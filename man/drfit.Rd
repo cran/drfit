@@ -7,7 +7,7 @@
 }
 \usage{
   drfit(data, startlogEC50 = NA, chooseone = TRUE, lognorm = TRUE, logis = FALSE, 
-    linearlogis = FALSE, b0 = 2, f0 = 0)
+    linearlogis = FALSE, linearlogisWrong = NA, b0 = 2, f0 = 0)
 }
 \arguments{
   \item{data}{
@@ -30,8 +30,12 @@
     A boolean defining if cumulative densitiy curves of logistic distributions
     are fitted to the data. Default is FALSE.} 
   \item{linearlogis}{
-    A boolean defining if the linear-logistic function as defined by van Ewijk and Hoekstra
-    1993 is fitted to the data. Default is FALSE.}
+    A boolean defining if the linear-logistic function
+    \code{\link{linearlogisf}} as defined by van Ewijk and Hoekstra 1993 is
+    fitted to the data. Default is FALSE.}
+  \item{linearlogisWrong}{
+    An optional vector containing the names of the substances for which the
+    linearlogis function produces a wrong fit.}
   \item{chooseone}{
     If TRUE (default), the models are tried in the order linearlogis, logis and lognorm,
     and the first model that produces a valid fit is used. Usually this will be the one 

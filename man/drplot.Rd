@@ -7,27 +7,25 @@
 }
 \usage{
   drplot(drresults, data, dtype, alpha, path, fileprefix, overlay,
-    postscript, color, datacolors, fitcolors)
+    postscript, png, bw, colors)
 }
 \arguments{
   \item{drresults}{
     A data frame as returned from \code{\link{drfit}}.
     }
   \item{data}{ 
-    A data frame as returned from \code{\link{drdata}}.  If data is to be
-    plotted, the data frame has to contain at least a factor called
-    "substance", a vector called "unit" containing the unit used for the dose,
-    a column "response" with the response values of the test system normalized
-    between 0 and 1, a column "dose" with the numeric dose values and a factor
-    called "dosefactor" containing the dose as a factor. If plotting of the data is 
-    not required, data can be set to FALSE.
+    A data frame as returned from \code{\link{drdata}}. The data frame has to
+    contain at least a factor called "substance", a vector called "unit"
+    containing the unit used for the dose, a column "response" with the
+    response values of the test system normalized between 0 and 1, a column
+    "dose" with the numeric dose values and a factor called "dosefactor"
+    containing the dose as a factor. 
     }
   \item{dtype}{
-    A string describing if the raw data should be plotted ("raw"), or 
-    an error bar should be constructed from the standard deviations of the
-    responses at each dose level ("std", default value) or from the confidence
-    intervals ("conf"). Of course, dtype only makes a difference, if a valid data
-    object has been referenced.
+    A string describing if the raw data should be plotted ("raw"), or an error
+    bar should be constructed from the standard deviations of the responses at
+    each dose level ("std", default value) or from the confidence intervals
+    ("conf"). If you don't want to see the data, set it to "none".
     }
   \item{alpha}{
     The confidence level, defaulting to 0.95, only used if dtype "conf" has been
@@ -48,23 +46,21 @@
     will all be put into the last graph in this case.
     }
   \item{postscript}{
-    If TRUE, (a) postscript graph(s) will be created. Otherwise, graphics will be
+    If TRUE, (a) postscript graph(s) will be created. Otherwise, and if 
+    the png argument is also FALSE, graphics will be
     displayed with a screen graphics device.
     }
-  \item{color}{
-    If TRUE, a sensible selection of colors will be attempted. If false, everything
-    will be drawn in black
+  \item{png}{
+    If TRUE, (a) png graph(s) will be created. Otherwise, and if the
+    postscript argument is also FALSE, graphics will be displayed with a
+    screen graphics device.
     }
-  \item{datacolors}{
+  \item{bw}{
+    A boolean deciding if the plots will be black and white or not. Default 
+    is TRUE.
+    }
+  \item{colors}{
     This is a vector of colors, defaulting to 1:8, used for plotting the data.
-    }
-  \item{fitcolors}{
-    Here you can specify a palette for the colors of the dose-response fits. The 
-    default value is "default", which produces the default palette, if the 
-    number of fits to be plotted is 8 or less. Otherwise, rainbow colors 
-    will be plotted. Unless there is more than one fit per substance to be plotted,
-    or the number of fits is larger than 8, the fitcolors will match the
-    datacolors.
     }
 }
 \value{
@@ -75,9 +71,9 @@
     
 } 
 \note{
-  Turn off the colors if you don't like them and don't want to fiddle with
-  them. Treatment of legends is quite bad. Be sure all devices are closed
-  (e.g. by calling \code{dev.off()}) before calling \code{drplot} again.
+  Treatment of legends is not really well solved. Be sure all devices are
+  closed (e.g. by calling \code{dev.off()}) before calling \code{drplot}
+  again after a failure.
 }
 \examples{
 data(antifoul)
