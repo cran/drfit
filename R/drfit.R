@@ -200,8 +200,8 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
             f[[ri]] <- NA
         }
     }
-    results <- data.frame(rsubstance,rn, rlhd, mtype, logEC50, stderrlogEC50, unit, sigma)
-    names(results) <- c("Substance","n", "lhd","mtype","logEC50","std","unit","sigma")
+    results <- data.frame(rsubstance, rn, rlld, rlhd, mtype, logEC50, stderrlogEC50, unit, sigma)
+    names(results) <- c("Substance","n","lld","lhd","mtype","logEC50","std","unit","sigma")
     if (lognorm || logis) {
         results$slope <- slope
     }
@@ -215,7 +215,7 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
 drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
         path = "./", fileprefix = "drplot", overlay = FALSE,
         postscript = FALSE, png = FALSE, bw = TRUE,
-        colors = 1:8)
+        colors = 1:8,devoff=T,lpos=FALSE)
 {
     unitlevels <- levels(as.factor(drresults$unit))
     if (length(unitlevels) == 1) {
@@ -244,6 +244,15 @@ drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
         }
     }
 
+    # Legend position
+    if (!lpos[[1]]) {
+        lx <- lhd - 1
+        ly <- hr + 0.1
+    } else {
+        lx <- lpos[[1]]
+        ly <- lpos[[2]]
+    }
+
     # Prepare overlay plot if requested
     if (overlay)
     {
@@ -260,7 +269,7 @@ drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
             cat("Created File: ",filename,"\n")
         }
         if (!postscript && !png) {
-            x11(width=7,height=7,pointsize=12)
+            get(getOption("device"))(width=7,height=7,pointsize=12)
         }
             
         plot(0,type="n",
@@ -275,6 +284,7 @@ drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
         splitted <- split(data,data$substance)
         n <- 0
         if (bw) colors <- rep("black",length(dsubstances))
+        # Loop over the substances in the data
         for (i in dsubstances) {
             n <- n + 1
             tmp <- splitted[[i]]
@@ -284,19 +294,19 @@ drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
                 if (!overlay)
                 {
                     if (postscript) {
-                        filename = paste(path,fileprefix,sub(" ","_",gsub("([\(\) ])", "", i)),".eps",sep="")
+                        filename = paste(path,fileprefix,sub(" ","_",i),".eps",sep="")
                         postscript(file=filename,
                                 paper="special",width=7,height=7,horizontal=FALSE,pointsize=12)
                         cat("Created File: ",filename,"\n")
                     } 
                     if (png) {
-                        filename = paste(path,fileprefix,sub(" ","_",gsub("([\(\) ])", "", i)),".png",sep="")
+                        filename = paste(path,fileprefix,sub(" ","_",i),".png",sep="")
                         png(filename=filename,
                             width=500, height=500,pointsize=12)
                         cat("Created File: ",filename,"\n")
                     }
                     if (!postscript && !png) {
-                        x11(width=7,height=7,pointsize=12)
+                         get(getOption("device"))(width=7,height=7,pointsize=12)
                     }
                         
                     plot(0,type="n",
@@ -305,7 +315,7 @@ drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
                         xlab=paste("Decadic Logarithm of the dose in ", unit),    
                         ylab="Normalized response")
                 }
-                if (!overlay) legend(lhd - 1, hr + 0.1, i,lty = 1, col = color)
+                if (!overlay) legend(lx, ly, i,lty = 1, col = color)
                 tmp$dosefactor <- factor(tmp$dose)  # necessary because the old
                                                     # factor has all levels, not 
                                                     # only the ones tested with
@@ -372,8 +382,12 @@ drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
             }
         }
     }
-    if (overlay) legend(lhd - 1, hr + 0.1, dsubstances,lty = 1, col = colors)
-    if (overlay && (postscript || png)) dev.off()
+    if (overlay) legend(lx, ly, dsubstances,lty = 1, col = colors)
+    if (overlay && (postscript || png)) {
+        if (devoff) {
+            dev.off()
+        }
+    }
 }
 
 checkplate <- function(plate,db="cytotox")

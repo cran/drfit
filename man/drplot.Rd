@@ -7,7 +7,7 @@
 }
 \usage{
   drplot(drresults, data, dtype, alpha, path, fileprefix, overlay,
-    postscript, png, bw, colors)
+    postscript, png, bw, colors, devoff, lpos)
 }
 \arguments{
   \item{drresults}{
@@ -61,6 +61,13 @@
     }
   \item{colors}{
     This is a vector of colors, defaulting to 1:8, used for plotting the data.
+    }
+  \item{lpos}{
+    A optional vector with the x and y position of the upper left corner of the legend. The default guess is not always the optimum.}
+  \item{devoff}{
+    If set to FALSE, the closing of the device after creation of an overlay png
+    or postscript graph will be left out, so texts and other elements can be 
+    added to the graph.
     }
 }
 \value{

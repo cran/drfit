@@ -68,7 +68,7 @@
 }
 \examples{
 # Get cytotoxicity data for Tributyltin and zinc pyrithione, tested with IPC-81 cells
-\dontrun{data <- drdata(c("TBT","Zn Pyrithion"))}
+\dontrun{data <- drdata(c("TBT","ZnPT2"))}
 }
 \author{
   Johannes Ranke 

@@ -6,7 +6,7 @@
   the data.
 }
 \usage{
-  checksubstance(substance,db="cytotox",experimentator="%",celltype="%",whereClause="1",ok="%")
+  checksubstance(substance,db="cytotox",experimentator="\%",celltype="\%",whereClause="1",ok="%")
 }
 \arguments{
   \item{substance}{
@@ -20,9 +20,9 @@
     means that data from all experimentators are shown.}
   \item{celltype}{
     Currently, only data for IPC-81, C6, NB4, HeLa, Jurkat and U937 are supported.
-    Default is "\%", i.e. any cell type.}
+    Default is "\%", i.e. data for any cell type will be displayed.}
   \item{enzymetype}{
-    Currently, only data for AChE, GR and GST are supported.}
+    Currently, only data for AChE, GR and GST are supported. The default value is "\%", i.e. data for any enzyme type will be displayed.}
   \item{whereClause}{
     With this argument, additional conditions for the SQL query can be set, 
     e.g. "where plate != 710". The default is 1 (in SQL syntax this means TRUE).}
