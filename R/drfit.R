@@ -13,6 +13,7 @@ drdata <- function(substances, experimentator = "%", db = "cytotox",
         whereClause," AND ok in (",
         ok,")",sep="")
     data <- sqlQuery(channel,query)
+    odbcClose(channel)
     names(data)[[1]] <- "dose"
     names(data)[[2]] <- "response"
     data$dosefactor <- factor(data$dose)
@@ -182,7 +183,7 @@ drplot <- function(drresults, data = FALSE, dtype = "std", alpha = 0.95,
         path = "./", fileprefix = "drplot", overlay = FALSE,
         postscript = FALSE, 
         color = TRUE,
-        colors = 1:8, fitcolors = "default")
+        datacolors = 1:8, fitcolors = "default")
 {
     # Prepare plots
     devices <- 1
@@ -256,16 +257,16 @@ drplot <- function(drresults, data = FALSE, dtype = "std", alpha = 0.95,
                     xlab=paste("Decadic Logarithm of the dose in ", unit),    
                     ylab="Normalized response")
             }
-            if (color == FALSE) colors <- rep("black",length(dsubstances))
+            if (color == FALSE) datacolors <- rep("black",length(dsubstances))
             n <- n + 1
-            if (!overlay) legend(lhd - 1, hr + 0.1, i,lty = 1, col = colors[[n]])
+            if (!overlay) legend(lhd - 1, hr + 0.1, i,lty = 1, col = datacolors[[n]])
             tmp <- splitted[[i]]
             tmp$dosefactor <- factor(tmp$dose)  # necessary because the old
                                                 # factor has all levels, not 
                                                 # only the ones tested with
                                                 # this substance
             if (dtype == "raw") {
-                points(log10(tmp$dose),tmp$response,col=colors[[n]])
+                points(log10(tmp$dose),tmp$response,col=datacolors[[n]])
             } else {
                 splitresponses <- split(tmp$response,tmp$dosefactor)
                 means <- sapply(splitresponses,mean)
@@ -287,11 +288,11 @@ drplot <- function(drresults, data = FALSE, dtype = "std", alpha = 0.95,
             if (dtype != "raw")
             {
                 x <- log10(as.numeric(levels(tmp$dosefactor)))
-                segments(x,bottoms,x,tops,col=colors[[n]])
-                points(x,means,col=colors[[n]])
+                segments(x,bottoms,x,tops,col=datacolors[[n]])
+                points(x,means,col=datacolors[[n]])
                 smidge <- 0.05
-                segments(x - smidge,bottoms,x + smidge,bottoms,col=colors[[n]])
-                segments(x - smidge,tops,x + smidge,tops,col=colors[[n]])
+                segments(x - smidge,bottoms,x + smidge,bottoms,col=datacolors[[n]])
+                segments(x - smidge,tops,x + smidge,tops,col=datacolors[[n]])
             }
         }
     }
@@ -301,7 +302,13 @@ drplot <- function(drresults, data = FALSE, dtype = "std", alpha = 0.95,
     nf <-  length(fits$Substance)  # number of fits to plot
     if (fitcolors[[1]] == "default")
     {
-        defaultfitcolors <- rainbow(nf)
+        if (nf <= 8)
+        {
+            defaultfitcolors <- palette()
+        } else
+        {
+            defaultfitcolors <- rainbow(nf)
+        }
     }
     legendcolors <- vector()
     for (i in 1:nf)
@@ -378,6 +385,8 @@ checkplate <- function(plate,db="cytotox") {
     
     platedata <- sqlQuery(channel,platequery)
     controldata <- sqlQuery(channel,controlquery)
+
+    odbcClose(channel)
 
     if (length(platedata$experimentator) < 1) {
         cat("There is no response data for plate ",plate," in database ",db,"\n")

@@ -7,7 +7,7 @@
 }
 \usage{
   drplot(drresults, data, dtype, alpha, path, fileprefix, overlay,
-    postscript, color, colors, fitcolors)
+    postscript, color, datacolors, fitcolors)
 }
 \arguments{
   \item{drresults}{
@@ -55,12 +55,16 @@
     If TRUE, a sensible selection of colors will be attempted. If false, everything
     will be drawn in black
     }
-  \item{colors}{
+  \item{datacolors}{
     This is a vector of colors, defaulting to 1:8, used for plotting the data.
     }
   \item{fitcolors}{
     Here you can specify a palette for the colors of the dose-response fits. The 
-    default value is "default", which produces rainbow colors.
+    default value is "default", which produces the default palette, if the 
+    number of fits to be plotted is 8 or less. Otherwise, rainbow colors 
+    will be plotted. Unless there is more than one fit per substance to be plotted,
+    or the number of fits is larger than 8, the fitcolors will match the
+    datacolors.
     }
 }
 \value{
