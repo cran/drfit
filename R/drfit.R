@@ -3,7 +3,7 @@ drdata <- function(substances, experimentator = "%", db = "cytotox",
     ok="'ok'")
 {
     library(RODBC) 
-    cytotoxchannel <- odbcConnect("cytotox",uid="cytotox",pwd="cytotox",case="tolower")
+    channel <- odbcConnect("cytotox",uid="cytotox",pwd="cytotox",case="tolower")
     slist <- paste(substances,collapse="','")
     query <- paste("SELECT conc,viability,unit,experimentator,substance,celltype,",
         "plate,ok FROM cytotox WHERE substance IN ('",
@@ -12,7 +12,7 @@ drdata <- function(substances, experimentator = "%", db = "cytotox",
         celltype,"' AND ",
         whereClause," AND ok in (",
         ok,")",sep="")
-    data <- sqlQuery(cytotoxchannel,query)
+    data <- sqlQuery(channel,query)
     names(data)[[1]] <- "dose"
     names(data)[[2]] <- "response"
     data$dosefactor <- factor(data$dose)
@@ -23,13 +23,12 @@ drdata <- function(substances, experimentator = "%", db = "cytotox",
 drfit <- function(data, startlogEC50 = NA, lognorm = TRUE, logis = FALSE,
         linearlogis = FALSE, b0 = 2, f0 = 0)
 {
-    library(nls)
-        substances <- levels(data$substance)
-        unit <- levels(as.factor(data$unit))
-        logisf <- function(x,x0,b,k=1)
-        {
-            k / (1 + (x/x0)^b)
-        }
+    substances <- levels(data$substance)
+    unit <- levels(as.factor(data$unit))
+    logisf <- function(x,x0,b,k=1)
+    {
+        k / (1 + (x/x0)^b)
+    }
     linearlogisf <- function(x,k,f,mu,b)
     {
         k*(1 + f*x) / (1 + ((2*f*(10^mu) + 1) * ((x/(10^mu))^b)))
@@ -366,5 +365,73 @@ drplot <- function(drresults, data = FALSE, dtype = "std", alpha = 0.95,
         for (i in 2:devices) {
             dev.off(i)
         }
+    }
+}
+
+checkplate <- function(plate,db="cytotox") {
+    library(RODBC) 
+    channel <- odbcConnect(db,uid=db,pwd=db,case="tolower")
+
+    platequery <- paste("SELECT experimentator,substance,celltype,conc,unit,viability,performed,ok FROM ",
+        db," WHERE plate=", plate)
+    controlquery <- paste("SELECT type,response FROM controls WHERE plate=",plate)
+    
+    platedata <- sqlQuery(channel,platequery)
+    controldata <- sqlQuery(channel,controlquery)
+
+    if (length(platedata$experimentator) < 1) {
+        cat("There is no response data for plate ",plate," in database ",db,"\n")
+    } else {
+        platedata$experimentator <- factor(platedata$experimentator)
+        platedata$celltype <- factor(platedata$celltype)
+        platedata$substance <- factor(platedata$substance)
+        platedata$unit <- factor(platedata$unit)
+        platedata$performed <- factor(platedata$performed)
+        platedata$ok <- factor(platedata$ok)
+        
+        blinds <- subset(controldata,type=="blind")
+        controls <- subset(controldata,type=="control")
+        
+        numberOfBlinds <- length(blinds$response)
+        numberOfControls <- length(controls$response)
+        meanOfBlinds <- mean(blinds$response)
+        meanOfControls <- mean(controls$response)
+        stdOfBlinds <- sd(blinds$response)
+        stdOfControls <- sd(controls$response)
+        
+        cat("Plate ",plate," from database ",db,"\n",
+            "\tExperimentator: ",levels(platedata$experimentator),"\n",
+            "\tCell type(s): ",levels(platedata$celltype),"\n",
+            "\tPerformed on : ",levels(platedata$performed),"\n",
+            "\tSubstance(s): ",levels(platedata$substance),"\n",
+            "\tConcentration unit: ",levels(platedata$unit),"\n",
+            "\tOK: ",levels(platedata$ok),"\n",
+            "\t\tNumber \tMean \tStandard Deviation\n",
+            "blind\t\t",numberOfBlinds,"\t",meanOfBlinds,"\t",stdOfBlinds,"\n",
+            "control\t",numberOfControls,"\t",meanOfControls,"\t",stdOfControls,"\n")
+        
+        par(ask=TRUE)
+        
+        boxplot(blinds$response,controls$response,names=c("blinds","controls"),ylab="Response",main=paste("Plate ",plate))
+        
+        drdata <- subset(platedata,select=c(substance,conc,viability))
+        drdata$substance <- factor(drdata$substance)
+        substances <- levels(drdata$substance)
+        substances
+       
+        plot(log10(drdata$conc),drdata$viability,
+            xlim=c(-2.5, 4.5), 
+            ylim= c(-0.1, 2), 
+            xlab=paste("Decadic Logarithm of the concentration in ",levels(platedata$unit)),
+            ylab="Viability")
+        
+        drdatalist <- split(drdata,drdata$substance)
+        
+        for (i in 1:length(drdatalist)) {
+            points(log10(drdatalist[[i]]$conc),drdatalist[[i]]$viability,col=i);
+        }
+
+        legend(3.0,1.5,substances, pch=1, col=1:length(substances))
+        title(main=paste("Plate ",plate," - ",levels(platedata$experimentator)," - ",levels(platedata$celltype)))
     }
 }

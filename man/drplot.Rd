@@ -65,16 +65,20 @@
 }
 \value{
   \item{results}{
-      A data frame containing at least one line for each substance. If the data did not
-      show a mean response < 0.5 at the highest dose level, the modeltype is set to "none".
-      Every successful fit is reported in one line. Parameters of the fitted curves are only
-      reported if the fitted EC50 is not higher than the highest dose.}
+    You will get plots of data and/or the fitted dose-response curves, on the
+    screen and/or as postscript files, depending on the parameters.
+    }
     
 } 
+\note{
+  Turn off the colors if you don't like them and don't want to fiddle with
+  them. Treatment of legends is quite bad. Be sure all devices are closed
+  (e.g. by calling \code{dev.off()}) before calling \code{drplot} again.
+}
 \examples{
-\dontrun{data(antifoul)}
-\dontrun{r <- drfit(antifoul)}
-\dontrun{format(r,digits=2)}
+data(antifoul)
+r <- drfit(antifoul)
+\dontrun{drplot(r,antifoul)}
 }
 \author{
   Johannes Ranke 

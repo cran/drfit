@@ -37,10 +37,11 @@
 \details{
   The function is currently only used for retrieving data from the
   mysql database "cytotox" of the UFT Department of Bioorganic Chemistry.
-  Additionally to the installation of the RODBC package, it is required to set
-  up a ODBC data source with the name "cytotox", using an ODBC driver for mysql, 
-  probably myODBC. Then, under Unix, you can use iodbc or unixodbc for setting
-  up the respective data source with data source name (DSN) "cytotox". For my
+  Access to this database is limited to UFT staff.  Additionally to the
+  installation of the RODBC package, it is required to set up a ODBC data
+  source with the name "cytotox", using an ODBC driver for mysql, probably
+  myODBC. Then, under Unix, you can use iodbc or unixodbc for setting up the
+  respective data source with data source name (DSN) "cytotox". For my
   setting using unixodbc, I am using the file \file{/etc/odbcinst.ini}
   containing: 
   \tabular{lll}{

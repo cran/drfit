@@ -8,10 +8,10 @@
   from the "cytotox" database of the UFT Department of Bioorganic Chemistry on 
   February 25, 2004
 }
-\usage{data(rivers)}
+\usage{data(antifoul)}
 \format{
   A dataframe containing 135 and 81 data points for concentrations and responses
-  for TBT and Zink Pyrithione, respecitively. Additional data from the database is 
+  for TBT and Zink Pyrithione, respectively. Additional data from the database is 
   also present.
 }
 \source{

@@ -45,9 +45,9 @@
     
 } 
 \examples{
-\dontrun{data(antifoul)}
-\dontrun{r <- drfit(antifoul)}
-\dontrun{format(r,digits=2)}
+data(antifoul)
+r <- drfit(antifoul)
+format(r,digits=2)
 }
 \author{
   Johannes Ranke 
