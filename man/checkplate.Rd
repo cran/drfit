@@ -13,8 +13,9 @@
   \item{plate}{
     The number of the plate identifying it within the database.}
   \item{db}{
-    The database to be used. Currently only "cytotox" of the UFT Department of
-    Bioorganic Chemistry is supported.}
+    The database to be used. Currently, the databases "cytotox" and "enzymes"
+    of the UFT Department of Bioorganic Chemistry are supported (default is
+    "cytotox").} 
 }
 \value{
   The function lists a report and shows two graphs.

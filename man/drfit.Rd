@@ -6,7 +6,7 @@
   biometric results for (eco)toxicity evaluation
 }
 \usage{
-  drfit(data, startlogEC50 = NA, lognorm = TRUE, logis = FALSE, 
+  drfit(data, startlogEC50 = NA, chooseone = TRUE, lognorm = TRUE, logis = FALSE, 
     linearlogis = FALSE, b0 = 2, f0 = 0)
 }
 \arguments{
@@ -32,6 +32,11 @@
   \item{linearlogis}{
     A boolean defining if the linear-logistic function as defined by van Ewijk and Hoekstra
     1993 is fitted to the data. Default is FALSE.}
+  \item{chooseone}{
+    If TRUE (default), the models are tried in the order linearlogis, logis and lognorm,
+    and the first model that produces a valid fit is used. Usually this will be the one 
+    with the lowest residual standard deviation. If FALSE, all models that are set to TRUE
+    and that can be fitted will be reported.}
   \item{b0,f0}{
     If the linearlogistic model is fitted, b0 and f0 give the possibility to
     adapt the starting values for the parameters b and f.}

@@ -6,19 +6,23 @@
 }
 \usage{
   drdata(substances, experimentator = "\%", db = "cytotox", celltype = "IPC-81", 
-    whereClause = "1", ok = "'ok'")
+    enzymetype="AChE", whereClause = "1", ok = "'ok'")
 }
 \arguments{
   \item{substances}{
     A string or an array of strings with the substance names for
     which dose-response data is to be retrieved.}
   \item{experimentator}{
-    The name of the experimentator whose data is to be used.}
+    The name of the experimentator whose data is to be used. Default is "%", which
+    means that data from all experimentators are retrieved.}
   \item{db}{
-    The database to be used. Currently only "cytotox" of the UFT Department of
-    Bioorganic Chemistry is supported.}
+    The database to be used. Currently, the databases "cytotox" and "enzymes"
+    of the UFT Department of Bioorganic Chemistry are supported (default is
+    "cytotox").} 
   \item{celltype}{
     Currently, only data for IPC-81, C6, NB4, HeLa, Jurkat and U937 are supported.}
+  \item{enzymetype}{
+    Currently, only data for AChE, GR and GST are supported.}
   \item{whereClause}{
     With this argument, additional conditions for the SQL query can be set, 
     e.g. "where plate != 710". The default is 1 (in SQL syntax this means TRUE).}

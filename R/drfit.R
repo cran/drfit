@@ -1,15 +1,25 @@
 drdata <- function(substances, experimentator = "%", db = "cytotox",
-    celltype="IPC-81",whereClause="1",
+    celltype="IPC-81",enzymetype="AChE",whereClause="1",
     ok="'ok'")
 {
     library(RODBC) 
-    channel <- odbcConnect("cytotox",uid="cytotox",pwd="cytotox",case="tolower")
+    channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
     slist <- paste(substances,collapse="','")
-    query <- paste("SELECT conc,viability,unit,experimentator,substance,celltype,",
-        "plate,ok FROM cytotox WHERE substance IN ('",
+    if (db == "cytotox") {
+        responsetype <- "viability"
+        testtype <- "celltype"
+        type <- celltype
+    } else {
+        responsetype <- "activity"
+        testtype <- "enzyme"
+        type <- enzymetype
+    }
+        
+    query <- paste("SELECT conc,",responsetype,",unit,experimentator,substance,",testtype,
+        ",plate,ok FROM ", db, " WHERE substance IN ('",
         slist,"') AND experimentator LIKE '",
-        experimentator,"' AND celltype LIKE '",
-        celltype,"' AND ",
+        experimentator,"' AND ",testtype," LIKE '",
+        type,"' AND ",
         whereClause," AND ok in (",
         ok,")",sep="")
     data <- sqlQuery(channel,query)
@@ -21,7 +31,8 @@ drdata <- function(substances, experimentator = "%", db = "cytotox",
     return(data)
 }
     
-drfit <- function(data, startlogEC50 = NA, lognorm = TRUE, logis = FALSE,
+drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
+        lognorm = TRUE, logis = FALSE,
         linearlogis = FALSE, b0 = 2, f0 = 0)
 {
     substances <- levels(data$substance)
@@ -35,11 +46,14 @@ drfit <- function(data, startlogEC50 = NA, lognorm = TRUE, logis = FALSE,
         k*(1 + f*x) / (1 + ((2*f*(10^mu) + 1) * ((x/(10^mu))^b)))
     }
 
-    ri <- 0                               # an index over the result rows
+    ri <- rix <- 0                        # ri is the index over the result rows
+                                          # rix is used later to check if any
+                                          # model result was appended
     rsubstance <- array()                 # the substance names in the results
     rn <- vector()                        # number of dose-response curves 
     rlhd <- rlld <- vector()              # highest and lowest doses tested
     mtype <- array()                      # the modeltypes
+    sigma <- array()                      # the standard deviation of the residuals
     logEC50 <- vector()
     stderrlogEC50 <- vector()
     slope <- vector()
@@ -47,128 +61,150 @@ drfit <- function(data, startlogEC50 = NA, lognorm = TRUE, logis = FALSE,
     f <- vector()
 
     splitted <- split(data,data$substance)
-    for (i in substances)
-    {
+    for (i in substances) {
         tmp <- splitted[[i]]
+        fit <- FALSE
         n <- round(length(tmp$response)/9)
-        if (is.na(startlogEC50[i])){
-            w <- 1/abs(tmp$response - 0.3)
-                startlogEC50[[i]] <- sum(w * log10(tmp$dose))/sum(w)
+        if (length(tmp$response) == 0) {
+            nodata = TRUE
+        } else {
+            nodata = FALSE
         }
-        highestdose <- max(tmp$dose)
-        lowestdose <- min(tmp$dose)
-        lhd <- log10(highestdose)
-        lld <- log10(lowestdose)
-        responseathighestdose <- mean(subset(tmp,dose==highestdose)$response)
-        rix <- ri                         # rix is used late to check if any
-                                          # model result was appended
-        if (responseathighestdose < 0.5) {
-            if (lognorm)
-            {
-                m <- try(nls(response ~ pnorm(-log10(dose),-logEC50,slope),
+        if (!nodata) {
+            if (is.na(startlogEC50[i])){
+                w <- 1/abs(tmp$response - 0.3)
+                startlogEC50[[i]] <- sum(w * log10(tmp$dose))/sum(w)
+            }
+            highestdose <- max(tmp$dose)
+            lowestdose <- min(tmp$dose)
+            lhd <- log10(highestdose)
+            lld <- log10(lowestdose)
+            responseathighestdose <- mean(subset(tmp,dose==highestdose)$response)
+            rix <- ri
+            if (responseathighestdose < 0.5) {
+                inactive <- FALSE
+
+                if (linearlogis) {
+                    m <- try(nls(response ~ linearlogisf(dose,1,f,logEC50,b),
+                            data=tmp,
+                            start=list(f=f0,logEC50=startlogEC50[[i]],b=b0)))
+                    if (!inherits(m, "try-error")) {
+                        fit <- TRUE
+                        ri <- ri + 1
+                        s <- summary(m)
+                        sigma[[ri]] <- s$sigma
+                        rsubstance[[ri]] <- i
+                        rn[[ri]] <- n
+                        rlld[[ri]] <- log10(lowestdose)
+                        rlhd[[ri]] <- log10(highestdose)
+                        mtype[[ri]] <- "linearlogis"
+                        logEC50[[ri]] <- coef(m)[["logEC50"]]
+                        slope[[ri]] <- NA
+                        if (logEC50[[ri]] > rlhd[[ri]]) {
+                            logEC50[[ri]] <- NA
+                            stderrlogEC50[[ri]] <- NA
+                            b[[ri]] <- NA
+                            f[[ri]] <- NA
+                        } else {
+                            stderrlogEC50[[ri]] <- s$parameters["logEC50","Std. Error"]
+                            b[[ri]] <- coef(m)[["b"]]
+                            f[[ri]] <- coef(m)[["f"]]
+                        }
+                    }
+                }
+
+                if (logis) {
+                # Instead of plogis(), the function logisf() defined above
+                # could be used for regression against dose, not log10(dose)
+                    m <- try(nls(response ~ plogis(-log10(dose),-logEC50,slope),
                             data=tmp,
                             start=list(logEC50=startlogEC50[[i]],slope=1)))
-                    if (!inherits(m, "try-error"))
-                    {
-                        ri <- ri + 1
+                    if (chooseone==FALSE || fit==FALSE) {
+                        if (!inherits(m, "try-error")) {
+                            fit <- TRUE
+                            ri <- ri + 1
+                            s <- summary(m)
+                            sigma[[ri]] <- s$sigma
+                            rsubstance[[ri]] <- i
+                            rn[[ri]] <- n
+                            rlld[[ri]] <- log10(lowestdose)
+                            rlhd[[ri]] <- log10(highestdose)
+                            mtype[[ri]] <- "logis"
+                            logEC50[[ri]] <- coef(m)[["logEC50"]]
+                            b[[ri]] <- NA
+                            f[[ri]] <- NA
+                            if (logEC50[[ri]] > rlhd[[ri]]) {
+                                logEC50[[ri]] <- NA
+                                slope[[ri]] <- NA
+                                stderrlogEC50[[ri]] <- NA
+                            } else {
+                                slope[[ri]] <- coef(m)[["slope"]]
+                                stderrlogEC50[[ri]] <- s$parameters["logEC50","Std. Error"]
+                            }
+                        }
+                    }
+                }
+
+                if (lognorm) {
+                    m <- try(nls(response ~ pnorm(-log10(dose),-logEC50,slope),
+                                data=tmp,
+                                start=list(logEC50=startlogEC50[[i]],slope=1)))
+                    if (chooseone==FALSE || fit==FALSE) {
+                        if (!inherits(m, "try-error")) {
+                            fit <- TRUE
+                            ri <- ri + 1
+                            s <- summary(m)
+                            sigma[[ri]] <- s$sigma
                             rsubstance[[ri]] <- i
                             rn[[ri]] <- n
                             rlld[[ri]] <- log10(lowestdose)
                             rlhd[[ri]] <- log10(highestdose)
                             mtype[[ri]] <- "lognorm"
-                            s <- summary(m)
                             logEC50[[ri]] <- coef(m)[["logEC50"]]
-                            if (logEC50[[ri]] > rlhd[[ri]])
-                            {
-                                logEC50[[ri]] <- NA
-                                    slope[[ri]] <- NA
-                                    stderrlogEC50[[ri]] <- NA
-                            } else 
-                            {
-                                slope[[ri]] <- coef(m)[["slope"]]
-                                    stderrlogEC50[[ri]] <- s$parameters["logEC50","Std. Error"]
-                            }
-                    }
-            }
-
-            if (logis)
-            {
-            # Instead of plogis(), the function logisf() defined above
-            # could be used for regression against dose, not log10(dose)
-                m <- try(nls(response ~ plogis(-log10(dose),-logEC50,slope),
-                        data=tmp,
-                        start=list(logEC50=startlogEC50[[i]],slope=1)))
-                if (!inherits(m, "try-error"))
-                {
-                    ri <- ri + 1
-                    rsubstance[[ri]] <- i
-                    rn[[ri]] <- n
-                    rlld[[ri]] <- log10(lowestdose)
-                    rlhd[[ri]] <- log10(highestdose)
-                    mtype[[ri]] <- "logis"
-                    s <- summary(m)
-                    logEC50[[ri]] <- coef(m)[["logEC50"]]
-                    if (logEC50[[ri]] > rlhd[[ri]])
-                    {
-                        logEC50[[ri]] <- NA
-                            slope[[ri]] <- NA
-                            stderrlogEC50[[ri]] <- NA
-                    } else 
-                    {
-                        slope[[ri]] <- coef(m)[["slope"]]
-                            stderrlogEC50[[ri]] <- s$parameters["logEC50","Std. Error"]
-                    }
-                }
-            }
-
-            if (linearlogis)
-            {
-                m <- try(nls(response ~ linearlogisf(dose,1,f,logEC50,b),
-                        data=tmp,
-                        start=list(f=f0,logEC50=startlogEC50[[i]],b=b0)))
-                if (!inherits(m, "try-error"))
-                {
-                    ri <- ri + 1
-                    rsubstance[[ri]] <- i
-                    rn[[ri]] <- n
-                    rlld[[ri]] <- log10(lowestdose)
-                    rlhd[[ri]] <- log10(highestdose)
-                    mtype[[ri]] <- "linearlogis"
-                    s <- summary(m)
-#print(s)
-                    logEC50[[ri]] <- coef(m)[["logEC50"]]
-                    if (logEC50[[ri]] > rlhd[[ri]])
-                    {
-                        logEC50[[ri]] <- NA
-                            stderrlogEC50[[ri]] <- NA
                             b[[ri]] <- NA
                             f[[ri]] <- NA
-                    } else 
-                    {
-                        stderrlogEC50[[ri]] <- s$parameters["logEC50","Std. Error"]
-                            b[[ri]] <- coef(m)[["b"]]
-                            f[[ri]] <- coef(m)[["f"]]
+                            if (logEC50[[ri]] > rlhd[[ri]]) {
+                                logEC50[[ri]] <- NA
+                                slope[[ri]] <- NA
+                                stderrlogEC50[[ri]] <- NA
+                            } else {
+                                slope[[ri]] <- coef(m)[["slope"]]
+                                stderrlogEC50[[ri]] <- s$parameters["logEC50","Std. Error"]
+                            }
+                        }
                     }
                 }
+
+            } else {
+                inactive <- TRUE
             }
-        } 
-        if (ri == rix)          # if no entry was appended for this substance
-        {
+        }
+        if (ri == rix) {          # if no entry was appended for this substance
             ri <- ri + 1
-                rsubstance[[ri]] <- i
-                rn[[ri]] <- n
+            rsubstance[[ri]] <- i
+            rn[[ri]] <- n
+            if (nodata) {
+                rlld[[ri]] <- rlhd[[i]] <- NA
+                mtype[[ri]] <- "no data"
+            } else {
                 rlld[[ri]] <- log10(lowestdose)
                 rlhd[[i]] <- log10(highestdose)
-                mtype[[ri]] <- "none"
-                logEC50[[ri]] <- NA
-                stderrlogEC50[[ri]] <- NA
-                slope[[ri]] <- NA
-                b[[ri]] <- NA
-                f[[ri]] <- NA
+                if (inactive) {
+                    mtype[[ri]] <- "inactive"
+                } else {
+                    mtype[[ri]] <- "no fit"
+                }
+            }
+            sigma[[ri]] <- NA
+            logEC50[[ri]] <- NA
+            stderrlogEC50[[ri]] <- NA
+            slope[[ri]] <- NA
+            b[[ri]] <- NA
+            f[[ri]] <- NA
         }
     }
-    results <- data.frame(rsubstance,rn, rlld, rlhd, mtype, logEC50, stderrlogEC50, unit)
-    names(results) <- c("Substance","n", "lld","lhd","mtype","logEC50","std","unit")
+    results <- data.frame(rsubstance,rn, rlhd, mtype, logEC50, stderrlogEC50, unit, sigma)
+    names(results) <- c("Substance","n", "lhd","mtype","logEC50","std","unit","sigma")
     if (lognorm || logis) {
         results$slope <- slope
     }
@@ -375,12 +411,22 @@ drplot <- function(drresults, data = FALSE, dtype = "std", alpha = 0.95,
     }
 }
 
-checkplate <- function(plate,db="cytotox") {
+checkplate <- function(plate,db="cytotox")
+{
     library(RODBC) 
-    channel <- odbcConnect(db,uid=db,pwd=db,case="tolower")
+    channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
 
-    platequery <- paste("SELECT experimentator,substance,celltype,conc,unit,viability,performed,ok FROM ",
-        db," WHERE plate=", plate)
+    if (db == "cytotox") {
+        responsetype <- "viability"
+        testtype <- "celltype"
+    } else {
+        responsetype <- "activity"
+        testtype <- "enzyme"
+    }
+        
+    platequery <- paste("SELECT experimentator,substance,",testtype,",conc,unit,",responsetype,",performed,ok",
+        "FROM ",db," WHERE plate=", plate)
+
     controlquery <- paste("SELECT type,response FROM controls WHERE plate=",plate)
     
     platedata <- sqlQuery(channel,platequery)
@@ -392,7 +438,7 @@ checkplate <- function(plate,db="cytotox") {
         cat("There is no response data for plate ",plate," in database ",db,"\n")
     } else {
         platedata$experimentator <- factor(platedata$experimentator)
-        platedata$celltype <- factor(platedata$celltype)
+        platedata$type <- factor(platedata[[testtype]])
         platedata$substance <- factor(platedata$substance)
         platedata$unit <- factor(platedata$unit)
         platedata$performed <- factor(platedata$performed)
@@ -410,7 +456,7 @@ checkplate <- function(plate,db="cytotox") {
         
         cat("Plate ",plate," from database ",db,"\n",
             "\tExperimentator: ",levels(platedata$experimentator),"\n",
-            "\tCell type(s): ",levels(platedata$celltype),"\n",
+            "\tType(s): ",levels(platedata$type),"\n",
             "\tPerformed on : ",levels(platedata$performed),"\n",
             "\tSubstance(s): ",levels(platedata$substance),"\n",
             "\tConcentration unit: ",levels(platedata$unit),"\n",
@@ -423,24 +469,84 @@ checkplate <- function(plate,db="cytotox") {
         
         boxplot(blinds$response,controls$response,names=c("blinds","controls"),ylab="Response",main=paste("Plate ",plate))
         
-        drdata <- subset(platedata,select=c(substance,conc,viability))
+        drdata <- platedata[c(2,4,6)]
         drdata$substance <- factor(drdata$substance)
         substances <- levels(drdata$substance)
-        substances
        
         plot(log10(drdata$conc),drdata$viability,
             xlim=c(-2.5, 4.5), 
             ylim= c(-0.1, 2), 
-            xlab=paste("Decadic Logarithm of the concentration in ",levels(platedata$unit)),
-            ylab="Viability")
+            xlab=paste("decadic logarithm of the concentration in ",levels(platedata$unit)),
+            ylab=responsetype)
         
         drdatalist <- split(drdata,drdata$substance)
         
         for (i in 1:length(drdatalist)) {
-            points(log10(drdatalist[[i]]$conc),drdatalist[[i]]$viability,col=i);
+            points(log10(drdatalist[[i]]$conc),drdatalist[[i]][[responsetype]],col=i);
         }
 
         legend(3.0,1.5,substances, pch=1, col=1:length(substances))
-        title(main=paste("Plate ",plate," - ",levels(platedata$experimentator)," - ",levels(platedata$celltype)))
+        title(main=paste("Plate ",plate," - ",levels(platedata$experimentator)," - ",levels(platedata$type)))
     }
+}
+
+checksubstance <- function(substance,db="cytotox",experimentator="%",celltype="%",enzymetype="%",whereClause="1",ok="%") 
+{
+    library(RODBC) 
+    channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
+
+    if (db == "cytotox") {
+        responsetype <- "viability"
+        testtype <- "celltype"
+        type <- celltype
+    } else {
+        responsetype <- "activity"
+        testtype <- "enzyme"
+        type <- enzymetype
+    }
+    query <- paste("SELECT experimentator,substance,",testtype,",plate,conc,unit,",responsetype,",ok",
+        " FROM ",db," WHERE substance LIKE '",
+        substance,"' AND experimentator LIKE '",
+        experimentator,"' AND ",testtype," LIKE '",
+        type,"' AND ",
+        whereClause," AND ok LIKE '",ok,"'",sep="")
+
+    data <- sqlQuery(channel,query)
+    odbcClose(channel)
+    
+    data$experimentator <- factor(data$experimentator)    
+    data$substance <- factor(data$substance)
+    substances <- levels(data$substance)    
+    data$type <- factor(data[[testtype]])                
+    data$plate <- factor(data$plate)                        
+    plates <- levels(data$plate)
+    concentrations <- split(data$conc,data$conc)
+    concentrations <- as.numeric(names(concentrations))
+    data$unit <- factor(data$unit)                        
+    data$ok <- factor(data$ok)
+    
+    if (length(plates)>6) {
+        palette(rainbow(length(plates)))      
+    }
+ 
+    plot(log10(data$conc),data[[responsetype]],
+        xlim=c(-2.5, 4.5),                                                                  
+        ylim= c(-0.1, 2),                                                                 
+        xlab=paste("decadic logarithm of the concentration in ",levels(data$unit)),    
+        ylab=responsetype)  
+        
+    platelist <- split(data,data$plate)
+   
+    for (i in 1:length(platelist)) {    
+        points(log10(platelist[[i]]$conc),platelist[[i]][[responsetype]],col=i);          
+    }       
+    
+    legend(3.5,1.7,plates, pch=1, col=1:length(plates))
+    title(main=paste(substance," - ",levels(data$experimentator)," - ",levels(data$type)))
+ 
+    cat("Substanz ",substance,"\n",
+        "\tExperimentator(s):",levels(data$experimentator),"\n",
+        "\tType(s):\t",levels(data$type),"\n",
+        "\tSubstance(s):\t",levels(data$substance),"\n",
+        "\tPlate(s):\t",plates,"\n\n")
 }
