@@ -6,7 +6,7 @@
   the data.
 }
 \usage{
-  checksubstance(substance,db="cytotox",experimentator="\%",celltype="\%",whereClause="1",ok="%")
+  checksubstance(substance,db="cytotox",experimentator="\%",celltype="\%",enzymetype="\%",whereClause="1",ok="\%")
 }
 \arguments{
   \item{substance}{

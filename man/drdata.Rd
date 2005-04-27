@@ -6,7 +6,7 @@
 }
 \usage{
   drdata(substances, experimentator = "\%", db = "cytotox", celltype = "IPC-81", 
-    enzymetype="AChE", whereClause = "1", ok = "'ok'")
+    enzymetype="AChE", whereClause = "1", ok = "'ok','no fit'")
 }
 \arguments{
   \item{substances}{
@@ -27,9 +27,11 @@
     With this argument, additional conditions for the SQL query can be set, 
     e.g. "where plate != 710". The default is 1 (in SQL syntax this means TRUE).}
   \item{ok}{
-    With the default value "'ok'", only data that has been checked and set to "ok"
-    in the database is retrieved. Another sensible argument would be "'ok','?'", in 
-    order to additionally retrieve data which has not yet been checked.}
+    With the default value "'ok','no fit'", only data that has been checked and set to "ok"
+    or "no fit" in the database is retrieved. The argument "no fit" will result
+    in not using the data for fitting, but it will be plotted.
+    Another sensible argument would be "'ok','no fit','?'", in order to additionally
+    retrieve data which has not yet been checked.}
 }
 \value{
   \item{data}{

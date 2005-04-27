@@ -17,7 +17,9 @@
     response values of the test system normalized between 0 and 1 and a column
     "dose" with the numeric dose values. For later use of the
     \code{\link{drplot}} function, a factor called "dosefactor" also has to be
-    present, containing the dose as a factor.
+    present, containing the dose as a factor. If there is a column called "ok"
+    and it is set to "no fit", then the corresponding data point will be excluded
+    from the fitting procedure.
     }
   \item{startlogEC50}{
     Especially for the linearlogis model, a suitable log10 of the EC50 has to be given 

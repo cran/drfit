@@ -1,6 +1,6 @@
 drdata <- function(substances, experimentator = "%", db = "cytotox",
     celltype="IPC-81",enzymetype="AChE",whereClause="1",
-    ok="'ok'")
+    ok="'ok','no fit'")
 {
     library(RODBC) 
     channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
@@ -41,6 +41,7 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
         linearlogis = FALSE, linearlogisWrong = NA, 
         b0 = 2, f0 = 0)
 {
+    if(!is.null(data$ok)) data <- subset(data,ok!="no fit")
     substances <- levels(data$substance)
     unit <- levels(as.factor(data$unit))
 
