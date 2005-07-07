@@ -7,7 +7,7 @@
 }
 \usage{
   drfit(data, startlogEC50 = NA, chooseone = TRUE, lognorm = TRUE, logis = FALSE, 
-    linearlogis = FALSE, linearlogisWrong = NA, b0 = 2, f0 = 0)
+    linearlogis = FALSE, linearlogisWrong = NA, allWrong = NA, b0 = 2, f0 = 0)
 }
 \arguments{
   \item{data}{
@@ -38,6 +38,9 @@
   \item{linearlogisWrong}{
     An optional vector containing the names of the substances for which the
     linearlogis function produces a wrong fit.}
+  \item{allWrong}{
+    An optional vector containing the names of the substances for which all
+    functions produces a wrong fit.}
   \item{chooseone}{
     If TRUE (default), the models are tried in the order linearlogis, logis and lognorm,
     and the first model that produces a valid fit is used. Usually this will be the one 

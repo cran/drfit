@@ -38,18 +38,19 @@ linearlogisf <- function(x,k,f,mu,b)
 
 drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
         lognorm = TRUE, logis = FALSE,
-        linearlogis = FALSE, linearlogisWrong = NA, 
+        linearlogis = FALSE, linearlogisWrong = NA, allWrong = NA,
         b0 = 2, f0 = 0)
 {
-    if(!is.null(data$ok)) data <- subset(data,ok!="no fit")
+    if(!is.null(data$ok)) data <- subset(data,ok!="no fit") # Don't use data where ok 
+                                                            # was set to "no fit"
     substances <- levels(data$substance)
-    unit <- levels(as.factor(data$unit))
 
     ri <- rix <- 0                        # ri is the index over the result rows
                                           # rix is used later to check if any
                                           # model result was appended
     rsubstance <- array()                 # the substance names in the results
     rn <- vector()                        # number of dose-response curves 
+    runit <- vector()                     # vector of units for each result row
     rlhd <- rlld <- vector()              # highest and lowest doses tested
     mtype <- array()                      # the modeltypes
     sigma <- array()                      # the standard deviation of the residuals
@@ -63,6 +64,17 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
     for (i in substances) {
         tmp <- splitted[[i]]
         fit <- FALSE
+        if (length(tmp) != 0) {
+            unit <- levels(as.factor(as.vector(tmp$unit)))
+            cat("\n",i,": Fitting data...\n",sep="")
+        } else {
+            unit <- ""
+            cat("\n",i,": No data\n",sep="")
+        }
+        if (length(unit) > 1) {
+            cat("More than one unit for substance ",i,", halting\n\n",sep="")
+            break
+        }
         n <- round(length(tmp$response)/9)
         if (length(tmp$response) == 0) {
             nodata = TRUE
@@ -84,7 +96,8 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
                 inactive <- FALSE
 
                 if (linearlogis && 
-                    length(subset(linearlogisWrong,linearlogisWrong == i))==0) {
+                    length(subset(linearlogisWrong,linearlogisWrong == i))==0 &&
+                    length(subset(allWrong,allWrong == i))==0) {
                     m <- try(nls(response ~ linearlogisf(dose,1,f,logEC50,b),
                             data=tmp,
                             start=list(f=f0,logEC50=startlogEC50[[i]],b=b0)))
@@ -95,6 +108,7 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
                         sigma[[ri]] <- s$sigma
                         rsubstance[[ri]] <- i
                         rn[[ri]] <- n
+                        runit[[ri]] <- unit
                         rlld[[ri]] <- log10(lowestdose)
                         rlhd[[ri]] <- log10(highestdose)
                         mtype[[ri]] <- "linearlogis"
@@ -113,7 +127,8 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
                     }
                 }
 
-                if (logis) {
+                if (logis &&
+                    length(subset(allWrong,allWrong == i))==0) {
                     m <- try(nls(response ~ plogis(-log10(dose),-logEC50,slope),
                             data=tmp,
                             start=list(logEC50=startlogEC50[[i]],slope=1)))
@@ -143,7 +158,8 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
                     }
                 }
 
-                if (lognorm) {
+                if (lognorm &&
+                    length(subset(allWrong,allWrong == i))==0) {
                     m <- try(nls(response ~ pnorm(-log10(dose),-logEC50,slope),
                                 data=tmp,
                                 start=list(logEC50=startlogEC50[[i]],slope=1)))
@@ -155,6 +171,7 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
                             sigma[[ri]] <- s$sigma
                             rsubstance[[ri]] <- i
                             rn[[ri]] <- n
+                            runit[[ri]] <- unit
                             rlld[[ri]] <- log10(lowestdose)
                             rlhd[[ri]] <- log10(highestdose)
                             mtype[[ri]] <- "lognorm"
@@ -184,9 +201,11 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
             if (nodata) {
                 rlld[[ri]] <- rlhd[[i]] <- NA
                 mtype[[ri]] <- "no data"
+                runit[[ri]] <- NA
             } else {
                 rlld[[ri]] <- log10(lowestdose)
                 rlhd[[i]] <- log10(highestdose)
+                runit[[ri]] <- unit
                 if (inactive) {
                     mtype[[ri]] <- "inactive"
                 } else {
@@ -201,7 +220,7 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
             f[[ri]] <- NA
         }
     }
-    results <- data.frame(rsubstance, rn, rlld, rlhd, mtype, logEC50, stderrlogEC50, unit, sigma)
+    results <- data.frame(rsubstance, rn, rlld, rlhd, mtype, logEC50, stderrlogEC50, runit, sigma)
     names(results) <- c("Substance","n","lld","lhd","mtype","logEC50","std","unit","sigma")
     if (lognorm || logis) {
         results$slope <- slope
