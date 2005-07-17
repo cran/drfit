@@ -1,12 +1,12 @@
-\name{linearlogisf}
-\alias{linearlogisf}
+\name{linlogitf}
+\alias{linlogitf}
 \title{Linear-logistic function}
 \description{
   Helper function describing a special type of dose-response curves, showing a stimulus
   at subtoxic doses.
 }
 \usage{
-  linearlogisf(x,k,f,mu,b)
+  linlogitf(x,k,f,mu,b)
 }
 \arguments{
   \item{x}{

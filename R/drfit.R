@@ -31,15 +31,15 @@ drdata <- function(substances, experimentator = "%", db = "cytotox",
     return(data)
 }
     
-linearlogisf <- function(x,k,f,mu,b)
+linlogitf <- function(x,k,f,mu,b)
 {
     k*(1 + f*x) / (1 + ((2*f*(10^mu) + 1) * ((x/(10^mu))^b)))
 }
 
 drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
-        lognorm = TRUE, logis = FALSE,
-        linearlogis = FALSE, linearlogisWrong = NA, allWrong = NA,
-        b0 = 2, f0 = 0)
+        probit = TRUE, logit = FALSE, weibull = FALSE,
+        linlogit = FALSE, linlogitWrong = NA, allWrong = NA,
+        s0 = 0.5, b0 = 2, f0 = 0)
 {
     if(!is.null(data$ok)) data <- subset(data,ok!="no fit") # Don't use data where ok 
                                                             # was set to "no fit"
@@ -56,9 +56,7 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
     sigma <- array()                      # the standard deviation of the residuals
     logEC50 <- vector()
     stderrlogEC50 <- vector()
-    slope <- vector()
-    b <- vector()
-    f <- vector()
+    a <- b <- c <- vector()
 
     splitted <- split(data,data$substance)
     for (i in substances) {
@@ -95,10 +93,10 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
             if (responseathighestdose < 0.5) {
                 inactive <- FALSE
 
-                if (linearlogis && 
-                    length(subset(linearlogisWrong,linearlogisWrong == i))==0 &&
+                if (linlogit && 
+                    length(subset(linlogitWrong,linlogitWrong == i))==0 &&
                     length(subset(allWrong,allWrong == i))==0) {
-                    m <- try(nls(response ~ linearlogisf(dose,1,f,logEC50,b),
+                    m <- try(nls(response ~ linlogitf(dose,1,f,logEC50,b),
                             data=tmp,
                             start=list(f=f0,logEC50=startlogEC50[[i]],b=b0)))
                     if (!inherits(m, "try-error")) {
@@ -111,58 +109,28 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
                         runit[[ri]] <- unit
                         rlld[[ri]] <- log10(lowestdose)
                         rlhd[[ri]] <- log10(highestdose)
-                        mtype[[ri]] <- "linearlogis"
+                        mtype[[ri]] <- "linlogit"
                         logEC50[[ri]] <- coef(m)[["logEC50"]]
-                        slope[[ri]] <- NA
                         if (logEC50[[ri]] > rlhd[[ri]]) {
                             logEC50[[ri]] <- NA
                             stderrlogEC50[[ri]] <- NA
+                            a[[ri]] <- NA
                             b[[ri]] <- NA
-                            f[[ri]] <- NA
+                            c[[ri]] <- NA
                         } else {
                             stderrlogEC50[[ri]] <- s$parameters["logEC50","Std. Error"]
+                            a[[ri]] <- coef(m)[["logEC50"]]
                             b[[ri]] <- coef(m)[["b"]]
-                            f[[ri]] <- coef(m)[["f"]]
+                            c[[ri]] <- coef(m)[["f"]]
                         }
                     }
                 }
 
-                if (logis &&
+                if (weibull &&
                     length(subset(allWrong,allWrong == i))==0) {
-                    m <- try(nls(response ~ plogis(-log10(dose),-logEC50,slope),
+                    m <- try(nls(response ~ pweibull(-log10(dose)+location,shape),
                             data=tmp,
-                            start=list(logEC50=startlogEC50[[i]],slope=1)))
-                    if (chooseone==FALSE || fit==FALSE) {
-                        if (!inherits(m, "try-error")) {
-                            fit <- TRUE
-                            ri <- ri + 1
-                            s <- summary(m)
-                            sigma[[ri]] <- s$sigma
-                            rsubstance[[ri]] <- i
-                            rn[[ri]] <- n
-                            rlld[[ri]] <- log10(lowestdose)
-                            rlhd[[ri]] <- log10(highestdose)
-                            mtype[[ri]] <- "logis"
-                            logEC50[[ri]] <- coef(m)[["logEC50"]]
-                            b[[ri]] <- NA
-                            f[[ri]] <- NA
-                            if (logEC50[[ri]] > rlhd[[ri]]) {
-                                logEC50[[ri]] <- NA
-                                slope[[ri]] <- NA
-                                stderrlogEC50[[ri]] <- NA
-                            } else {
-                                slope[[ri]] <- coef(m)[["slope"]]
-                                stderrlogEC50[[ri]] <- s$parameters["logEC50","Std. Error"]
-                            }
-                        }
-                    }
-                }
-
-                if (lognorm &&
-                    length(subset(allWrong,allWrong == i))==0) {
-                    m <- try(nls(response ~ pnorm(-log10(dose),-logEC50,slope),
-                                data=tmp,
-                                start=list(logEC50=startlogEC50[[i]],slope=1)))
+                            start=list(location=startlogEC50[[i]],shape=s0)))
                     if (chooseone==FALSE || fit==FALSE) {
                         if (!inherits(m, "try-error")) {
                             fit <- TRUE
@@ -174,17 +142,86 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
                             runit[[ri]] <- unit
                             rlld[[ri]] <- log10(lowestdose)
                             rlhd[[ri]] <- log10(highestdose)
-                            mtype[[ri]] <- "lognorm"
-                            logEC50[[ri]] <- coef(m)[["logEC50"]]
-                            b[[ri]] <- NA
-                            f[[ri]] <- NA
+                            mtype[[ri]] <- "weibull"
+                            a[[ri]] <- coef(m)[["location"]]
+                            b[[ri]] <- coef(m)[["shape"]]
+                            sqrdev <- function(logdose) {
+                                (0.5 - pweibull( - logdose + a[[ri]], b[[ri]]))^2 
+                            }
+                            logEC50[[ri]] <- nlm(sqrdev,startlogEC50[[i]])$estimate
+                            c[[ri]] <- NA
                             if (logEC50[[ri]] > rlhd[[ri]]) {
                                 logEC50[[ri]] <- NA
-                                slope[[ri]] <- NA
                                 stderrlogEC50[[ri]] <- NA
+                                a[[ri]] <- NA
+                                b[[ri]] <- NA
                             } else {
-                                slope[[ri]] <- coef(m)[["slope"]]
+                                stderrlogEC50[[ri]] <- NA
+                            }
+                        }
+                    }
+                }
+
+                if (logit &&
+                    length(subset(allWrong,allWrong == i))==0) {
+                    m <- try(nls(response ~ plogis(-log10(dose),-logEC50,scale),
+                            data=tmp,
+                            start=list(logEC50=startlogEC50[[i]],scale=1)))
+                    if (chooseone==FALSE || fit==FALSE) {
+                        if (!inherits(m, "try-error")) {
+                            fit <- TRUE
+                            ri <- ri + 1
+                            s <- summary(m)
+                            sigma[[ri]] <- s$sigma
+                            rsubstance[[ri]] <- i
+                            rn[[ri]] <- n
+                            runit[[ri]] <- unit
+                            rlld[[ri]] <- log10(lowestdose)
+                            rlhd[[ri]] <- log10(highestdose)
+                            mtype[[ri]] <- "logit"
+                            logEC50[[ri]] <- a[[ri]] <- coef(m)[["logEC50"]]
+                            b[[ri]] <- coef(m)[["scale"]]
+                            c[[ri]] <- NA
+                            if (logEC50[[ri]] > rlhd[[ri]]) {
+                                logEC50[[ri]] <- NA
+                                stderrlogEC50[[ri]] <- NA
+                                a[[ri]] <- NA
+                                b[[ri]] <- NA
+                            } else {
                                 stderrlogEC50[[ri]] <- s$parameters["logEC50","Std. Error"]
+                            }
+                        }
+                    }
+                }
+
+                if (probit &&
+                    length(subset(allWrong,allWrong == i))==0) {
+                    m <- try(nls(response ~ pnorm(-log10(dose),-logEC50,scale),
+                                data=tmp,
+                                start=list(logEC50=startlogEC50[[i]],scale=1)))
+                    if (chooseone==FALSE || fit==FALSE) {
+                        if (!inherits(m, "try-error")) {
+                            fit <- TRUE
+                            ri <- ri + 1
+                            s <- summary(m)
+                            sigma[[ri]] <- s$sigma
+                            rsubstance[[ri]] <- i
+                            rn[[ri]] <- n
+                            runit[[ri]] <- unit
+                            rlld[[ri]] <- log10(lowestdose)
+                            rlhd[[ri]] <- log10(highestdose)
+                            mtype[[ri]] <- "probit"
+                            logEC50[[ri]] <- coef(m)[["logEC50"]]
+                            c[[ri]] <- NA
+                            if (logEC50[[ri]] > rlhd[[ri]]) {
+                                logEC50[[ri]] <- NA
+                                stderrlogEC50[[ri]] <- NA
+                                a[[ri]] <- NA
+                                b[[ri]] <- NA
+                            } else {
+                                stderrlogEC50[[ri]] <- s$parameters["logEC50","Std. Error"]
+                                a[[ri]] <- coef(m)[["logEC50"]]
+                                b[[ri]] <- coef(m)[["scale"]]
                             }
                         }
                     }
@@ -215,19 +252,15 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
             sigma[[ri]] <- NA
             logEC50[[ri]] <- NA
             stderrlogEC50[[ri]] <- NA
-            slope[[ri]] <- NA
+            a[[ri]] <- NA
             b[[ri]] <- NA
-            f[[ri]] <- NA
+            c[[ri]] <- NA
         }
     }
-    results <- data.frame(rsubstance, rn, rlld, rlhd, mtype, logEC50, stderrlogEC50, runit, sigma)
-    names(results) <- c("Substance","n","lld","lhd","mtype","logEC50","std","unit","sigma")
-    if (lognorm || logis) {
-        results$slope <- slope
-    }
-    if (linearlogis) {
-        results$b <- b
-        results$f <- f
+    results <- data.frame(rsubstance, rn, rlld, rlhd, mtype, logEC50, stderrlogEC50, runit, sigma, a, b)
+    names(results) <- c("Substance","n","lld","lhd","mtype","logEC50","std","unit","sigma","a","b")
+    if (linlogit) {
+        results$c <- c
     }
     return(results)
 }
@@ -235,7 +268,7 @@ drfit <- function(data, startlogEC50 = NA, chooseone=TRUE,
 drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
         path = "./", fileprefix = "drplot", overlay = FALSE,
         postscript = FALSE, png = FALSE, bw = TRUE,
-        colors = 1:8,devoff=T,lpos=FALSE)
+        colors = 1:8,devoff=T,lpos="topright")
 {
     unitlevels <- levels(as.factor(drresults$unit))
     if (length(unitlevels) == 1) {
@@ -257,20 +290,11 @@ drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
     } else {
         lld <- min(drresults[["logEC50"]],na.rm=TRUE) - 2
         lhd <- max(drresults[["logEC50"]],na.rm=TRUE) + 2
-        if (length(subset(drresults,mtype=="linearlogis")$Substance) != 0) {
+        if (length(subset(drresults,mtype=="linlogit")$Substance) != 0) {
             hr <- 1.8 
         } else {
             hr <- 1.0
         }
-    }
-
-    # Legend position
-    if (!lpos[[1]]) {
-        lx <- lhd - 1
-        ly <- hr + 0.1
-    } else {
-        lx <- lpos[[1]]
-        ly <- lpos[[2]]
     }
 
     # Prepare overlay plot if requested
@@ -335,7 +359,7 @@ drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
                         xlab=paste("Decadic Logarithm of the dose in ", unit),    
                         ylab="Normalized response")
                 }
-                if (!overlay) legend(lx, ly, i,lty = 1, col = color)
+                if (!overlay) legend(lpos, i,lty = 1, col = color, inset=0.05)
                 tmp$dosefactor <- factor(tmp$dose)  # necessary because the old
                                                     # factor has all levels, not 
                                                     # only the ones tested with
@@ -381,16 +405,21 @@ drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
                     {
                         logEC50 <- fits[j,"logEC50"]
                         mtype <- as.character(fits[j, "mtype"])
-                        if (mtype == "lognorm") {
-                            slope <- fits[j,"slope"]
-                            plot(function(x) pnorm(-x,-logEC50,slope),lld - 0.5, lhd + 2, add=TRUE,col=color)
+                        if (mtype == "probit") {
+                            scale <- fits[j,"b"]
+                            plot(function(x) pnorm(-x,-logEC50,scale),lld - 0.5, lhd + 2, add=TRUE,col=color)
                         }
-                        if (mtype == "logis") {
-                            slope <- fits[j,"slope"]
-                            plot(function(x) plogis(-x,-logEC50,slope),lld - 0.5, lhd + 2, add=TRUE,col=color)
+                        if (mtype == "logit") {
+                            scale <- fits[j,"b"]
+                            plot(function(x) plogis(-x,-logEC50,scale),lld - 0.5, lhd + 2, add=TRUE,col=color)
                         }
-                        if (mtype == "linearlogis") {
-                            plot(function(x) linearlogisf(10^x,1,fits[j,"f"],fits[j,"logEC50"],fits[j,"b"]),
+                        if (mtype == "weibull") {
+                            location <- fits[j,"a"]
+                            shape <- fits[j,"b"]
+                            plot(function(x) pweibull(-x+location,shape),lld - 0.5, lhd + 2, add=TRUE,col=color)
+                        }
+                        if (mtype == "linlogit") {
+                            plot(function(x) linlogitf(10^x,1,fits[j,"c"],fits[j,"logEC50"],fits[j,"b"]),
                                 lld - 0.5, lhd + 2,
                                 add=TRUE,col=color)
                         }
@@ -402,7 +431,7 @@ drplot <- function(drresults, data, dtype = "std", alpha = 0.95,
             }
         }
     }
-    if (overlay) legend(lx, ly, dsubstances,lty = 1, col = colors)
+    if (overlay) legend(lpos, dsubstances,lty = 1, col = colors, inset=0.05)
     if (overlay && (postscript || png)) {
         if (devoff) {
             dev.off()
@@ -484,7 +513,7 @@ checkplate <- function(plate,db="cytotox")
             points(log10(drdatalist[[i]]$conc),drdatalist[[i]][[responsetype]],col=i);
         }
 
-        legend(3.0,1.5,substances, pch=1, col=1:length(substances))
+        legend("topright",substances, pch=1, col=1:length(substances), inset=0.05)
         title(main=paste("Plate ",plate," - ",levels(platedata$experimentator)," - ",levels(platedata$type)))
     }
 }
@@ -540,7 +569,7 @@ checksubstance <- function(substance,db="cytotox",experimentator="%",celltype="%
         points(log10(platelist[[i]]$conc),platelist[[i]][[responsetype]],col=i);          
     }       
     
-    legend(3.5,1.7,plates, pch=1, col=1:length(plates))
+    legend("topright", plates, pch=1, col=1:length(plates), inset=0.05)
     title(main=paste(substance," - ",levels(data$experimentator)," - ",levels(data$type)))
  
     cat("Substanz ",substance,"\n",

@@ -63,7 +63,9 @@
     This is a vector of colors, defaulting to 1:8, used for plotting the data.
     }
   \item{lpos}{
-    A optional vector with the x and y position of the upper left corner of the legend. The default guess is not always the optimum.}
+    An optional argument defaulting to "topright" specifying the position
+    of the legend by being passed to the legend function. See the help for the
+    legend function for all possiblities.} 
   \item{devoff}{
     If set to FALSE, the closing of the device after creation of an overlay png
     or postscript graph will be left out, so texts and other elements can be 
@@ -78,9 +80,8 @@
     
 } 
 \note{
-  Treatment of legends is not really well solved. Be sure all devices are
-  closed (e.g. by calling \code{dev.off()}) before calling \code{drplot}
-  again after a failure.
+  Be sure all devices are closed (e.g. by calling \code{dev.off()}) before
+  calling \code{drplot} again after a failure.
 }
 \examples{
 data(antifoul)
