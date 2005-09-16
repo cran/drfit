@@ -1,0 +1,24 @@
+#!/bin/sh
+# debian/postinst file for r-cran-packages
+# Copyright 2004, 2005 by Dirk Eddelbuettel <edd@debian.org>
+
+set -e
+
+
+
+case "$1" in
+    configure)
+	if test -x /usr/bin/R; then
+	    /usr/bin/R CMD perl /usr/lib/R/share/perl/build-help.pl --htmllists
+        fi
+        ;;
+    abort-upgrade|abort-remove|abort-deconfigure)
+        ;;
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        ;;
+esac
+
+
+exit 0
+

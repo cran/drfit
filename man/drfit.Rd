@@ -51,8 +51,8 @@
     An optional vector containing the names of the substances for which all
     functions produce a wrong fit.}
   \item{chooseone}{
-    If TRUE (default), the models are tried in the order linlogit, weibull,
-    logit, probit, and the first model that produces a valid fit is used.
+    If TRUE (default), the models are tried in the order linlogit, probit,
+    logit, weibull, and the first model that produces a valid fit is used.
     If FALSE, all models that are set to TRUE and that can be fitted will be
     reported.}
   \item{s0}{

@@ -7,7 +7,7 @@
 }
 \usage{
   drplot(drresults, data, dtype, alpha, path, fileprefix, overlay,
-    postscript, png, bw, colors, devoff, lpos)
+    postscript, png, bw, pointsize, colors, devoff, lpos)
 }
 \arguments{
   \item{drresults}{
@@ -58,6 +58,9 @@
   \item{bw}{
     A boolean deciding if the plots will be black and white or not. Default 
     is TRUE.
+    }
+  \item{pointsize}{
+    The pointsize used for png and postscript graphics.
     }
   \item{colors}{
     This is a vector of colors, defaulting to 1:8, used for plotting the data.

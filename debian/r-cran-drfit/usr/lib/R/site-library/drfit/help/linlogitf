@@ -1,0 +1,40 @@
+linlogitf               package:drfit               R Documentation
+
+_L_i_n_e_a_r-_l_o_g_i_s_t_i_c _f_u_n_c_t_i_o_n
+
+_D_e_s_c_r_i_p_t_i_o_n:
+
+     Helper function describing a special type of dose-response curves,
+     showing a stimulus at subtoxic doses.
+
+_U_s_a_g_e:
+
+       linlogitf(x,k,f,mu,b)
+
+_A_r_g_u_m_e_n_t_s:
+
+       x: In this context, the x variable is the dose.
+
+       k: In the drfit functions, k is set to 1.
+
+       f: One of the parameters describing the curve shape.
+
+      mu: The parameter describing the location of the curve (log
+          EC50).
+
+       b: One of the parameters describing the curve shape.
+
+_V_a_l_u_e:
+
+     The response at dose x.
+
+_A_u_t_h_o_r(_s):
+
+     Johannes Ranke  jranke@uni-bremen.de  <URL:
+     http://www.uft.uni-bremen.de/chemie/ranke>
+
+_R_e_f_e_r_e_n_c_e_s:
+
+     van Ewijk, P. H. and Hoekstra, J. A. (1993) _Ecotox Environ
+     Safety_ *25* 25-32
+

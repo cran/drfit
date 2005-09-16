@@ -6,7 +6,8 @@
 }
 \usage{
   drdata(substances, experimentator = "\%", db = "cytotox", celltype = "IPC-81", 
-    enzymetype="AChE", whereClause = "1", ok = "'ok','no fit'")
+    enzymetype="AChE", organism="Vibrio fischeri", endpoint="Luminescence", 
+    whereClause = "1", ok = "'ok','no fit'")
 }
 \arguments{
   \item{substances}{
@@ -23,6 +24,12 @@
     Currently, only data for IPC-81, C6, NB4, HeLa, Jurkat and U937 are supported.}
   \item{enzymetype}{
     Currently, only data for AChE, GR and GST are supported.}
+  \item{organism}{
+    The organism that was exposed to the chemical. Only important if the database
+    "ecotox" is used. Defaults to "Vibrio fischeri".}
+  \item{endpoint}{
+    The endpoint that should be used for selecting the data. Only important if the
+    database "ecotox" is used. Defaults to "Vibrio fischeri".}
   \item{whereClause}{
     With this argument, additional conditions for the SQL query can be set, 
     e.g. "where plate != 710". The default is 1 (in SQL syntax this means TRUE).}
