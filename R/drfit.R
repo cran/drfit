@@ -491,6 +491,7 @@ checkplate <- function(plate,db="cytotox")
         meanOfControls <- mean(controls$response)
         stdOfBlinds <- sd(blinds$response)
         stdOfControls <- sd(controls$response)
+        percentstdOfcontrols <-stdOfControls *100/meanOfControls
         
         cat("Plate ",plate," from database ",db,"\n",
             "\tExperimentator: ",levels(platedata$experimentator),"\n",
@@ -499,9 +500,9 @@ checkplate <- function(plate,db="cytotox")
             "\tSubstance(s): ",levels(platedata$substance),"\n",
             "\tConcentration unit: ",levels(platedata$unit),"\n",
             "\tOK: ",levels(platedata$ok),"\n",
-            "\t\tNumber \tMean \tStandard Deviation\n",
-            "blind\t\t",numberOfBlinds,"\t",meanOfBlinds,"\t",stdOfBlinds,"\n",
-            "control\t",numberOfControls,"\t",meanOfControls,"\t",stdOfControls,"\n")
+            "\t\tNumber \tMean \t\tStandard Deviation \t% Standard Deviation \n",
+            "\tblind\t",numberOfBlinds,"\t",meanOfBlinds,"\t",stdOfBlinds,"\n",
+            "\tcontrol\t",numberOfControls,"\t",meanOfControls,"\t",stdOfControls,"\t\t",percentstdOfcontrols,"\n")
         
         par(ask=TRUE)
         
@@ -523,7 +524,7 @@ checkplate <- function(plate,db="cytotox")
             points(log10(drdatalist[[i]]$conc),drdatalist[[i]][[responsetype]],col=i);
         }
 
-        legend("topright",substances, pch=1, col=1:length(substances), inset=0.05)
+        legend("topleft",substances, pch=1, col=1:length(substances), inset=0.05)
         title(main=paste("Plate ",plate," - ",levels(platedata$experimentator)," - ",levels(platedata$type)))
     }
 }
@@ -579,7 +580,7 @@ checksubstance <- function(substance,db="cytotox",experimentator="%",celltype="%
         points(log10(platelist[[i]]$conc),platelist[[i]][[responsetype]],col=i);          
     }       
     
-    legend("topright", plates, pch=1, col=1:length(plates), inset=0.05)
+    legend("topleft", plates, pch=1, col=1:length(plates), inset=0.05)
     title(main=paste(substance," - ",levels(data$experimentator)," - ",levels(data$type)))
  
     cat("Substanz ",substance,"\n",
