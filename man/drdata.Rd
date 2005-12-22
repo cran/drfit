@@ -32,7 +32,8 @@
     database "ecotox" is used. Defaults to "Vibrio fischeri".}
   \item{whereClause}{
     With this argument, additional conditions for the SQL query can be set, 
-    e.g. "where plate != 710". The default is 1 (in SQL syntax this means TRUE).}
+    e.g. "plate != 710" (i.e. "Do not retrieve data for plate 710"). The
+    default is 1 (in SQL syntax this means TRUE).} 
   \item{ok}{
     With the default value "'ok','no fit'", only data that has been checked and set to "ok"
     or "no fit" in the database is retrieved. The argument "no fit" will result

@@ -16,7 +16,7 @@
   \item{f}{
     One of the parameters describing the curve shape.}
   \item{mu}{
-    The parameter describing the location of the curve (log EC50).}
+    The parameter describing the location of the curve (log ED50).}
   \item{b}{
     One of the parameters describing the curve shape.}
 }

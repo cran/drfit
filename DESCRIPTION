@@ -1,6 +1,6 @@
 Package: drfit
-Version: 0.04-42
-Date: 2005-10-10
+Version: 0.04-52
+Date: 2005-12-22
 Title: Dose-response data evaluation
 Author: Johannes Ranke <jranke@uni-bremen.de>
 Maintainer: Johannes Ranke <jranke@uni-bremen.de>
@@ -14,7 +14,7 @@ Description: drfit provides basic functions for fitting dose-response curves to
 	which is used to describe data showing stimulation at low doses
 	(hormesis). 
 	In addition, functions checking, plotting and retrieving dose-response data
-	of the UFT Bremen are provided.
+	retrieved from a database accessed via RODBC are included.
 	I would be delighted if you would join in this effort of creating useful
 	and useable tools for dealing with dose-response data from biological
 	testing.
@@ -22,4 +22,4 @@ License: GPL version 2 or newer
 URL: http://www.r-project.org, 
 	http://www.uft.uni-bremen.de/chemie/ranke,
 	http://kriemhild.uft.uni-bremen.de/viewcvs/?root=drfit
-Packaged: Mon Oct 10 13:40:47 2005; ranke
+Packaged: Thu Dec 22 16:58:26 2005; ranke
