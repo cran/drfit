@@ -11,8 +11,8 @@
 \usage{data(antifoul)}
 \format{
   A dataframe containing 135 and 81 data points for concentrations and responses
-  for TBT and Zink Pyrithione, respectively. Additional data from the database is 
-  also present.
+  for TBT and Zink Pyrithione, respectively. Some additional columns from the
+  database are also present.
 }
 \source{
   \url{http://www.uft.uni-bremen.de/chemie}

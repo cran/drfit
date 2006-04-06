@@ -6,8 +6,9 @@
   either combined or separately, for one or more substances.
 }
 \usage{
-  drplot(drresults, data, dtype, alpha, path, fileprefix, overlay,
-    postscript, png, bw, pointsize, colors, devoff, lpos)
+  drplot(drresults, data, dtype, alpha, ctype, path,
+     fileprefix, overlay, xlim, ylim, postscript, pdf, png, bw,
+     pointsize, colors, devoff, lpos)
 }
 \arguments{
   \item{drresults}{
@@ -31,6 +32,12 @@
     The confidence level, defaulting to 0.95, only used if dtype "conf" has been
     chosen.
     }
+  \item{ctype}{
+    This argument decides if horizontal lines are drawn to show the scatter of 
+    the control values (dose = 0, mean response = 1). Defaults to "none",
+    further allowed values are "std" and "conf" for displaying the standard deviation
+    of the controls or the confidence interval for the mean of the controls.
+    }
   \item{path}{
     The path where graphic files should be put if any are produced. Defaults
     to "./" i.e. the current working directory of R.
@@ -45,15 +52,26 @@
     (postscript=FALSE) only works correctly for data plots. Dose-response models
     will all be put into the last graph in this case.
     }
+  \item{xlim}{
+    The plot limits (min,max) on the dose axis.
+  }
+  \item{ylim}{
+    The plot limits (min,max) on the response axis.
+  }
   \item{postscript}{
     If TRUE, (a) postscript graph(s) will be created. Otherwise, and if 
-    the png argument is also FALSE, graphics will be
+    the pdf and png arguments are also FALSE, graphics will be
+    displayed with a screen graphics device.
+    }
+  \item{pdf}{
+    If TRUE, (a) pdf graph(s) will be created. Otherwise, and if 
+    the postscript and png arguments are also FALSE, graphics will be
     displayed with a screen graphics device.
     }
   \item{png}{
     If TRUE, (a) png graph(s) will be created. Otherwise, and if the
-    postscript argument is also FALSE, graphics will be displayed with a
-    screen graphics device.
+	postscript and pdf arguments are also FALSE, graphics will be displayed
+	with a screen graphics device.
     }
   \item{bw}{
     A boolean deciding if the plots will be black and white or not. Default 
