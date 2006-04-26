@@ -18,8 +18,9 @@ Author and Maintainer: Johannes Ranke <jranke@uni-bremen.de>
 \keyword{ regression }
 \keyword{ nonlinear }
 \seealso{
-There is another, more sophisticated package with similar functionality
-called \code{\link[drc:drc-package]{drc}}
+There is another, more statistically sophisticated package with similar
+functionality called \code{\link[drc:drc-package]{drc}}. I think my package is
+more user-friendly, though.
 }
 \examples{
 data(antifoul)

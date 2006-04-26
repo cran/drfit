@@ -6,7 +6,7 @@
   This is just a sample Lemna growth rate data set for two substances 
   arbitrarily named X and Y.
 }
-\usage{data(antifoul)}
+\usage{data(XY)}
 \format{
   A dataframe containing dose (concentration) and response data, as well as
   control values where the dose is zero.

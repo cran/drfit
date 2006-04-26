@@ -25,12 +25,7 @@ drplot <- function(drresults, data,
         if (nc > 0) {
             sdc <- sd(zerodata$response)
             controlconf <- sdc * qt((1 + alpha)/2, nc - 1) / sqrt(nc)
-            cat("There are ",nc,"data points with dose 0 (control values)\n")
-            cat("with a standard deviation of",sdc,"\n")
-            cat("and a confidence interval of",controlconf,"\n")
             if (nc < 3) {
-                cat("\nThere are less than 3 control points, therefore their scatter\n")
-                cat("will not be displayed\n")
                 ctype = "none"
             }
         } else {
@@ -82,15 +77,17 @@ drplot <- function(drresults, data,
                 width=500, height=500, pointsize=pointsize)
             cat("Created File: ",filename,"\n")
         }
-        if (!postscript && !png && !pdf) {
-            get(getOption("device"))(width=7,height=7)
-        }
             
         plot(0,type="n",
             xlim = xlim,
             ylim = ylim,
             xlab = paste("Decadic Logarithm of the dose in ", unit),    
             ylab = "Normalized response")
+    } else {
+        # If overlay plot is not requested, ask before showing multiple plots on the screen
+        if (!postscript && !png && !pdf) {
+            par(ask=TRUE)
+        }
     }
 
     # Plot the data either as raw data or as error bars
@@ -125,9 +122,6 @@ drplot <- function(drresults, data,
                         png(filename=filename,
                             width=500, height=500, pointsize=pointsize)
                         cat("Created File: ",filename,"\n")
-                    }
-                    if (!postscript && !png && !pdf) {
-                         get(getOption("device"))(width=7,height=7)
                     }
                         
                     plot(0,type="n",

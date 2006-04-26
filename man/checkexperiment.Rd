@@ -14,9 +14,9 @@
   \item{id}{
     The id of the experiment or the plate identifying it within the database.}
   \item{db}{
-	The database to be used. Currently, the microtiter plate databases
-	"cytotox", "enzymes" of the UFT Department of Bioorganic Chemistry are
-	supported, as well as the database of ecotoxicity experiments "ecotox".}
+  The database to be used. Currently, the microtiter plate databases
+  "cytotox", "enzymes" of the UFT Department of Bioorganic Chemistry are
+  supported, as well as the database of ecotoxicity experiments "ecotox".}
 }
 \value{
   The function lists a report and shows two graphs side by side.

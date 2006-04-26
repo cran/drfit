@@ -9,8 +9,8 @@
 }
 \usage{data(pyrithione)}
 \format{
-  A dataframe containing the data as required for the \code{\link{drfit}} function.
-}
+  A dataframe containing the data as required for the \code{\link{drfit}}
+  function.  }
 \source{
   Doose C, Ranke J, Stock F, Bottin-Weber U, Jastorff B (2004)
   Structure-activity relationships of pyrithiones - IPC-81 toxicity tests with

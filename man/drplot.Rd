@@ -2,7 +2,7 @@
 \alias{drplot}
 \title{Plot dose-response models}
 \description{
-	Produce graphics of dose-response data and dose-response relationships 
+  Produce graphics of dose-response data and dose-response relationships 
   either combined or separately, for one or more substances.
 }
 \usage{
@@ -34,17 +34,18 @@
     }
   \item{ctype}{
     This argument decides if horizontal lines are drawn to show the scatter of 
-    the control values (dose = 0, mean response = 1). Defaults to "none",
-    further allowed values are "std" and "conf" for displaying the standard deviation
-    of the controls or the confidence interval for the mean of the controls.
+    the control values (dose = 0), if there are more than three of them.
+    Defaults to "none", further allowed values are "std" and "conf" for
+    displaying the standard deviation of the controls or the confidence
+    interval for the mean of the controls.
     }
   \item{path}{
     The path where graphic files should be put if any are produced. Defaults
     to "./" i.e. the current working directory of R.
     }
   \item{fileprefix}{
-    A string which will form the beginning of each filename, if graphic files are 
-    created. Defaults to "drplot".
+    A string which will form the beginning of each filename, if graphic files
+    are created. Defaults to "drplot".
     }
   \item{overlay}{
     If TRUE, all output will be put into one graph, otherwise a separate graph
@@ -70,8 +71,8 @@
     }
   \item{png}{
     If TRUE, (a) png graph(s) will be created. Otherwise, and if the
-	postscript and pdf arguments are also FALSE, graphics will be displayed
-	with a screen graphics device.
+    postscript and pdf arguments are also FALSE, graphics will be displayed
+    with a screen graphics device.
     }
   \item{bw}{
     A boolean deciding if the plots will be black and white or not. Default 
@@ -98,7 +99,6 @@
     You will get plots of data and/or the fitted dose-response curves, on the
     screen and/or as postscript files, depending on the parameters.
     }
-    
 } 
 \note{
   Be sure all devices are closed (e.g. by calling \code{dev.off()}) before
