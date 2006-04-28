@@ -1,6 +1,6 @@
 Package: drfit
-Version: 0.05-73
-Date: 2006-04-26
+Version: 0.05-75
+Date: 2006-04-28
 Title: Dose-response data evaluation
 Author: Johannes Ranke <jranke@uni-bremen.de>
 Maintainer: Johannes Ranke <jranke@uni-bremen.de>
@@ -19,4 +19,4 @@ License: GPL version 2 or newer
 URL: http://www.r-project.org, 
 	http://www.uft.uni-bremen.de/chemie/ranke,
 	http://kriemhild.uft.uni-bremen.de/viewcvs/?root=drfit
-Packaged: Wed Apr 26 17:12:45 2006; ranke
+Packaged: Fri Apr 28 16:08:13 2006; ranke

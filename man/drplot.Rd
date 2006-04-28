@@ -49,9 +49,7 @@
     }
   \item{overlay}{
     If TRUE, all output will be put into one graph, otherwise a separate graph
-    will be created for each substance. In the latter case, on-screen display
-    (postscript=FALSE) only works correctly for data plots. Dose-response models
-    will all be put into the last graph in this case.
+    will be created for each substance. 
     }
   \item{xlim}{
     The plot limits (min,max) on the dose axis.
@@ -66,7 +64,7 @@
     }
   \item{pdf}{
     If TRUE, (a) pdf graph(s) will be created. Otherwise, and if 
-    the postscript and png arguments are also FALSE, graphics will be
+    the postscript, and png arguments are also FALSE, graphics will be
     displayed with a screen graphics device.
     }
   \item{png}{
@@ -79,7 +77,7 @@
     is TRUE.
     }
   \item{pointsize}{
-    The pointsize used for png and postscript graphics.
+    The pointsize used for pdf, png and postscript graphics.
     }
   \item{colors}{
     This is a vector of colors, defaulting to 1:8, used for plotting the data.
@@ -89,26 +87,24 @@
     of the legend by being passed to the legend function. See the help for the
     legend function for all possiblities.} 
   \item{devoff}{
-    If set to FALSE, the closing of the device after creation of an overlay png
-    or postscript graph will be left out, so texts and other elements can be 
-    added to the graph.
+    If set to FALSE, the device will not be closed after creation of an overlay
+    pdf, png or postscript graph, so texts and other elements can
+    be added.
     }
 }
 \value{
   \item{results}{
     You will get plots of data and/or the fitted dose-response curves, on the
-    screen and/or as postscript files, depending on the parameters.
+    screen and/or as postscript/pdf/png files, depending on the parameters.
     }
 } 
-\note{
-  Be sure all devices are closed (e.g. by calling \code{dev.off()}) before
-  calling \code{drplot} again after a failure.
-}
 \examples{
 data(antifoul)
 r <- drfit(antifoul)
 \dontrun{drplot(r,antifoul)}
 }
+\note{There is a demo for each dataset that can be accessed by
+  \code{demo(dataset)}} 
 \author{
   Johannes Ranke 
   \email{jranke@uni-bremen.de} 

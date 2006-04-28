@@ -100,6 +100,8 @@ data(antifoul)
 r <- drfit(antifoul)
 format(r,digits=2)
 }
+\note{There is a demo for each dataset that can be accessed by
+  \code{demo(dataset)}} 
 \author{
   Johannes Ranke 
   \email{jranke@uni-bremen.de} 

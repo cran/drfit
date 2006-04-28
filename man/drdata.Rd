@@ -1,8 +1,8 @@
 \name{drdata}
 \alias{drdata}
-\title{Get dose-response data}
+\title{Get dose-response data via RODBC}
 \description{
-	Get dose-response data from a remote mysql server 
+	Get dose-response data from an adequate ODBC data source
 }
 \usage{
   drdata(substances, experimentator = "\%", db = "cytotox", celltype = "IPC-81", 
@@ -14,39 +14,40 @@
     A string or an array of strings with the substance names for
     which dose-response data is to be retrieved.}
   \item{experimentator}{
-    The name of the experimentator whose data is to be used. Default is "%", which
-    means that data from all experimentators are retrieved.}
+    The name of the experimentator whose data is to be used. Default is "%",
+    which means that data from all experimentators are retrieved.}
   \item{db}{
-    The database to be used. Currently, the databases "cytotox" and "enzymes"
-    of the UFT Department of Bioorganic Chemistry are supported (default is
-    "cytotox").} 
+    The database to be used. Currently, the databases "cytotox", "enzymes"
+    and "ecotox" of the UFT Department of Bioorganic Chemistry are 
+    supported (default is "cytotox").} 
   \item{celltype}{
-    Currently, only data for IPC-81, C6, NB4, HeLa, Jurkat and U937 are supported.}
+    Currently, only data for IPC-81, C6, NB4, HeLa, Jurkat and U937 are
+    supported.} 
   \item{enzymetype}{
     Currently, only data for AChE, GR and GST are supported.}
   \item{organism}{
     The organism that was exposed to the chemical. Only important if the database
     "ecotox" is used. Defaults to "Vibrio fischeri".}
   \item{endpoint}{
-    The endpoint that should be used for selecting the data. Only important if the
-    database "ecotox" is used. Defaults to "Vibrio fischeri".}
+    The endpoint that should be used for selecting the data. Only important if
+    the database "ecotox" is used. Defaults to "Luminescence".}
   \item{whereClause}{
     With this argument, additional conditions for the SQL query can be set, 
     e.g. "plate != 710" (i.e. "Do not retrieve data for plate 710"). The
     default is 1 (in SQL syntax this means TRUE).} 
   \item{ok}{
-    With the default value "'ok','no fit'", only data that has been checked and set to "ok"
-    or "no fit" in the database is retrieved. The argument "no fit" will result
-    in not using the data for fitting, but it will be plotted.
-    Another sensible argument would be "'ok','no fit','?'", in order to additionally
-    retrieve data which has not yet been checked.}
+    With the default value "'ok','no fit'", only data that has been checked and
+    set to "ok" or "no fit" in the database is retrieved. The argument "no fit"
+    will result in not using the data for fitting, but it will be plotted.
+    Another sensible argument would be "'ok','no fit','?'", in order to
+    additionally retrieve data which has not yet been checked.}
 }
 \value{
   \item{data}{
-    A data frame with a factor describing the dose levels, the numeric dose levels
-    and a numeric column describing the response, as well as the entries for
-    plate, experimentator, performed (date of test performance), celltype, unit
-    (of the dose/concentration), and for the ok field in the database.}
+    A data frame with a factor describing the dose levels, the numeric dose
+    levels and a numeric column describing the response, as well as the entries
+    for plate, experimentator, performed (date of test performance), celltype,
+    unit (of the dose/concentration), and for the ok field in the database.}
 }
 \details{
   The function is currently only used for retrieving data from the
@@ -74,11 +75,12 @@
     Database \tab = \tab cytotox  \cr
     Server \tab = \tab eckehaat  \cr
     Port \tab = \tab 3306  \cr
-  }.
+  }
 }
 \examples{
-# Get cytotoxicity data for Tributyltin and zinc pyrithione, tested with IPC-81 cells
-\dontrun{data <- drdata(c("TBT","ZnPT2"))}
+# Get cytotoxicity data for Tributyltin and zinc pyrithione, tested with IPC-81
+# cells
+\dontrun{drdata(c("TBT","ZnPT2"))}
 }
 \author{
   Johannes Ranke 

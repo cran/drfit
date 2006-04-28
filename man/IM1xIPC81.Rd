@@ -20,6 +20,9 @@
   \code{\link{drfit}} function. An additional column contains
   the tested organism (name of the cell line).
 }
+\examples{
+  \dontrun{demo(IM1xIPC81)}
+}
 \source{
   Ranke J, Mölter K, Stock F, Bottin-Weber U, Poczobutt J,
   Hoffmann J, Ondruschka B, Filser J, Jastorff B (2004)

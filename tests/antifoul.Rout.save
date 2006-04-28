@@ -1,0 +1,33 @@
+
+R : Copyright 2006, The R Foundation for Statistical Computing
+Version 2.3.0 (2006-04-24)
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(drfit)
+Loading required package: RODBC
+> data(antifoul)
+> rantifoul <- drfit(antifoul)
+
+TBT: Fitting data...
+
+Zn Pyrithion: Fitting data...
+> rantifoul
+     Substance ndl   n       lld     lhd  mtype    logED50        std unit
+1          TBT  38 135 -2.709271 2.39794 probit -0.1643560 0.05349216   µM
+2 Zn Pyrithion  27  81 -2.107210 2.00000 probit -0.3979222 0.05393693   µM
+      sigma          a         b
+1 0.1928611 -0.1643560 0.6763882
+2 0.2286560 -0.3979222 0.4169632
+> 

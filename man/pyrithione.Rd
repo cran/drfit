@@ -11,6 +11,9 @@
 \format{
   A dataframe containing the data as required for the \code{\link{drfit}}
   function.  }
+\examples{
+  \dontrun{demo(pyrithione)}
+}
 \source{
   Doose C, Ranke J, Stock F, Bottin-Weber U, Jastorff B (2004)
   Structure-activity relationships of pyrithiones - IPC-81 toxicity tests with

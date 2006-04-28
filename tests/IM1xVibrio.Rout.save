@@ -1,0 +1,57 @@
+
+R : Copyright 2006, The R Foundation for Statistical Computing
+Version 2.3.0 (2006-04-24)
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(drfit)
+Loading required package: RODBC
+> data(IM1xVibrio)
+> rIM1xVibrio <- drfit(IM1xVibrio)
+
+IM13 BF4: Fitting data...
+
+IM14 BF4: Fitting data...
+
+IM15 BF4: Fitting data...
+
+IM16 BF4: Fitting data...
+
+IM17 BF4: Fitting data...
+
+IM18 BF4: Fitting data...
+
+IM19 BF4: Fitting data...
+
+IM1-10 BF4: Fitting data...
+> rIM1xVibrio
+   Substance ndl  n      lld     lhd  mtype    logED50        std unit
+1   IM13 BF4  13 22 -5.30103 4.69897 probit  3.9399128 0.03658457   然
+2   IM14 BF4  12 57 -4.30103 4.69897 probit  3.5442110 0.02060194   然
+3   IM15 BF4   7 20 -0.30103 4.69897 probit  3.1398488 0.01254468   然
+4   IM16 BF4  13 30 -4.30103 4.69897 probit  3.1804247 0.01801591   然
+5   IM17 BF4  10 20 -1.30103 4.69897 probit  2.4317301 0.03015341   然
+6   IM18 BF4  10 17 -2.30103 2.69897 probit  1.4015187 0.04053083   然
+7   IM19 BF4  13 22 -5.30103 2.69897 probit  0.7157942 0.02085130   然
+8 IM1-10 BF4  11 20 -6.30103 2.69897 probit -0.1790307 0.03623821   然
+       sigma          a         b
+1 0.06302893  3.9399128 0.5763074
+2 0.05905375  3.5442110 0.6561300
+3 0.02695476  3.1398488 0.5526675
+4 0.04514079  3.1804247 0.4881559
+5 0.04773317  2.4317301 0.6386547
+6 0.05611347  1.4015187 0.8008513
+7 0.02956284  0.7157942 0.6969275
+8 0.04098662 -0.1790307 0.8019351
+> 

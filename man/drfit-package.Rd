@@ -13,14 +13,16 @@ There is a preliminary version of an introductory article located in \url{../doc
 \author{
 Author and Maintainer: Johannes Ranke <jranke@uni-bremen.de>
 }
+\note{There is a demo for each dataset that can be accessed by
+  \code{demo(dataset)}} 
 \keyword{ package }
 \keyword{ models }
 \keyword{ regression }
 \keyword{ nonlinear }
 \seealso{
-There is another, more statistically sophisticated package with similar
-functionality called \code{\link[drc:drc-package]{drc}}. I think my package is
-more user-friendly, though.
+On CRAN, there is another, more statistically sophisticated package with
+similar functionality called \code{\link[drc:drc-package]{drc}}. I think 
+the advantage of my package is its user-friendliness.
 }
 \examples{
 data(antifoul)

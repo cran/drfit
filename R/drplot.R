@@ -7,6 +7,7 @@ drplot <- function(drresults, data,
         pointsize = 12,
         colors = 1:8, devoff=T, lpos="topright")
 {
+    op <- par(no.readonly = TRUE)
     # Check if all data have the same unit
     unitlevels <- levels(as.factor(drresults$unit))
     if (length(unitlevels) == 1) {
@@ -85,9 +86,9 @@ drplot <- function(drresults, data,
             ylab = "Normalized response")
     } else {
         # If overlay plot is not requested, ask before showing multiple plots on the screen
-        if (!postscript && !png && !pdf) {
-            par(ask=TRUE)
-        }
+        if (!postscript && !png && !pdf && length(dsubstances) > 1) {
+            op <- par(ask=TRUE)
+        } 
     }
 
     # Plot the data either as raw data or as error bars
@@ -219,4 +220,6 @@ drplot <- function(drresults, data,
             dev.off()
         }
     }
+    # Reset the ask parameter to previous setting
+    par(op)
 }

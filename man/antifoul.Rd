@@ -14,6 +14,9 @@
   for TBT and Zink Pyrithione, respectively. Some additional columns from the
   database are also present.
 }
+\examples{
+  \dontrun{demo(antifoul)}
+}
 \source{
   \url{http://www.uft.uni-bremen.de/chemie}
 }

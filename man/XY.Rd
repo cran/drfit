@@ -11,6 +11,9 @@
   A dataframe containing dose (concentration) and response data, as well as
   control values where the dose is zero.
 }
+\examples{
+  \dontrun{demo(XY)}
+}
 \source{
   \url{http://www.uft.uni-bremen.de/chemie}
 }

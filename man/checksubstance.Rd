@@ -16,13 +16,15 @@
     of the UFT Department of Bioorganic Chemistry are supported (default is
     "cytotox").} 
   \item{experimentator}{
-    The name of the experimentator whose data is to be used. Default is "\%", which
-    means that data from all experimentators are shown.}
+    The name of the experimentator whose data is to be used. Default is "\%",
+    which means that data from all experimentators are shown.}
   \item{celltype}{
-    Currently, only data for IPC-81, C6, NB4, HeLa, Jurkat and U937 are supported.
-    Default is "\%", i.e. data for any cell type will be displayed.}
+    Currently, only data for IPC-81, C6, NB4, HeLa, Jurkat and U937 are
+    supported.  Default is "\%", i.e. data for any cell type will be
+    displayed.}
   \item{enzymetype}{
-    Currently, only data for AChE, GR and GST are supported. The default value is "\%", i.e. data for any enzyme type will be displayed.}
+    Currently, only data for AChE, GR and GST are supported. The default value
+    is "\%", i.e. data for any enzyme type will be displayed.}
   \item{whereClause}{
     With this argument, additional conditions for the SQL query can be set, 
     e.g. "where plate != 710". The default is 1 (in SQL syntax this means TRUE).}

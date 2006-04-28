@@ -18,6 +18,9 @@
   Vibrio fischeri, \code{organism}), and a field specifying if the data is
   regarded valid (\code{ok}).
 }
+\examples{
+  \dontrun{demo(IM1xVibrio)}
+}
 \source{
   Ranke J, Mölter K, Stock F, Bottin-Weber U, Poczobutt J, Hoffmann J,
   Ondruschka B, Filser J, Jastorff B (2004) Biological effects of imidazolium

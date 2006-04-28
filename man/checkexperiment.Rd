@@ -22,8 +22,8 @@
   The function lists a report and shows two graphs side by side.
 }
 \examples{
-# Check plate number 1 in the cytotox database
-\dontrun{data <- checkplate(3)}
+# Check plate number 3 in the cytotox database
+\dontrun{checkplate(3)}
 }
 \author{
   Johannes Ranke 

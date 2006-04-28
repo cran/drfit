@@ -1,5 +1,7 @@
 checkexperiment <- function(id,db="ecotox")
 {
+    op <- par(no.readonly = TRUE)
+
     databases <- data.frame(
         responsetype=c("viability","activity","response"),
         testtype=c("celltype","enzyme","organism"),
@@ -28,6 +30,8 @@ checkexperiment <- function(id,db="ecotox")
     }
 
     odbcClose(channel)
+
+    par(ask=TRUE)
 
     if (db %in% c("cytotox","enzymes")) {
         blinds <- subset(controldata,type=="blind")
@@ -77,8 +81,7 @@ checkexperiment <- function(id,db="ecotox")
         "\tcontrol\t",numberOfControls,"\t",meanOfControls,"\t",
             stdOfControls,"\t\t",percentstdOfcontrols,"\n")
     
-    get(getOption("device"))(width=10,height=5)
-    par(mfcol=c(1,2))
+
     if (db == "ecotox") {
         boxplot(controls$response,
             names="controls",
@@ -116,4 +119,7 @@ checkexperiment <- function(id,db="ecotox")
     legend("topright",substances, pch=1, col=1:length(substances), inset=0.05)
     title(main=paste(levels(expdata$experimentator),
         " - ",levels(expdata$type)))
+
+    # Reset the graphics parameters to previous setting
+    par(op)
 }

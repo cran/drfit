@@ -2,7 +2,7 @@ antifoul                Dose-Response data for TBT and Zink Pyrithione
                         in IPC-81 cells
 checkexperiment         Check raw data from a specified experiment or
                         microtiter plate
-drdata                  Get dose-response data
+drdata                  Get dose-response data via RODBC
 drfit                   Fit dose-response models
 drfit-package           Dose-response data evaluation
 drplot                  Plot dose-response models
