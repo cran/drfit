@@ -1,7 +1,5 @@
 checkexperiment <- function(id,db="ecotox")
 {
-    op <- par(no.readonly = TRUE)
-
     databases <- data.frame(
         responsetype=c("viability","activity","response"),
         testtype=c("celltype","enzyme","organism"),
@@ -31,7 +29,8 @@ checkexperiment <- function(id,db="ecotox")
 
     odbcClose(channel)
 
-    par(ask=TRUE)
+    op <- par(ask=TRUE)
+    on.exit(par(op))
 
     if (db %in% c("cytotox","enzymes")) {
         blinds <- subset(controldata,type=="blind")
@@ -119,7 +118,4 @@ checkexperiment <- function(id,db="ecotox")
     legend("topright",substances, pch=1, col=1:length(substances), inset=0.05)
     title(main=paste(levels(expdata$experimentator),
         " - ",levels(expdata$type)))
-
-    # Reset the graphics parameters to previous setting
-    par(op)
 }

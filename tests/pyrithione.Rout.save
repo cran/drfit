@@ -16,70 +16,86 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(drfit)
+Loading required package: MASS
 Loading required package: RODBC
 > data(pyrithione)
 > rpyr <- drfit(pyrithione,linlogit=TRUE,linlogitWrong=c("MSPT","MSPHI"))
 
 Na Pyrithion: Fitting data...
+Waiting for profiling to be done...
+Error in prof$getProfile() : number of iterations exceeded maximum of 50
 
 Pyridin: Fitting data...
 
 PyNO: Fitting data...
 
 (PT)2: Fitting data...
+Waiting for profiling to be done...
 
 MSO2P: Fitting data...
 
 MSPHI: Fitting data...
+Waiting for profiling to be done...
 
 PyS: Fitting data...
 Error in nls(response ~ linlogitf(dose, 1, f, logED50, b), data = tmp,  : 
 	step factor 0.000488281 reduced below 'minFactor' of 0.000976562
+Waiting for profiling to be done...
+Error in numericDeriv(form[[3]], names(ind), env) : 
+	Missing value or an infinity produced when evaluating the model
+In addition: Warning message:
+NaNs produced in: pnorm(q, mean, sd, lower.tail, log.p) 
 
 Zn Pyrithion: Fitting data...
+Waiting for profiling to be done...
 
 Cu Pyrithion: Fitting data...
+Waiting for profiling to be done...
 
 Fe Pyrithion: Fitting data...
+Waiting for profiling to be done...
 
 (PyS)2: Fitting data...
 Error in nls(response ~ linlogitf(dose, 1, f, logED50, b), data = tmp,  : 
 	singular gradient
+Waiting for profiling to be done...
 
 MSPT: Fitting data...
+Waiting for profiling to be done...
 
 TBT: Fitting data...
+Waiting for profiling to be done...
 
 NaJ: Fitting data...
 > rpyr
-      Substance ndl   n       lld     lhd    mtype    logED50        std unit
-1  Na Pyrithion  20 108 -2.107210 2.00000 linlogit -0.3461318 0.04237833   然
-2       Pyridin  19 161  0.591760 3.69897 inactive         NA         NA   然
-3          PyNO  19  81  0.591760 3.69897   no fit         NA         NA   然
-4         (PT)2  19  81 -2.408240 2.00000 linlogit -0.4197031 0.05030460   然
-5         MSO2P  28 108 -1.709271 3.69897 inactive         NA         NA   然
-6         MSPHI  19  81  0.591760 3.69897   probit  3.6625025 0.06724673   然
-7           PyS  18  80 -0.408240 3.00000   probit  2.6817944 0.02031252   然
-8  Zn Pyrithion  27  81 -2.107210 2.00000 linlogit -0.4132885 0.06234927   然
-9  Cu Pyrithion  19  79 -2.408240 2.00000 linlogit -0.3074717 0.07918130   然
-10 Fe Pyrithion  19  81 -2.408240 2.00000 linlogit -0.3534572 0.07263386   然
-11       (PyS)2  20  81 -0.408240 3.00000   probit  1.7840499 0.05230663   然
-12         MSPT  18 108 -0.408240 3.00000   probit  2.1384811 0.03379904   然
-13          TBT  38 135 -2.709271 2.39794 linlogit -0.1580954 0.05474371   然
-14          NaJ  10 108  0.591760 3.30103 inactive         NA         NA   然
-        sigma          a         b           c
-1  0.20857751 -0.3461318 2.1188272 -0.26698979
-2          NA         NA        NA          NA
-3  0.09188853         NA        NA          NA
-4  0.20509070 -0.4197031 1.8466994 -0.51508088
-5          NA         NA        NA          NA
-6  0.12943273  3.6625025 0.4387540          NA
-7  0.13401920  2.6817944 0.1250523          NA
-8  0.22877916 -0.4132885 1.7424846  0.61078660
-9  0.24494451 -0.3074717 1.0150649 -0.04897422
-10 0.23383185 -0.3534572 1.1823558  0.02510613
-11 0.23298721  1.7840499 0.4098018          NA
-12 0.22881257  2.1384811 0.2112625          NA
-13 0.19264079 -0.1580954 1.0406576 -0.02416104
-14         NA         NA        NA          NA
+      Substance ndl   n       lld     lhd    mtype    logED50       2.5%
+1  Na Pyrithion  20 108 -2.107210 2.00000 linlogit -0.3461318         NA
+2       Pyridin  19 161  0.591760 3.69897 inactive         NA         NA
+3          PyNO  19  81  0.591760 3.69897   no fit         NA         NA
+4         (PT)2  19  81 -2.408240 2.00000 linlogit -0.4197031 -0.5326102
+5         MSO2P  28 108 -1.709271 3.69897 inactive         NA         NA
+6         MSPHI  19  81  0.591760 3.69897   probit  3.6625025  3.5548278
+7           PyS  18  80 -0.408240 3.00000   probit  2.6817944         NA
+8  Zn Pyrithion  27  81 -2.107210 2.00000 linlogit -0.4132885 -0.5293327
+9  Cu Pyrithion  19  79 -2.408240 2.00000 linlogit -0.3074717 -0.4753489
+10 Fe Pyrithion  19  81 -2.408240 2.00000 linlogit -0.3534572 -0.5003829
+11       (PyS)2  20  81 -0.408240 3.00000   probit  1.7840499  1.6726792
+12         MSPT  18 108 -0.408240 3.00000   probit  2.1384811  2.0709306
+13          TBT  38 135 -2.709271 2.39794 linlogit -0.1580954 -0.2602139
+14          NaJ  10 108  0.591760 3.30103 inactive         NA         NA
+         97.5% unit      sigma          a         b           c
+1           NA   然 0.20857751 -0.3461318 2.1188272 -0.26698979
+2           NA   然         NA         NA        NA          NA
+3           NA   然 0.09188853         NA        NA          NA
+4           NA   然 0.20509070 -0.4197031 1.8466994 -0.51508088
+5           NA   然         NA         NA        NA          NA
+6   3.88053203   然 0.12943273  3.6625025 0.4387540          NA
+7           NA   然 0.13401920  2.6817944 0.1250523          NA
+8  -0.29979846   然 0.22877916 -0.4132885 1.7424846  0.61078660
+9  -0.15442805   然 0.24494451 -0.3074717 1.0150649 -0.04897422
+10 -0.21459555   然 0.23383185 -0.3534572 1.1823558  0.02510613
+11  1.88824519   然 0.23298721  1.7840499 0.4098018          NA
+12  2.20511512   然 0.22881257  2.1384811 0.2112625          NA
+13 -0.05045493   然 0.19264079 -0.1580954 1.0406576 -0.02416104
+14          NA   然         NA         NA        NA          NA
 > 

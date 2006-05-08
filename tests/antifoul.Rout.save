@@ -16,18 +16,21 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(drfit)
+Loading required package: MASS
 Loading required package: RODBC
 > data(antifoul)
 > rantifoul <- drfit(antifoul)
 
 TBT: Fitting data...
+Waiting for profiling to be done...
 
 Zn Pyrithion: Fitting data...
+Waiting for profiling to be done...
 > rantifoul
-     Substance ndl   n       lld     lhd  mtype    logED50        std unit
-1          TBT  38 135 -2.709271 2.39794 probit -0.1643560 0.05349216   然
-2 Zn Pyrithion  27  81 -2.107210 2.00000 probit -0.3979222 0.05393693   然
-      sigma          a         b
-1 0.1928611 -0.1643560 0.6763882
-2 0.2286560 -0.3979222 0.4169632
+     Substance ndl   n       lld     lhd  mtype    logED50       2.5%
+1          TBT  38 135 -2.709271 2.39794 probit -0.1643560 -0.2650411
+2 Zn Pyrithion  27  81 -2.107210 2.00000 probit -0.3979222 -0.5078291
+        97.5% unit     sigma          a         b
+1 -0.05648615   然 0.1928611 -0.1643560 0.6763882
+2 -0.29156056   然 0.2286560 -0.3979222 0.4169632
 > 

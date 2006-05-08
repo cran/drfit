@@ -16,6 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(drfit)
+Loading required package: MASS
 Loading required package: RODBC
 > data(IM1xIPC81)
 > rIM1xIPC81 <- drfit(IM1xIPC81,linlogit=TRUE)
@@ -35,41 +36,45 @@ IM15 BF4: Fitting data...
 IM16 BF4: Fitting data...
 
 IM17 BF4: Fitting data...
+Waiting for profiling to be done...
 Error in numericDeriv(form[[3]], names(ind), env) : 
 	Missing value or an infinity produced when evaluating the model
 In addition: Warning message:
 NaNs produced in: pnorm(q, mean, sd, lower.tail, log.p) 
 
 IM18 BF4: Fitting data...
+Waiting for profiling to be done...
 Error in numericDeriv(form[[3]], names(ind), env) : 
 	Missing value or an infinity produced when evaluating the model
 In addition: Warning message:
 NaNs produced in: pnorm(q, mean, sd, lower.tail, log.p) 
 
 IM19 BF4: Fitting data...
+Waiting for profiling to be done...
 Error in numericDeriv(form[[3]], names(ind), env) : 
 	Missing value or an infinity produced when evaluating the model
 In addition: Warning message:
 NaNs produced in: pnorm(q, mean, sd, lower.tail, log.p) 
 
 IM1-10 BF4: Fitting data...
+Waiting for profiling to be done...
 > rIM1xIPC81
-   Substance ndl   n         lld      lhd    mtype   logED50        std unit
-1   IM13 BF4   9  81  0.59176003 3.000000 inactive        NA         NA   然
-2   IM14 BF4  20 216 -0.01030017 3.176091   no fit        NA         NA   然
-3   IM15 BF4   9 135  0.59176003 3.000000 inactive        NA         NA   然
-4   IM16 BF4   9 108  0.59176003 3.000000 inactive        NA         NA   然
-5   IM17 BF4   9  81  0.59176003 3.000000 linlogit 2.5785719 0.03819482   然
-6   IM18 BF4   9 135  0.59176003 3.000000 linlogit 1.6806040 0.02982682   然
-7   IM19 BF4   9  81  0.59176003 3.000000 linlogit 1.6496121 0.02636274   然
-8 IM1-10 BF4  11 162 -0.01030017 3.000000 linlogit 0.7696961 0.04165397   然
-      sigma         a        b          c
-1        NA        NA       NA         NA
-2        NA        NA       NA         NA
-3        NA        NA       NA         NA
-4        NA        NA       NA         NA
-5 0.2375857 2.5785719 2.300216 0.01468034
-6 0.2324871 1.6806040 2.237338 0.05719295
-7 0.1452716 1.6496121 1.976976 0.10956088
-8 0.2987708 0.7696961 1.936253 0.45808611
+   Substance ndl   n         lld      lhd    mtype   logED50      2.5%
+1   IM13 BF4   9  81  0.59176003 3.000000 inactive        NA        NA
+2   IM14 BF4  20 216 -0.01030017 3.176091   no fit        NA        NA
+3   IM15 BF4   9 135  0.59176003 3.000000 inactive        NA        NA
+4   IM16 BF4   9 108  0.59176003 3.000000 inactive        NA        NA
+5   IM17 BF4   9  81  0.59176003 3.000000 linlogit 2.5785719 2.5057219
+6   IM18 BF4   9 135  0.59176003 3.000000 linlogit 1.6806040 1.6229756
+7   IM19 BF4   9  81  0.59176003 3.000000 linlogit 1.6496121 1.5984793
+8 IM1-10 BF4  11 162 -0.01030017 3.000000 linlogit 0.7696961 0.6870081
+      97.5% unit     sigma         a        b          c
+1        NA   然        NA        NA       NA         NA
+2        NA   然        NA        NA       NA         NA
+3        NA   然        NA        NA       NA         NA
+4        NA   然        NA        NA       NA         NA
+5 2.6617385   然 0.2375857 2.5785719 2.300216 0.01468034
+6 1.7418917   然 0.2324871 1.6806040 2.237338 0.05719295
+7 1.7031463   然 0.1452716 1.6496121 1.976976 0.10956088
+8 0.8544213   然 0.2987708 0.7696961 1.936253 0.45808611
 > 

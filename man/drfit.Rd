@@ -7,7 +7,7 @@
 }
 \usage{
   drfit(data, startlogED50 = NA, chooseone = TRUE, probit = TRUE, logit = FALSE,
-  weibull = FALSE, linlogit = FALSE, conf = FALSE, linlogitWrong = NA,
+  weibull = FALSE, linlogit = FALSE, level = 0.95, linlogitWrong = NA,
   allWrong = NA, s0 = 0.5, b0 = 2, f0 = 0)
 }
 \arguments{
@@ -43,10 +43,8 @@
     A boolean defining if the linear-logistic function
     \code{\link{linlogitf}} as defined by van Ewijk and Hoekstra 1993 is
     fitted to the data. Default is FALSE.}
-  \item{conf}{
-    A boolean defining if a confidence interval of the log ED50 is to be
-    listed for alpha = 5 \% (two-sided). If FALSE (default), the standard
-    deviation is listed in the output of drfit.}
+  \item{level}{
+    The level for the confidence interval listed for the log ED50.}
   \item{linlogitWrong}{
     An optional vector containing the names of the substances for which the
     linlogit function produces a wrong fit.}
@@ -81,10 +79,10 @@
     \code{lhd} is the decadic logarithm of the highest dose.  For the
     \dQuote{linlogit}, \dQuote{logit} and \dQuote{probit} models, the
     parameter \code{a} that is reported coincides with the logED50, i.e the
-    logED50 is one of the model parameters that is being fitted, and
-    therefore, depending on the argument \code{conf}, a standard deviation
-    \code{std} or a confidence interval \code{conf} is reported for the
-    logED50. In the case of the \dQuote{weibull} model, \code{a} is a
+    logED50 is one of the model parameters that is being fitted. Therefore,
+    a confidence interval for the confidence level \code{level} is calculated
+    using the \code{\link[MASS:confint]{confint.nls}} function and listed.
+    In the case of the \dQuote{weibull} model, \code{a} is a
     location parameter.  Parameter \code{b} in the case of the
     \dQuote{linlogit} fit is the variable b from the \code{\link{linlogitf}}
     function. In the case of \dQuote{probit} fit it is the standard deviation

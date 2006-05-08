@@ -1,27 +1,28 @@
 drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
         probit = TRUE, logit = FALSE, weibull = FALSE,
-        linlogit = FALSE, conf = FALSE,
+        linlogit = FALSE, level = 0.95,
         linlogitWrong = NA, allWrong = NA,
         s0 = 0.5, b0 = 2, f0 = 0)
 {
-    if(!is.null(data$ok)) data <- subset(data,ok!="no fit") # Don't use data with 
-                                                            # ok set to "no fit"
+    require(MASS)
+    if(!is.null(data$ok)) data <- subset(data,ok!="no fit") # Don't use data
+                                                            # with ok set to
+                                                            # "no fit"
     substances <- levels(data$substance)
 
-    ri <- rix <- 0                        # ri is the index over the result rows
-                                          # rix is used later to check if any
-                                          # model result was appended
-    rsubstance <- array()                 # the substance names in the results
-    rndl <- vector()                      # number of dose levels
-    rn <- vector()                        # mean number of replicates 
-                                          # in each dose level
-    runit <- vector()                     # vector of units for each result row
-    rlhd <- rlld <- vector()              # highest and lowest doses tested
-    mtype <- array()                      # the modeltypes
-    sigma <- array()                      # the standard deviation of the residuals
+    ri <- rix <- 0                  # ri is the index over the result rows
+                                    # rix is used later to check if any
+                                    # model result was appended
+    rsubstance <- array()           # the substance names in the results
+    rndl <- vector()                # number of dose levels
+    rn <- vector()                  # mean number of replicates 
+                                    # in each dose level
+    runit <- vector()               # vector of units for each result row
+    rlhd <- rlld <- vector()        # highest and lowest doses tested
+    mtype <- array()                # the modeltypes
+    sigma <- array()                # the standard deviation of the residuals
     logED50 <- vector()
-    stderrlogED50 <- vector()
-    conflogED50 <- vector()
+    logED50low <- logED50high <- vector()
     a <- b <- c <- vector()
 
     splitted <- split(data,data$substance)
@@ -87,15 +88,21 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                             if (logED50[[ri]] > rlhd[[ri]]) {
                                 mtype[[ri]] <- "no fit"
                                 logED50[[ri]] <- NA
-                                stderrlogED50[[ri]] <- NA
-                                conflogED50[[ri]] <- NA
+                                logED50low[[ri]] <- NA
+                                logED50high[[ri]] <- NA
                                 a[[ri]] <- NA
                                 b[[ri]] <- NA
                                 c[[ri]] <- NA
                             } else {
                                 mtype[[ri]] <- "linlogit"
-                                stderrlogED50[[ri]] <- s$parameters["logED50","Std. Error"]
-                                conflogED50[[ri]] <- stderrlogED50[[ri]] * qt(0.975, n - 3)
+                                logED50conf <- try(confint(m,"logED50",level=level))
+                                if (!inherits(logED50conf, "try-error")) {
+                                    logED50low[[ri]] <- logED50conf[[1]]
+                                    logED50high[[ri]] <- logED50conf[[2]]
+                                } else {
+                                    logED50low[[ri]] <- NA
+                                    logED50high[[ri]] <- NA
+                                }
                                 a[[ri]] <- coef(m)[["logED50"]]
                                 b[[ri]] <- coef(m)[["b"]]
                                 c[[ri]] <- coef(m)[["f"]]
@@ -125,14 +132,20 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                                 if (logED50[[ri]] > rlhd[[ri]]) {
                                     mtype[[ri]] <- "no fit"
                                     logED50[[ri]] <- NA
-                                    stderrlogED50[[ri]] <- NA
-                                    conflogED50[[ri]] <- NA
+                                    logED50low[[ri]] <- NA
+                                    logED50high[[ri]] <- NA
                                     a[[ri]] <- NA
                                     b[[ri]] <- NA
                                 } else {
                                     mtype[[ri]] <- "probit"
-                                    stderrlogED50[[ri]] <- s$parameters["logED50","Std. Error"]
-                                    conflogED50[[ri]] <- stderrlogED50[[ri]] * qt(0.975, n - 2)
+                                    logED50conf <- try(confint(m,"logED50",level=level))
+                                    if (!inherits(logED50conf, "try-error")) {
+                                        logED50low[[ri]] <- logED50conf[[1]]
+                                        logED50high[[ri]] <- logED50conf[[2]]
+                                    } else {
+                                        logED50low[[ri]] <- NA
+                                        logED50high[[ri]] <- NA
+                                    }
                                     a[[ri]] <- coef(m)[["logED50"]]
                                     b[[ri]] <- coef(m)[["scale"]]
                                 }
@@ -163,14 +176,20 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                                 if (logED50[[ri]] > rlhd[[ri]]) {
                                     mtype[[ri]] <- "no fit"
                                     logED50[[ri]] <- NA
-                                    stderrlogED50[[ri]] <- NA
-                                    conflogED50[[ri]] <- NA
+                                    logED50low[[ri]] <- NA
+                                    logED50high[[ri]] <- NA
                                     a[[ri]] <- NA
                                     b[[ri]] <- NA
                                 } else {
                                     mtype[[ri]] <- "logit"
-                                    stderrlogED50[[ri]] <- s$parameters["logED50","Std. Error"]
-                                    conflogED50[[ri]] <- stderrlogED50[[ri]] * qt(0.975, n - 2)
+                                    logED50conf <- try(confint(m,"logED50",level=level))
+                                    if (!inherits(logED50conf, "try-error")) {
+                                        logED50low[[ri]] <- logED50conf[[1]]
+                                        logED50high[[ri]] <- logED50conf[[2]]
+                                    } else {
+                                        logED50low[[ri]] <- NA
+                                        logED50high[[ri]] <- NA
+                                    }
                                 }
                             }
                         }
@@ -200,17 +219,15 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                                 }
                                 logED50[[ri]] <- nlm(sqrdev,startlogED50[[i]])$estimate
                                 c[[ri]] <- NA
+                                logED50low[[ri]] <- NA
+                                logED50high[[ri]] <- NA
                                 if (logED50[[ri]] > rlhd[[ri]]) {
                                     mtype[[ri]] <- "no fit"
                                     logED50[[ri]] <- NA
-                                    stderrlogED50[[ri]] <- NA
-                                    conflogED50[[ri]] <- NA
                                     a[[ri]] <- NA
                                     b[[ri]] <- NA
                                 } else {
                                     mtype[[ri]] <- "weibull"
-                                    stderrlogED50[[ri]] <- NA
-                                    conflogED50[[ri]] <- stderrlogED50[[ri]] * qt(0.975, n - 2)
                                 }
                             }
                         }
@@ -247,21 +264,19 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
             }
             sigma[[ri]] <- NA
             logED50[[ri]] <- NA
-            stderrlogED50[[ri]] <- NA
-            conflogED50[[ri]] <- NA
+            logED50low[[ri]] <- NA
+            logED50high[[ri]] <- NA
             a[[ri]] <- NA
             b[[ri]] <- NA
             c[[ri]] <- NA
         }
     }
-    if (conf)
-    {
-        results <- data.frame(rsubstance, rndl, rn, rlld, rlhd, mtype, logED50, conflogED50, runit, sigma, a, b)
-        names(results) <- c("Substance","ndl","n","lld","lhd","mtype","logED50","conf","unit","sigma","a","b")
-    } else {
-        results <- data.frame(rsubstance, rndl, rn, rlld, rlhd, mtype, logED50, stderrlogED50, runit, sigma, a, b)
-        names(results) <- c("Substance","ndl","n","lld","lhd","mtype","logED50","std","unit","sigma","a","b")
-    } 
+    results <- data.frame(rsubstance, rndl, rn, rlld, rlhd, mtype, 
+        logED50, logED50low, logED50high, runit, sigma, a, b)
+	names(results) <- c("Substance","ndl","n","lld","lhd","mtype","logED50",
+		paste(100*(1-level)/2,"%",sep=""),
+		paste(100*(1+level)/2,"%",sep=""),
+		"unit","sigma","a","b")
 
     if (linlogit) {
         results$c <- c

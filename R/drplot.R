@@ -7,7 +7,6 @@ drplot <- function(drresults, data,
         pointsize = 12,
         colors = 1:8, devoff=T, lpos="topright")
 {
-    op <- par(no.readonly = TRUE)
     # Check if all data have the same unit
     unitlevels <- levels(as.factor(drresults$unit))
     if (length(unitlevels) == 1) {
@@ -88,6 +87,7 @@ drplot <- function(drresults, data,
         # If overlay plot is not requested, ask before showing multiple plots on the screen
         if (!postscript && !png && !pdf && length(dsubstances) > 1) {
             op <- par(ask=TRUE)
+            on.exit(par(op))
         } 
     }
 
@@ -220,6 +220,4 @@ drplot <- function(drresults, data,
             dev.off()
         }
     }
-    # Reset the ask parameter to previous setting
-    par(op)
 }
