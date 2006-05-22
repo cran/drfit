@@ -8,7 +8,7 @@
 \usage{
   drfit(data, startlogED50 = NA, chooseone = TRUE, probit = TRUE, logit = FALSE,
   weibull = FALSE, linlogit = FALSE, level = 0.95, linlogitWrong = NA,
-  allWrong = NA, s0 = 0.5, b0 = 2, f0 = 0)
+  allWrong = NA, ps0 = 1, ls0 = 0.5, ws0 = 0.5, b0 = 2, f0 = 0)
 }
 \arguments{
   \item{data}{
@@ -56,12 +56,18 @@
     logit, weibull, and the first model that produces a valid fit is used.
     If FALSE, all models that are set to TRUE and that can be fitted will be
     reported.}
-  \item{s0}{
-    If the weibull model is fitted, s0 gives the possibility to adjust the
-    starting value for the shape parameter of \code{\link{pweibull}}.}
+  \item{ps0}{
+    If the probit model is fitted, \code{ps0} gives the possibility to adjust
+    the starting value for the scale parameter of \code{\link{pnorm}}.}
+  \item{ls0}{
+    If the logit model is fitted, \code{ls0} gives the possibility to adjust
+    the starting value for the scale parameter of \code{\link{plogis}}.}
+  \item{ws0}{
+    If the weibull model is fitted, \code{ws0} gives the possibility to adjust
+    the starting value for the shape parameter of \code{\link{pweibull}}.}
   \item{b0,f0}{
-    If the linearlogistic model is fitted, b0 and f0 give the possibility to
-    adjust the starting values for the parameters b and f.}
+    If the linearlogistic model is fitted, \code{b0} and \code{f0} give the
+    possibility to adjust the starting values for the parameters b and f.}
 }
 \value{
   \item{results}{

@@ -2,7 +2,8 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
         probit = TRUE, logit = FALSE, weibull = FALSE,
         linlogit = FALSE, level = 0.95,
         linlogitWrong = NA, allWrong = NA,
-        s0 = 0.5, b0 = 2, f0 = 0)
+        ps0 = 1, ls0 = 0.5, ws0 = 0.5,
+        b0 = 2, f0 = 0)
 {
     require(MASS)
     if(!is.null(data$ok)) data <- subset(data,ok!="no fit") # Don't use data
@@ -114,7 +115,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ pnorm(-log10(dose),-logED50,scale),
                                     data=tmp,
-                                    start=list(logED50=startlogED50[[i]],scale=1)))
+                                    start=list(logED50=startlogED50[[i]],scale=ps0)))
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
@@ -157,7 +158,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ plogis(-log10(dose),-logED50,scale),
                                 data=tmp,
-                                start=list(logED50=startlogED50[[i]],scale=1)))
+                                start=list(logED50=startlogED50[[i]],scale=ls0)))
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
@@ -199,7 +200,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ pweibull(-log10(dose)+location,shape),
                                 data=tmp,
-                                start=list(location=startlogED50[[i]],shape=s0)))
+                                start=list(location=startlogED50[[i]],shape=ws0)))
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
@@ -273,10 +274,10 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
     }
     results <- data.frame(rsubstance, rndl, rn, rlld, rlhd, mtype, 
         logED50, logED50low, logED50high, runit, sigma, a, b)
-	names(results) <- c("Substance","ndl","n","lld","lhd","mtype","logED50",
-		paste(100*(1-level)/2,"%",sep=""),
-		paste(100*(1+level)/2,"%",sep=""),
-		"unit","sigma","a","b")
+    names(results) <- c("Substance","ndl","n","lld","lhd","mtype","logED50",
+        paste(100*(1-level)/2,"%",sep=""),
+        paste(100*(1+level)/2,"%",sep=""),
+        "unit","sigma","a","b")
 
     if (linlogit) {
         results$c <- c

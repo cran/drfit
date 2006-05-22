@@ -8,7 +8,9 @@ Dose-response data evaluation
 See \url{../DESCRIPTION}
 }
 \details{
-There is a preliminary version of an introductory article located in \url{../doc/drfit-Rnews.pdf}.
+There is an introductory article located in \url{../doc/drfit-Rnews.pdf},
+which will be published in the R News special edition on the use
+of R for chemists.
 }
 \author{
 Author and Maintainer: Johannes Ranke <jranke@uni-bremen.de>
@@ -28,5 +30,5 @@ the advantage of my package is its user-friendliness.
 data(antifoul)
 r <- drfit(antifoul)
 format(r,digits=2)
-\dontrun{drplot(r,antifoul,overlay=TRUE,bw=FALSE)}
+drplot(r,antifoul,overlay=TRUE,bw=FALSE)
 }
