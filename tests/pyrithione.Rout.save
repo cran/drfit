@@ -1,6 +1,6 @@
 
 R : Copyright 2006, The R Foundation for Statistical Computing
-Version 2.3.0 (2006-04-24)
+Version 2.3.1 beta (2006-05-18 r38119)
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -67,35 +67,35 @@ TBT: Fitting data...
 Waiting for profiling to be done...
 
 NaJ: Fitting data...
-> rpyr
-      Substance ndl   n       lld     lhd    mtype    logED50       2.5%
-1  Na Pyrithion  20 108 -2.107210 2.00000 linlogit -0.3461318         NA
-2       Pyridin  19 161  0.591760 3.69897 inactive         NA         NA
-3          PyNO  19  81  0.591760 3.69897   no fit         NA         NA
-4         (PT)2  19  81 -2.408240 2.00000 linlogit -0.4197031 -0.5326102
-5         MSO2P  28 108 -1.709271 3.69897 inactive         NA         NA
-6         MSPHI  19  81  0.591760 3.69897   probit  3.6625025  3.5548278
-7           PyS  18  80 -0.408240 3.00000   probit  2.6817944         NA
-8  Zn Pyrithion  27  81 -2.107210 2.00000 linlogit -0.4132885 -0.5293327
-9  Cu Pyrithion  19  79 -2.408240 2.00000 linlogit -0.3074717 -0.4753489
-10 Fe Pyrithion  19  81 -2.408240 2.00000 linlogit -0.3534572 -0.5003829
-11       (PyS)2  20  81 -0.408240 3.00000   probit  1.7840499  1.6726792
-12         MSPT  18 108 -0.408240 3.00000   probit  2.1384811  2.0709306
-13          TBT  38 135 -2.709271 2.39794 linlogit -0.1580954 -0.2602139
-14          NaJ  10 108  0.591760 3.30103 inactive         NA         NA
-         97.5% unit      sigma          a         b           c
-1           NA   然 0.20857751 -0.3461318 2.1188272 -0.26698979
-2           NA   然         NA         NA        NA          NA
-3           NA   然 0.09188853         NA        NA          NA
-4           NA   然 0.20509070 -0.4197031 1.8466994 -0.51508088
-5           NA   然         NA         NA        NA          NA
-6   3.88053203   然 0.12943273  3.6625025 0.4387540          NA
-7           NA   然 0.13401920  2.6817944 0.1250523          NA
-8  -0.29979846   然 0.22877916 -0.4132885 1.7424846  0.61078660
-9  -0.15442805   然 0.24494451 -0.3074717 1.0150649 -0.04897422
-10 -0.21459555   然 0.23383185 -0.3534572 1.1823558  0.02510613
-11  1.88824519   然 0.23298721  1.7840499 0.4098018          NA
-12  2.20511512   然 0.22881257  2.1384811 0.2112625          NA
-13 -0.05045493   然 0.19264079 -0.1580954 1.0406576 -0.02416104
-14          NA   然         NA         NA        NA          NA
+> print(rpyr,digits=3)
+      Substance ndl   n    lld lhd    mtype logED50   2.5%   97.5% unit  sigma
+1  Na Pyrithion  20 108 -2.107 2.0 linlogit  -0.346     NA      NA   然 0.2086
+2       Pyridin  19 161  0.592 3.7 inactive      NA     NA      NA   然     NA
+3          PyNO  19  81  0.592 3.7   no fit      NA     NA      NA   然 0.0919
+4         (PT)2  19  81 -2.408 2.0 linlogit  -0.420 -0.533      NA   然 0.2051
+5         MSO2P  28 108 -1.709 3.7 inactive      NA     NA      NA   然     NA
+6         MSPHI  19  81  0.592 3.7   probit   3.663  3.555  3.8805   然 0.1294
+7           PyS  18  80 -0.408 3.0   probit   2.682     NA      NA   然 0.1340
+8  Zn Pyrithion  27  81 -2.107 2.0 linlogit  -0.413 -0.529 -0.2998   然 0.2288
+9  Cu Pyrithion  19  79 -2.408 2.0 linlogit  -0.307 -0.475 -0.1544   然 0.2449
+10 Fe Pyrithion  19  81 -2.408 2.0 linlogit  -0.353 -0.500 -0.2146   然 0.2338
+11       (PyS)2  20  81 -0.408 3.0   probit   1.784  1.673  1.8882   然 0.2330
+12         MSPT  18 108 -0.408 3.0   probit   2.138  2.071  2.2051   然 0.2288
+13          TBT  38 135 -2.709 2.4 linlogit  -0.158 -0.260 -0.0505   然 0.1926
+14          NaJ  10 108  0.592 3.3 inactive      NA     NA      NA   然     NA
+        a     b       c
+1  -0.346 2.119 -0.2670
+2      NA    NA      NA
+3      NA    NA      NA
+4  -0.420 1.847 -0.5151
+5      NA    NA      NA
+6   3.663 0.439      NA
+7   2.682 0.125      NA
+8  -0.413 1.742  0.6108
+9  -0.307 1.015 -0.0490
+10 -0.353 1.182  0.0251
+11  1.784 0.410      NA
+12  2.138 0.211      NA
+13 -0.158 1.041 -0.0242
+14     NA    NA      NA
 > 

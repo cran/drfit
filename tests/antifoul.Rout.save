@@ -1,6 +1,6 @@
 
 R : Copyright 2006, The R Foundation for Statistical Computing
-Version 2.3.0 (2006-04-24)
+Version 2.3.1 beta (2006-05-18 r38119)
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -26,11 +26,11 @@ Waiting for profiling to be done...
 
 Zn Pyrithion: Fitting data...
 Waiting for profiling to be done...
-> rantifoul
-     Substance ndl   n       lld     lhd  mtype    logED50       2.5%
-1          TBT  38 135 -2.709271 2.39794 probit -0.1643560 -0.2650411
-2 Zn Pyrithion  27  81 -2.107210 2.00000 probit -0.3979222 -0.5078291
-        97.5% unit     sigma          a         b
-1 -0.05648615   然 0.1928611 -0.1643560 0.6763882
-2 -0.29156056   然 0.2286560 -0.3979222 0.4169632
+> print(rantifoul,digits=5)
+     Substance ndl   n     lld    lhd  mtype  logED50     2.5%     97.5% unit
+1          TBT  38 135 -2.7093 2.3979 probit -0.16436 -0.26504 -0.056486   然
+2 Zn Pyrithion  27  81 -2.1072 2.0000 probit -0.39792 -0.50783 -0.291561   然
+    sigma        a       b
+1 0.19286 -0.16436 0.67639
+2 0.22866 -0.39792 0.41696
 > 

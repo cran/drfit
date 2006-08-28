@@ -28,17 +28,17 @@ Waiting for profiling to be done...
 Waiting for profiling to be done...
 
 Substance Y: Fitting data...
-> rXY
-    Substance ndl  n  lld  lhd    mtype  logED50     2.5%    97.5% unit
-1     Control   1  6 -Inf -Inf inactive       NA       NA       NA mg/L
-2 Substance X   4 12    1    3   probit 2.161905 2.105861 2.214359 mg/L
-3 Substance X   4 12    1    3    logit 2.160948 2.112152 2.207912 mg/L
-4 Substance X   4 12    1    3  weibull 2.174365       NA       NA mg/L
-5 Substance Y   4 12    1    3   active       NA       NA       NA mg/L
-       sigma        a         b
-1         NA       NA        NA
-2 0.04131746 2.161905 0.5061306
-3 0.03758732 2.160948 0.2991424
-4 0.05723870 3.009640 2.0362368
-5         NA       NA        NA
+> print(rXY,digits=5)
+    Substance ndl  n  lld  lhd    mtype logED50   2.5%  97.5% unit    sigma
+1     Control   1  6 -Inf -Inf inactive      NA     NA     NA mg/L       NA
+2 Substance X   4 12    1    3   probit  2.1619 2.1059 2.2144 mg/L 0.041317
+3 Substance X   4 12    1    3    logit  2.1609 2.1122 2.2079 mg/L 0.037587
+4 Substance X   4 12    1    3  weibull  2.1744     NA     NA mg/L 0.057239
+5 Substance Y   4 12    1    3   active      NA     NA     NA mg/L       NA
+       a       b
+1     NA      NA
+2 2.1619 0.50613
+3 2.1609 0.29914
+4 3.0096 2.03624
+5     NA      NA
 > 

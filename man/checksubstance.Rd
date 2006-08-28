@@ -6,7 +6,10 @@
   the data.
 }
 \usage{
-  checksubstance(substance,db="cytotox",experimentator="\%",celltype="\%",enzymetype="\%",whereClause="1",ok="\%")
+  checksubstance(substance, db = "cytotox", experimentator = "\%", 
+    celltype = "\%", enzymetype = "\%", organism = "\%", 
+    endpoint = "\%",
+    whereClause = "1", ok = "\%")
 }
 \arguments{
   \item{substance}{
@@ -25,9 +28,15 @@
   \item{enzymetype}{
     Currently, only data for AChE, GR and GST are supported. The default value
     is "\%", i.e. data for any enzyme type will be displayed.}
+  \item{organism}{
+    The latin name of the tested organism, if the ecotox db was selected. The
+    default value is "\%", i.e. data for any organism will be displayed.}
+  \item{endpoint}{
+    The endpoint that should be used for selecting the data. Only important if
+    the database "ecotox" is used. Defaults to "\%".}
   \item{whereClause}{
     With this argument, additional conditions for the SQL query can be set, 
-    e.g. "where plate != 710". The default is 1 (in SQL syntax this means TRUE).}
+    e.g. "plate != 710". The default is 1 (in SQL syntax this means TRUE).}
   \item{ok}{
     With the default value "\%", all data in the database is retrieved for the 
     specified substance.}

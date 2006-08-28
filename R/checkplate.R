@@ -1,4 +1,4 @@
-checkplate <- function(id,db="cytotox")
+checkplate <- function(id, db = "cytotox")
 {
-    checkexperiment(id,db=db)
+    checkexperiment(id, db = db)
 }

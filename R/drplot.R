@@ -2,10 +2,12 @@ drplot <- function(drresults, data,
         dtype = "std", alpha = 0.95, ctype = "none",
         path = "./", fileprefix = "drplot", overlay = FALSE,
         xlim = c("auto","auto"), ylim = c("auto","auto"),
+        xlab = paste("Decadic Logarithm of the dose in ", unit),
+        ylab = "Normalized response",
         postscript = FALSE, pdf = FALSE, png = FALSE, 
         bw = TRUE,
         pointsize = 12,
-        colors = 1:8, devoff=T, lpos="topright")
+        colors = 1:8, ltys = 1:8, devoff=T, lpos="topright")
 {
     # Check if all data have the same unit
     unitlevels <- levels(as.factor(drresults$unit))
@@ -81,8 +83,8 @@ drplot <- function(drresults, data,
         plot(0,type="n",
             xlim = xlim,
             ylim = ylim,
-            xlab = paste("Decadic Logarithm of the dose in ", unit),    
-            ylab = "Normalized response")
+            xlab = xlab,
+            ylab = ylab)
     } else {
         # If overlay plot is not requested, ask before showing multiple plots on the screen
         if (!postscript && !png && !pdf && length(dsubstances) > 1) {
@@ -90,6 +92,8 @@ drplot <- function(drresults, data,
             on.exit(par(op))
         } 
     }
+    # nl is the overall number of fits to draw by different line types
+    nl <- 0
 
     # Plot the data either as raw data or as error bars
     if(is.data.frame(data)) {
@@ -97,7 +101,7 @@ drplot <- function(drresults, data,
         # n is the index for the dose-response curves
         n <- 0
         if (bw) colors <- rep("black",length(dsubstances))
-        # Loop over the substances in the data
+        # Loop over the substances in the data (index n)
         for (i in dsubstances) {
             n <- n + 1
             tmp <- splitted[[i]]
@@ -128,10 +132,10 @@ drplot <- function(drresults, data,
                     plot(0,type="n",
                         xlim = xlim,
                         ylim = ylim,
-                        xlab = paste("Decadic Logarithm of the dose in ", unit),    
-                        ylab = "Normalized response")
+                        xlab = xlab,
+                        ylab = ylab)
                 }
-                if (!overlay) legend(lpos, i,lty = 1, col = color, inset=0.05)
+                if (!overlay) legend(lpos, i, lty = 1, col = color, inset=0.05)
                 tmp$dosefactor <- factor(tmp$dose)  # necessary because the old
                                                     # factor has all levels, not 
                                                     # only the ones tested with
@@ -180,31 +184,39 @@ drplot <- function(drresults, data,
                     }
                 }
 
-                # Plot the fits, if there are any
+                # Plot the fits for this substance, if there are any
                 fits <- subset(drresults,Substance == i)
-                nf <-  length(fits$Substance)  # number of fits to plot
+                nf <-  length(fits$Substance)  # number of fits to plot for this substance
                 if (nf > 0) {
                     for (j in 1:nf)
                     {
                         logED50 <- fits[j,"logED50"]
                         mtype <- as.character(fits[j, "mtype"])
                         if (mtype == "probit") {
+                            if (overlay) nl <- nl + 1 else nl = j
+                            lty <- ltys[nl]
                             scale <- fits[j,"b"]
-                            plot(function(x) pnorm(-x,-logED50,scale),lld - 0.5, lhd + 2, add=TRUE,col=color)
+                            plot(function(x) pnorm(-x,-logED50,scale),lld - 0.5, lhd + 2, add=TRUE, col=color, lty=lty)
                         }
                         if (mtype == "logit") {
+                            if (overlay) nl <- nl + 1 else nl = j
+                            lty <- ltys[nl]
                             scale <- fits[j,"b"]
-                            plot(function(x) plogis(-x,-logED50,scale),lld - 0.5, lhd + 2, add=TRUE,col=color)
+                            plot(function(x) plogis(-x,-logED50,scale),lld - 0.5, lhd + 2, add=TRUE, col=color, lty=lty)
                         }
                         if (mtype == "weibull") {
+                            if (overlay) nl <- nl + 1 else nl = j
+                            lty <- ltys[nl]
                             location <- fits[j,"a"]
                             shape <- fits[j,"b"]
-                            plot(function(x) pweibull(-x+location,shape),lld - 0.5, lhd + 2, add=TRUE,col=color)
+                            plot(function(x) pweibull(-x+location,shape),lld - 0.5, lhd + 2, add=TRUE, col=color, lty=lty)
                         }
                         if (mtype == "linlogit") {
+                            if (overlay) nl <- nl + 1 else nl = j
+                            lty <- ltys[nl]
                             plot(function(x) linlogitf(10^x,1,fits[j,"c"],fits[j,"logED50"],fits[j,"b"]),
                                 lld - 0.5, lhd + 2,
-                                add=TRUE,col=color)
+                                add=TRUE, col=color, lty=lty)
                         }
                     }
                 }
@@ -214,7 +226,7 @@ drplot <- function(drresults, data,
             }
         }
     }
-    if (overlay) legend(lpos, dsubstances,lty = 1, col = colors, inset=0.05)
+    if (overlay) legend(lpos, dsubstances, col = colors, lty = ltys, inset=0.05)
     if (overlay && (postscript || png || pdf)) {
         if (devoff) {
             dev.off()

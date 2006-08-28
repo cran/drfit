@@ -7,8 +7,8 @@
 }
 \usage{
   drplot(drresults, data, dtype, alpha, ctype, path,
-     fileprefix, overlay, xlim, ylim, postscript, pdf, png, bw,
-     pointsize, colors, devoff, lpos)
+     fileprefix, overlay, xlim, ylim, xlab, ylab, postscript, pdf, png, bw,
+     pointsize, colors, ltys, devoff, lpos)
 }
 \arguments{
   \item{drresults}{
@@ -57,6 +57,12 @@
   \item{ylim}{
     The plot limits (min,max) on the response axis.
   }
+  \item{xlab}{
+    The axis title for the x axis. Defaults to "Concentration in" \code{unit}.
+  }
+  \item{ylab}{
+    The axis title for the y axis. Defaults to "Normalized response".
+  }
   \item{postscript}{
     If TRUE, (a) postscript graph(s) will be created. Otherwise, and if 
     the pdf and png arguments are also FALSE, graphics will be
@@ -81,6 +87,9 @@
     }
   \item{colors}{
     This is a vector of colors, defaulting to 1:8, used for plotting the data.
+    }
+  \item{ltys}{
+    This is a vector of line types for the dose-response models, defaulting to 1:8.
     }
   \item{lpos}{
     An optional argument defaulting to "topright" specifying the position

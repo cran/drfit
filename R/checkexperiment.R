@@ -1,23 +1,29 @@
-checkexperiment <- function(id,db="ecotox")
+checkexperiment <- function(id, db = "ecotox", endpoint = "%")
 {
     databases <- data.frame(
-        responsetype=c("viability","activity","response"),
+        responsename=c("viability","activity","response"),
         testtype=c("celltype","enzyme","organism"),
         exptype=c("plate","plate","experiment"))
     rownames(databases) <- c("cytotox","enzymes","ecotox")
 
-    if (!(db %in% rownames(databases))) stop("Database does not exist")
+    if (!(db %in% rownames(databases))) stop("Database is not supported")
 
     library(RODBC) 
     channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
 
-    responsetype = as.character(databases[db,1])
+    responsename = as.character(databases[db,1])
     testtype = as.character(databases[db,2])
     exptype = as.character(databases[db,3])
         
-    expquery <- paste("SELECT experimentator,substance,",
-        testtype,",conc,unit,",responsetype,",performed,ok",
-        "FROM ",db," WHERE ",exptype,"=", id)
+    expquery <- paste("SELECT experimentator,substance, ",
+        testtype, ",conc,unit,", responsename, ",performed,ok",
+        " FROM ",db," WHERE ",exptype,"=", id, 
+            sep = "")
+
+    if (db == "ecotox") {
+        expquery <- paste(expquery, " AND type LIKE '", 
+                endpoint, "'", sep = "")
+    }
 
     expdata <- sqlQuery(channel,expquery)
 
@@ -57,10 +63,13 @@ checkexperiment <- function(id,db="ecotox")
         meanOfControls <- stdOfControls <- percentstdOfcontrols <- NA
     }
 
+
     if (length(expdata$experimentator) < 1) {
         stop("There is no response data for ",exptype," ",
             id," in database ",db,"\n")
     } 
+    exptypestring <- paste(toupper(substring(exptype,1,1)),
+        substring(exptype,2),sep="")
     expdata$experimentator <- factor(expdata$experimentator)
     expdata$type <- factor(expdata[[testtype]])
     expdata$performed <- factor(as.character(expdata$performed))
@@ -68,13 +77,13 @@ checkexperiment <- function(id,db="ecotox")
     expdata$unit <- factor(expdata$unit)
     expdata$ok <- factor(expdata$ok)
     
-    cat("\n",exptype," ",id," from database ",db,"\n",
-        "\tExperimentator(s): ",levels(expdata$experimentator),"\n",
-        "\tType(s): ",levels(expdata$type),"\n",
-        "\tPerformed on: ",levels(expdata$performed),"\n",
-        "\tSubstance(s): ",levels(expdata$substance),"\n",
-        "\tConcentration unit(s): ",levels(expdata$unit),"\n",
-        "\tOK: ",levels(expdata$ok),"\n",
+    cat("\n",exptypestring,id,"from database",db,":\n\n",
+        "\tExperimentator(s):\t",levels(expdata$experimentator),"\n",
+        "\tType(s):\t\t",levels(expdata$type),"\n",
+        "\tPerformed on:\t\t",levels(expdata$performed),"\n",
+        "\tSubstance(s):\t\t",levels(expdata$substance),"\n",
+        "\tConcentration unit(s):\t",levels(expdata$unit),"\n",
+        "\tOK:\t\t\t",levels(expdata$ok),"\n",
         "\t\tNumber \tMean \tStd. Dev. \t% Std. Dev.\n",
         "\tblind\t",numberOfBlinds,"\t",meanOfBlinds,"\t",stdOfBlinds,"\n",
         "\tcontrol\t",numberOfControls,"\t",meanOfControls,"\t",
@@ -107,12 +116,12 @@ checkexperiment <- function(id,db="ecotox")
         xlim=c(lld - 0.5, lhd + 2), 
         ylim= c(-0.1, 2), 
         xlab=paste("decadic logarithm of the concentration in ",levels(expdata$unit)),
-        ylab=responsetype)
+        ylab=responsename)
     
     drdatalist <- split(drdata,drdata$substance)
     
     for (i in 1:length(drdatalist)) {
-        points(log10(drdatalist[[i]]$conc),drdatalist[[i]][[responsetype]],col=i);
+        points(log10(drdatalist[[i]]$conc),drdatalist[[i]][[responsename]],col=i);
     }
 
     legend("topright",substances, pch=1, col=1:length(substances), inset=0.05)

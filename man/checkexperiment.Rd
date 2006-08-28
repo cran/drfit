@@ -7,16 +7,19 @@
   specified database, box plot controls, and plot the dose-response data.
 }
 \usage{
-  checkplate(id,db="cytotox")
-  checkexperiment(id,db="ecotox")
+  checkplate(id, db = "cytotox")
+  checkexperiment(id, db = "ecotox", endpoint = "\%")
 }
 \arguments{
   \item{id}{
     The id of the experiment or the plate identifying it within the database.}
   \item{db}{
-  The database to be used. Currently, the microtiter plate databases
-  "cytotox", "enzymes" of the UFT Department of Bioorganic Chemistry are
-  supported, as well as the database of ecotoxicity experiments "ecotox".}
+    The database to be used. Currently, the microtiter plate databases
+    "cytotox", "enzymes" of the UFT Department of Bioorganic Chemistry are
+    supported, as well as the database of ecotoxicity experiments "ecotox".}
+  \item{endpoint}{
+    The endpoint that should be used for selecting the data. Only important if
+    the database "ecotox" is used. Defaults to "\%".}
 }
 \value{
   The function lists a report and shows two graphs side by side.

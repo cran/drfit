@@ -203,32 +203,40 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                                 start=list(location=startlogED50[[i]],shape=ws0)))
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
-                                fit <- TRUE
                                 ri <- ri + 1
-                                s <- summary(m)
-                                sigma[[ri]] <- s$sigma
-                                rsubstance[[ri]] <- i
-                                rndl[[ri]] <- ndl
-                                rn[[ri]] <- n
-                                runit[[ri]] <- unit
-                                rlld[[ri]] <- log10(lowestdose)
-                                rlhd[[ri]] <- log10(highestdose)
                                 a[[ri]] <- coef(m)[["location"]]
                                 b[[ri]] <- coef(m)[["shape"]]
                                 sqrdev <- function(logdose) {
                                     (0.5 - pweibull( - logdose + a[[ri]], b[[ri]]))^2 
                                 }
                                 logED50[[ri]] <- nlm(sqrdev,startlogED50[[i]])$estimate
-                                c[[ri]] <- NA
-                                logED50low[[ri]] <- NA
-                                logED50high[[ri]] <- NA
-                                if (logED50[[ri]] > rlhd[[ri]]) {
-                                    mtype[[ri]] <- "no fit"
-                                    logED50[[ri]] <- NA
-                                    a[[ri]] <- NA
-                                    b[[ri]] <- NA
+                                if (sqrdev(logED50[[ri]]) > 0.1) {
+                                    cat("\nCan't find ED50 for fitted weibull model of ",i,
+                                        "data\nwith startlogED50", startlogED50[[i]],"\n")
+                                    ri <- ri - 1
+                                    length(a) <- length(b) <- ri
+                                    length(logED50) <- ri
                                 } else {
-                                    mtype[[ri]] <- "weibull"
+                                    c[[ri]] <- NA
+                                    fit <- TRUE
+                                    s <- summary(m)
+                                    sigma[[ri]] <- s$sigma
+                                    rsubstance[[ri]] <- i
+                                    rndl[[ri]] <- ndl
+                                    rn[[ri]] <- n
+                                    runit[[ri]] <- unit
+                                    rlld[[ri]] <- log10(lowestdose)
+                                    rlhd[[ri]] <- log10(highestdose)
+                                    logED50low[[ri]] <- NA
+                                    logED50high[[ri]] <- NA
+                                    if (logED50[[ri]] > rlhd[[ri]]) {
+                                        mtype[[ri]] <- "no fit"
+                                        logED50[[ri]] <- NA
+                                        a[[ri]] <- NA
+                                        b[[ri]] <- NA
+                                    } else {
+                                        mtype[[ri]] <- "weibull"
+                                    }
                                 }
                             }
                         }

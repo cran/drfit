@@ -1,60 +1,94 @@
-checksubstance <- function(substance,db="cytotox",experimentator="%",celltype="%",enzymetype="%",whereClause="1",ok="%") 
+checksubstance <- function(substance, db = "cytotox", experimentator = "%",
+        celltype = "%", enzymetype = "%", organism = "%", 
+        endpoint = "%",
+        whereClause = "1", ok= "%") 
 {
+    databases <- data.frame(
+        responsename=c("viability","activity","response"),
+        testtype=c("celltype","enzyme","organism"),
+        exptype=c("plate","plate","experiment"))
+    rownames(databases) <- c("cytotox","enzymes","ecotox")
+
+    if (!(db %in% rownames(databases))) stop("Database is not supported")
+
     library(RODBC) 
     channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
 
+    responsename = as.character(databases[db,1])
+    testtype = as.character(databases[db,2])
+    exptype = as.character(databases[db,3])
+
     if (db == "cytotox") {
-        responsetype <- "viability"
-        testtype <- "celltype"
         type <- celltype
-    } else {
-        responsetype <- "activity"
-        testtype <- "enzyme"
+    } 
+    if (db == "enzymes") {
         type <- enzymetype
-    }
-    query <- paste("SELECT experimentator,substance,",testtype,",plate,conc,unit,",responsetype,",ok",
+    } 
+    if (db == "ecotox") {
+        type <- organism
+    } 
+
+    query <- paste("SELECT experimentator,substance,",
+        testtype, ",", exptype, ",conc,unit,",responsename,",ok",
         " FROM ",db," WHERE substance LIKE '",
         substance,"' AND experimentator LIKE '",
         experimentator,"' AND ",testtype," LIKE '",
         type,"' AND ",
-        whereClause," AND ok LIKE '",ok,"'",sep="")
+        whereClause," AND ok LIKE '",ok,"'",
+                sep = "")
+
+    if (db == "ecotox") {
+        query <- paste(query, " AND type LIKE '", 
+                endpoint, "'", sep = "")
+    }
 
     data <- sqlQuery(channel,query)
     odbcClose(channel)
+
+    if (length(data$experimentator) < 1) {
+        stop(paste("\nNo response data for",substance,"in database",
+                db,"found with these parameters\n"))
+    } 
     
     data$experimentator <- factor(data$experimentator)    
     data$substance <- factor(data$substance)
     substances <- levels(data$substance)    
     data$type <- factor(data[[testtype]])                
-    data$plate <- factor(data$plate)                        
-    plates <- levels(data$plate)
+    data[[exptype]] <- factor(data[[exptype]])                        
+    experiments <- levels(data[[exptype]])
     concentrations <- split(data$conc,data$conc)
     concentrations <- as.numeric(names(concentrations))
     data$unit <- factor(data$unit)                        
     data$ok <- factor(data$ok)
-    
-    if (length(plates)>6) {
-        palette(rainbow(length(plates)))      
+
+    if (length(experiments)>6) {
+        palette(rainbow(length(experiments)))      
     }
  
-    plot(log10(data$conc),data[[responsetype]],
+    plot(log10(data$conc),data[[responsename]],
         xlim=c(-2.5, 4.5),                                                                  
         ylim= c(-0.1, 2),                                                                 
         xlab=paste("decadic logarithm of the concentration in ",levels(data$unit)),    
-        ylab=responsetype)  
+        ylab=responsename)  
         
-    platelist <- split(data,data$plate)
+    explist <- split(data,data[[exptype]])
    
-    for (i in 1:length(platelist)) {    
-        points(log10(platelist[[i]]$conc),platelist[[i]][[responsetype]],col=i);          
+    for (i in 1:length(explist)) {    
+        points(log10(explist[[i]]$conc),explist[[i]][[responsename]],col=i);          
     }       
     
-    legend("topleft", plates, pch=1, col=1:length(plates), inset=0.05)
+    legend("topleft", experiments, pch=1, col=1:length(experiments), inset=0.05)
     title(main=paste(substance," - ",levels(data$experimentator)," - ",levels(data$type)))
- 
-    cat("Substanz ",substance,"\n",
-        "\tExperimentator(s):",levels(data$experimentator),"\n",
-        "\tType(s):\t",levels(data$type),"\n",
-        "\tSubstance(s):\t",levels(data$substance),"\n",
-        "\tPlate(s):\t",plates,"\n\n")
+
+    exptypename <-  paste(toupper(substring(exptype,1,1)), 
+        substring(exptype,2), sep = "")
+    experimentators <- paste(levels(data$experimentator), collapse = " ")
+    types <- paste(levels(data$type), collapse = " ")
+    experiments <- paste(levels(data[[exptype]]), collapse = " ")
+    class(experiments)
+    cat("\n\tSubstanz:\t\t",substance,"\n",
+        "\tExperimentator(s):\t", experimentators,"\n",
+        "\tType(s): \t\t",types,"\n",
+        "\tEndpoint: \t\t",endpoint,"\n",
+        "\t", exptypename, "(s):\t\t",experiments,"\n\n", sep = "")
 }
