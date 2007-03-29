@@ -72,7 +72,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                         length(subset(linlogitWrong,linlogitWrong == i))==0 &&
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ linlogitf(dose,1,f,logED50,b),
-                                data=tmp,
+                                data=tmp, algorithm="port",
                                 start=list(f=f0,logED50=startlogED50[[i]],b=b0)))
                         if (!inherits(m, "try-error")) {
                             fit <- TRUE
@@ -114,7 +114,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                     if (probit &&
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ pnorm(-log10(dose),-logED50,scale),
-                                    data=tmp,
+                                    data=tmp, algorithm="port",
                                     start=list(logED50=startlogED50[[i]],scale=ps0)))
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
@@ -157,7 +157,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                     if (logit &&
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ plogis(-log10(dose),-logED50,scale),
-                                data=tmp,
+                                data=tmp, algorithm="port",
                                 start=list(logED50=startlogED50[[i]],scale=ls0)))
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
@@ -199,7 +199,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                     if (weibull &&
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ pweibull(-log10(dose)+location,shape),
-                                data=tmp,
+                                data=tmp, algorithm="port",
                                 start=list(location=startlogED50[[i]],shape=ws0)))
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {

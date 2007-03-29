@@ -1,6 +1,6 @@
 
-R : Copyright 2006, The R Foundation for Statistical Computing
-Version 2.3.1 beta (2006-05-18 r38119)
+R version 2.4.1 (2006-12-18)
+Copyright (C) 2006 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -45,15 +45,15 @@ Waiting for profiling to be done...
 IM1-10 BF4: Fitting data...
 Waiting for profiling to be done...
 > print(rIM1xVibrio,digits=5)
-   Substance ndl  n      lld    lhd  mtype  logED50     2.5%    97.5% unit
-1   IM13 BF4  13 22 -5.30103 4.6990 probit  3.93991  3.86362  4.01601   然
-2   IM14 BF4  12 57 -4.30103 4.6990 probit  3.54421  3.50302  3.58555   然
-3   IM15 BF4   7 20 -0.30103 4.6990 probit  3.13985  3.11359  3.16624   然
-4   IM16 BF4  13 30 -4.30103 4.6990 probit  3.18042  3.14358  3.21762   然
-5   IM17 BF4  10 20 -1.30103 4.6990 probit  2.43173  2.36807  2.49512   然
-6   IM18 BF4  10 17 -2.30103 2.6990 probit  1.40152  1.31467  1.48806   然
-7   IM19 BF4  13 22 -5.30103 2.6990 probit  0.71579  0.67037  0.75925   然
-8 IM1-10 BF4  11 20 -6.30103 2.6990 probit -0.17903 -0.25694 -0.10372   然
+   Substance ndl  n      lld    lhd  mtype  logED50     2.5%    97.5%   unit
+1   IM13 BF4  13 22 -5.30103 4.6990 probit  3.93991  3.86362  4.01601 microM
+2   IM14 BF4  12 57 -4.30103 4.6990 probit  3.54421  3.50302  3.58555 microM
+3   IM15 BF4   7 20 -0.30103 4.6990 probit  3.13985  3.11359  3.16624 microM
+4   IM16 BF4  13 30 -4.30103 4.6990 probit  3.18042  3.14358  3.21762 microM
+5   IM17 BF4  10 20 -1.30103 4.6990 probit  2.43173  2.36807  2.49512 microM
+6   IM18 BF4  10 17 -2.30103 2.6990 probit  1.40152  1.31467  1.48806 microM
+7   IM19 BF4  13 22 -5.30103 2.6990 probit  0.71579  0.67037  0.75925 microM
+8 IM1-10 BF4  11 20 -6.30103 2.6990 probit -0.17903 -0.25694 -0.10372 microM
      sigma        a       b
 1 0.063029  3.93991 0.57631
 2 0.059054  3.54421 0.65613
