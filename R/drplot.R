@@ -7,7 +7,7 @@ drplot <- function(drresults, data,
         postscript = FALSE, pdf = FALSE, png = FALSE, 
         bw = TRUE,
         pointsize = 12,
-        colors = 1:8, ltys = 1:8, devoff=T, lpos="topright")
+        colors = 1:8, ltys = 1:8, devoff=TRUE, lpos="topright")
 {
     # Check if all data have the same unit
     unitlevels <- levels(as.factor(drresults$unit))
