@@ -65,19 +65,19 @@ drplot <- function(drresults, data,
             filename = paste(path,fileprefix,".eps",sep="")
             postscript(file=filename,
                     paper="special",width=7,height=7,horizontal=FALSE, pointsize=pointsize)
-            cat("Created File: ",filename,"\n")
+            message("Created File: ",filename,"\n")
         } 
         if (pdf) {
             filename = paste(path,fileprefix,".pdf",sep="")
             pdf(file=filename,
                     paper="special",width=7,height=7,horizontal=FALSE, pointsize=pointsize)
-            cat("Created File: ",filename,"\n")
+            message("Created File: ",filename,"\n")
         } 
         if (png) {
             filename = paste(path,fileprefix,".png",sep="")
             png(filename=filename,
                 width=500, height=500, pointsize=pointsize)
-            cat("Created File: ",filename,"\n")
+            message("Created File: ",filename,"\n")
         }
             
         plot(0,type="n",
@@ -114,19 +114,19 @@ drplot <- function(drresults, data,
                         filename = paste(path,fileprefix,sub(" ","_",i),".eps",sep="")
                         postscript(file=filename,
                                 paper="special",width=7,height=7,horizontal=FALSE,pointsize=pointsize)
-                        cat("Created File: ",filename,"\n")
+                        message("Created File: ",filename,"\n")
                     } 
                     if (pdf) {
                         filename = paste(path,fileprefix,sub(" ","_",i),".pdf",sep="")
                         pdf(file=filename,
                                 paper="special",width=7,height=7,horizontal=FALSE,pointsize=pointsize)
-                        cat("Created File: ",filename,"\n")
+                        message("Created File: ",filename,"\n")
                     } 
                     if (png) {
                         filename = paste(path,fileprefix,sub(" ","_",i),".png",sep="")
                         png(filename=filename,
                             width=500, height=500, pointsize=pointsize)
-                        cat("Created File: ",filename,"\n")
+                        message("Created File: ",filename,"\n")
                     }
                         
                     plot(0,type="n",
@@ -222,7 +222,7 @@ drplot <- function(drresults, data,
                 }
                 if (!overlay && (postscript || png || pdf)) dev.off()
             } else {
-                cat("No data for ",i,"\n")
+                message("No data for ",i,"\n")
             }
         }
     }

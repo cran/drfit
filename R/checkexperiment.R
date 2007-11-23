@@ -11,9 +11,16 @@ checkexperiment <- function(id, db = "ecotox", endpoint = "%")
     library(RODBC) 
     channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
 
+
     responsename = as.character(databases[db,1])
     testtype = as.character(databases[db,2])
     exptype = as.character(databases[db,3])
+
+    exptable <- paste(exptype, "s", sep="")
+    commentquery <- paste("SELECT comment FROM ", exptable ,
+        " WHERE ", exptype, " = ", id)
+    commentdata <- sqlQuery(channel,commentquery)
+    comment <- as.character(commentdata[[1]])
         
     expquery <- paste("SELECT experimentator,substance, ",
         testtype, ",conc,unit,", responsename, ",performed,ok",
@@ -83,7 +90,8 @@ checkexperiment <- function(id, db = "ecotox", endpoint = "%")
         "\tPerformed on:\t\t",levels(expdata$performed),"\n",
         "\tSubstance(s):\t\t",levels(expdata$substance),"\n",
         "\tConcentration unit(s):\t",levels(expdata$unit),"\n",
-        "\tOK:\t\t\t",levels(expdata$ok),"\n",
+        "\tComment:\t\t",comment,"\n",
+        "\tOK Levels:\t\t\t",levels(expdata$ok),"\n",
         "\t\tNumber \tMean \tStd. Dev. \t% Std. Dev.\n",
         "\tblind\t",numberOfBlinds,"\t",meanOfBlinds,"\t",stdOfBlinds,"\n",
         "\tcontrol\t",numberOfControls,"\t",meanOfControls,"\t",

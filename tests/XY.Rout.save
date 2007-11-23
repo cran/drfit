@@ -1,6 +1,6 @@
 
-R version 2.4.1 (2006-12-18)
-Copyright (C) 2006 The R Foundation for Statistical Computing
+R version 2.6.0 (2007-10-03)
+Copyright (C) 2007 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -23,11 +23,14 @@ Loading required package: RODBC
 
 Control: Fitting data...
 
+
 Substance X: Fitting data...
+
 Waiting for profiling to be done...
 Waiting for profiling to be done...
 
 Substance Y: Fitting data...
+
 > print(rXY,digits=5)
     Substance ndl  n  lld  lhd    mtype logED50   2.5%  97.5% unit    sigma
 1     Control   1  6 -Inf -Inf inactive      NA     NA     NA mg/L       NA

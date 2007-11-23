@@ -22,7 +22,7 @@
     the database "ecotox" is used. Defaults to "\%".}
 }
 \value{
-  The function lists a report and shows two graphs side by side.
+  The function lists a report and shows two graphs.
 }
 \examples{
 # Check plate number 3 in the cytotox database

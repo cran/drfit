@@ -1,5 +1,5 @@
 
-R version 2.6.0 RC (2007-09-25 r42980)
+R version 2.6.0 (2007-10-03)
 Copyright (C) 2007 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -23,7 +23,9 @@ Loading required package: RODBC
 
 IM13 BF4: Fitting data...
 
+
 IM14 BF4: Fitting data...
+
 Error in nls(response ~ linlogitf(dose, 1, f, logED50, b), data = tmp,  : 
   Convergence failure: false convergence (8)
 Error in numericDeriv(form[[3]], names(ind), env, ifelse(internalPars <  : 
@@ -33,9 +35,12 @@ In pnorm(q, mean, sd, lower.tail, log.p) : NaNs produced
 
 IM15 BF4: Fitting data...
 
+
 IM16 BF4: Fitting data...
 
+
 IM17 BF4: Fitting data...
+
 Waiting for profiling to be done...
 Error in numericDeriv(form[[3]], names(ind), env, ifelse(internalPars <  : 
   Missing value or an infinity produced when evaluating the model
@@ -43,6 +48,7 @@ In addition: Warning message:
 In pnorm(q, mean, sd, lower.tail, log.p) : NaNs produced
 
 IM18 BF4: Fitting data...
+
 Waiting for profiling to be done...
 Error in numericDeriv(form[[3]], names(ind), env, ifelse(internalPars <  : 
   Missing value or an infinity produced when evaluating the model
@@ -50,6 +56,7 @@ In addition: Warning message:
 In pnorm(q, mean, sd, lower.tail, log.p) : NaNs produced
 
 IM19 BF4: Fitting data...
+
 Waiting for profiling to be done...
 Error in numericDeriv(form[[3]], names(ind), env, ifelse(internalPars <  : 
   Missing value or an infinity produced when evaluating the model
@@ -57,6 +64,7 @@ In addition: Warning message:
 In pnorm(q, mean, sd, lower.tail, log.p) : NaNs produced
 
 IM1-10 BF4: Fitting data...
+
 Waiting for profiling to be done...
 > print(rIM1xIPC81,digits=5)
    Substance ndl   n       lld    lhd    mtype logED50    2.5%   97.5%   unit

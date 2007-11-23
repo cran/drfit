@@ -32,13 +32,13 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
         fit <- FALSE
         if (length(tmp) != 0) {
             unit <- levels(as.factor(as.vector(tmp$unit)))
-            cat("\n",i,": Fitting data...\n",sep="")
+            message("\n",i,": Fitting data...\n")
         } else {
             unit <- ""
-            cat("\n",i,": No data\n",sep="")
+            message("\n",i,": No data\n")
         }
         if (length(unit) > 1) {
-            cat("More than one unit for substance ",i,", halting\n\n",sep="")
+            message("More than one unit for substance ",i,", halting\n\n")
             break
         }
         if (length(tmp$response) == 0) {
@@ -211,8 +211,8 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                                 }
                                 logED50[[ri]] <- nlm(sqrdev,startlogED50[[i]])$estimate
                                 if (sqrdev(logED50[[ri]]) > 0.1) {
-                                    cat("\nCan't find ED50 for fitted weibull model of ",i,
-                                        "data\nwith startlogED50", startlogED50[[i]],"\n")
+                                    message("\nCan't find ED50 for fitted weibull model of ",i,
+                                        " data\nwith startlogED50 ", startlogED50[[i]],"\n")
                                     ri <- ri - 1
                                     length(a) <- length(b) <- ri
                                     length(logED50) <- ri
