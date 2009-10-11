@@ -1,6 +1,6 @@
 
-R version 2.6.0 (2007-10-03)
-Copyright (C) 2007 The R Foundation for Statistical Computing
+R version 2.9.2 (2009-08-24)
+Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -24,7 +24,6 @@ Loading required package: RODBC
 Na Pyrithion: Fitting data...
 
 Waiting for profiling to be done...
-Error in prof$getProfile() : attempt to apply non-function
 
 Pyridin: Fitting data...
 
@@ -48,7 +47,6 @@ Waiting for profiling to be done...
 PyS: Fitting data...
 
 Waiting for profiling to be done...
-Error in prof$getProfile() : attempt to apply non-function
 
 Zn Pyrithion: Fitting data...
 
@@ -74,13 +72,13 @@ NaJ: Fitting data...
 
 > print(rpyr,digits=3)
       Substance ndl   n    lld lhd    mtype logED50   2.5%   97.5%   unit sigma
-1  Na Pyrithion  20 108 -2.107 2.0 linlogit  -0.346     NA      NA microM 0.209
+1  Na Pyrithion  20 108 -2.107 2.0 linlogit  -0.346 -0.428 -0.2648 microM 0.209
 2       Pyridin  19 161  0.592 3.7 inactive      NA     NA      NA microM    NA
 3          PyNO  19  81  0.592 3.7   no fit      NA     NA      NA microM 0.107
 4         (PT)2  19  81 -2.408 2.0 linlogit  -0.420 -0.533      NA microM 0.205
 5         MSO2P  28 108 -1.709 3.7 inactive      NA     NA      NA microM    NA
-6         MSPHI  19  81  0.592 3.7   probit   3.663  3.555  3.8805 microM 0.129
-7           PyS  18  80 -0.408 3.0 linlogit   2.756     NA      NA microM 0.146
+6         MSPHI  19  81  0.592 3.7   probit   3.663  3.555  3.8802 microM 0.129
+7           PyS  18  80 -0.408 3.0 linlogit   2.756     NA  2.8228 microM 0.146
 8  Zn Pyrithion  27  81 -2.107 2.0 linlogit  -0.413 -0.529 -0.2998 microM 0.229
 9  Cu Pyrithion  19  79 -2.408 2.0 linlogit  -0.307 -0.475 -0.1544 microM 0.245
 10 Fe Pyrithion  19  81 -2.408 2.0 linlogit  -0.353 -0.500 -0.2146 microM 0.234

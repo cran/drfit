@@ -4,6 +4,7 @@ drplot <- function(drresults, data,
         xlim = c("auto","auto"), ylim = c("auto","auto"),
         xlab = paste("Decadic Logarithm of the dose in ", unit),
         ylab = "Normalized response",
+        axes = TRUE, frame.plot = TRUE,
         postscript = FALSE, pdf = FALSE, png = FALSE, 
         bw = TRUE,
         pointsize = 12,
@@ -84,7 +85,9 @@ drplot <- function(drresults, data,
             xlim = xlim,
             ylim = ylim,
             xlab = xlab,
-            ylab = ylab)
+            ylab = ylab,
+            axes = axes,
+            frame.plot = frame.plot)
     } else {
         # If overlay plot is not requested, ask before showing multiple plots on the screen
         if (!postscript && !png && !pdf && length(dsubstances) > 1) {
@@ -133,7 +136,9 @@ drplot <- function(drresults, data,
                         xlim = xlim,
                         ylim = ylim,
                         xlab = xlab,
-                        ylab = ylab)
+                        ylab = ylab,
+                        axes = axes,
+                        frame.plot = frame.plot)
                 }
                 if (!overlay) legend(lpos, i, lty = 1, col = color, inset=0.05)
                 tmp$dosefactor <- factor(tmp$dose)  # necessary because the old

@@ -1,6 +1,6 @@
 
-R version 2.6.0 (2007-10-03)
-Copyright (C) 2007 The R Foundation for Statistical Computing
+R version 2.9.2 (2009-08-24)
+Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -28,7 +28,7 @@ IM14 BF4: Fitting data...
 
 Error in nls(response ~ linlogitf(dose, 1, f, logED50, b), data = tmp,  : 
   Convergence failure: false convergence (8)
-Error in numericDeriv(form[[3]], names(ind), env, ifelse(internalPars <  : 
+Error in numericDeriv(form[[3L]], names(ind), env, ifelse(internalPars <  : 
   Missing value or an infinity produced when evaluating the model
 In addition: Warning message:
 In pnorm(q, mean, sd, lower.tail, log.p) : NaNs produced
@@ -42,7 +42,7 @@ IM16 BF4: Fitting data...
 IM17 BF4: Fitting data...
 
 Waiting for profiling to be done...
-Error in numericDeriv(form[[3]], names(ind), env, ifelse(internalPars <  : 
+Error in numericDeriv(form[[3L]], names(ind), env, ifelse(internalPars <  : 
   Missing value or an infinity produced when evaluating the model
 In addition: Warning message:
 In pnorm(q, mean, sd, lower.tail, log.p) : NaNs produced
@@ -50,7 +50,7 @@ In pnorm(q, mean, sd, lower.tail, log.p) : NaNs produced
 IM18 BF4: Fitting data...
 
 Waiting for profiling to be done...
-Error in numericDeriv(form[[3]], names(ind), env, ifelse(internalPars <  : 
+Error in numericDeriv(form[[3L]], names(ind), env, ifelse(internalPars <  : 
   Missing value or an infinity produced when evaluating the model
 In addition: Warning message:
 In pnorm(q, mean, sd, lower.tail, log.p) : NaNs produced
@@ -58,7 +58,7 @@ In pnorm(q, mean, sd, lower.tail, log.p) : NaNs produced
 IM19 BF4: Fitting data...
 
 Waiting for profiling to be done...
-Error in numericDeriv(form[[3]], names(ind), env, ifelse(internalPars <  : 
+Error in numericDeriv(form[[3L]], names(ind), env, ifelse(internalPars <  : 
   Missing value or an infinity produced when evaluating the model
 In addition: Warning message:
 In pnorm(q, mean, sd, lower.tail, log.p) : NaNs produced
@@ -73,7 +73,7 @@ Waiting for profiling to be done...
 3   IM15 BF4   9 135  0.591760 3.0000 inactive      NA      NA      NA microM
 4   IM16 BF4   9 108  0.591760 3.0000 inactive      NA      NA      NA microM
 5   IM17 BF4   9  81  0.591760 3.0000 linlogit  2.5786 2.50572 2.66174 microM
-6   IM18 BF4   9 135  0.591760 3.0000 linlogit  1.6806 1.62298 1.74189 microM
+6   IM18 BF4   9 135  0.591760 3.0000 linlogit  1.6806 1.62297 1.74189 microM
 7   IM19 BF4   9  81  0.591760 3.0000 linlogit  1.6496 1.59848 1.70315 microM
 8 IM1-10 BF4  11 162 -0.010300 3.0000 linlogit  0.7697 0.68701 0.85442 microM
     sigma      a      b        c

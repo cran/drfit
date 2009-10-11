@@ -7,8 +7,8 @@
 }
 \usage{
   drplot(drresults, data, dtype, alpha, ctype, path,
-     fileprefix, overlay, xlim, ylim, xlab, ylab, postscript, pdf, png, bw,
-     pointsize, colors, ltys, devoff, lpos)
+     fileprefix, overlay, xlim, ylim, xlab, ylab, axes, frame.plot, postscript,
+     pdf, png, bw, pointsize, colors, ltys, devoff, lpos)
 }
 \arguments{
   \item{drresults}{
@@ -62,6 +62,14 @@
   }
   \item{ylab}{
     The axis title for the y axis. Defaults to "Normalized response".
+  }
+  \item{axes}{
+    Specifies if axes should be drawn. Default is TRUE, as in
+    \code{\link{plot.default}}
+  }
+  \item{frame.plot}{
+    Specifies if the plot should be framed. Default is TRUE, as in
+    \code{\link{plot.default}}
   }
   \item{postscript}{
     If TRUE, (a) postscript graph(s) will be created. Otherwise, and if 

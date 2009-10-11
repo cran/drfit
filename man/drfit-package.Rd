@@ -23,8 +23,8 @@ Author and Maintainer: Johannes Ranke <jranke@uni-bremen.de>
 \keyword{ nonlinear }
 \seealso{
 On CRAN, there is another, more statistically sophisticated package with
-similar functionality called \code{\link[drc:drc-package]{drc}}. I think 
-the advantage of my package is its user-friendliness.
+similar functionality called \code{drc}. I think the advantage of my package
+is its user-friendliness.
 }
 \examples{
 data(antifoul)

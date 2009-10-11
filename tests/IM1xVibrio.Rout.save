@@ -1,6 +1,6 @@
 
-R version 2.6.0 (2007-10-03)
-Copyright (C) 2007 The R Foundation for Statistical Computing
+R version 2.9.2 (2009-08-24)
+Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -60,7 +60,7 @@ Waiting for profiling to be done...
 4   IM16 BF4  13 30 -4.30103 4.6990 probit  3.18042  3.14358  3.21762 microM
 5   IM17 BF4  10 20 -1.30103 4.6990 probit  2.43173  2.36807  2.49512 microM
 6   IM18 BF4  10 17 -2.30103 2.6990 probit  1.40152  1.31467  1.48806 microM
-7   IM19 BF4  13 22 -5.30103 2.6990 probit  0.71579  0.67037  0.75925 microM
+7   IM19 BF4  13 22 -5.30103 2.6990 probit  0.71579  0.67038  0.75925 microM
 8 IM1-10 BF4  11 20 -6.30103 2.6990 probit -0.17903 -0.25694 -0.10372 microM
      sigma        a       b
 1 0.063029  3.93991 0.57631
