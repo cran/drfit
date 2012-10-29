@@ -1,7 +1,8 @@
 
-R version 2.9.2 (2009-08-24)
-Copyright (C) 2009 The R Foundation for Statistical Computing
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -19,7 +20,7 @@ Type 'q()' to quit R.
 Loading required package: MASS
 Loading required package: RODBC
 > data(pyrithione)
-> rpyr <- drfit(pyrithione,linlogit=TRUE,linlogitWrong=c("MSPT","MSPHI"))
+> rpyr <- drfit(pyrithione,linlogit=TRUE,linlogitWrong=c("MSPT","MSPHI","PyS"))
 
 Na Pyrithion: Fitting data...
 
@@ -47,6 +48,10 @@ Waiting for profiling to be done...
 PyS: Fitting data...
 
 Waiting for profiling to be done...
+Error in numericDeriv(form[[3L]], names(ind), env, ifelse(internalPars <  : 
+  Missing value or an infinity produced when evaluating the model
+In addition: Warning message:
+In pnorm(-log10(dose), -logED50, scale) : NaNs produced
 
 Zn Pyrithion: Fitting data...
 
@@ -70,33 +75,36 @@ Waiting for profiling to be done...
 
 NaJ: Fitting data...
 
-> print(rpyr,digits=3)
-      Substance ndl   n    lld lhd    mtype logED50   2.5%   97.5%   unit sigma
-1  Na Pyrithion  20 108 -2.107 2.0 linlogit  -0.346 -0.428 -0.2648 microM 0.209
-2       Pyridin  19 161  0.592 3.7 inactive      NA     NA      NA microM    NA
-3          PyNO  19  81  0.592 3.7   no fit      NA     NA      NA microM 0.107
-4         (PT)2  19  81 -2.408 2.0 linlogit  -0.420 -0.533      NA microM 0.205
-5         MSO2P  28 108 -1.709 3.7 inactive      NA     NA      NA microM    NA
-6         MSPHI  19  81  0.592 3.7   probit   3.663  3.555  3.8802 microM 0.129
-7           PyS  18  80 -0.408 3.0 linlogit   2.756     NA  2.8228 microM 0.146
-8  Zn Pyrithion  27  81 -2.107 2.0 linlogit  -0.413 -0.529 -0.2998 microM 0.229
-9  Cu Pyrithion  19  79 -2.408 2.0 linlogit  -0.307 -0.475 -0.1544 microM 0.245
-10 Fe Pyrithion  19  81 -2.408 2.0 linlogit  -0.353 -0.500 -0.2146 microM 0.234
-11         MSPT  18 108 -0.408 3.0   probit   2.138  2.071  2.2051 microM 0.229
-12          TBT  38 135 -2.709 2.4 linlogit  -0.158 -0.260 -0.0505 microM 0.193
-13          NaJ  10 108  0.592 3.3 inactive      NA     NA      NA microM    NA
-        a     b         c
-1  -0.346 2.119 -0.266998
-2      NA    NA        NA
-3      NA    NA        NA
-4  -0.420 1.847 -0.515071
-5      NA    NA        NA
-6   3.663 0.439        NA
-7   2.756 0.743 -0.000993
-8  -0.413 1.742  0.610900
-9  -0.307 1.015 -0.048966
-10 -0.353 1.182  0.025082
-11  2.138 0.211        NA
-12 -0.158 1.041 -0.024165
-13     NA    NA        NA
+> print(rpyr,digits=4)
+      Substance ndl   n     lld   lhd    mtype logED50    2.5%    97.5%   unit
+1  Na Pyrithion  20 108 -2.1072 2.000 linlogit -0.3461 -0.4276 -0.26479 microM
+2       Pyridin  19 161  0.5918 3.699 inactive      NA      NA       NA microM
+3          PyNO  19  81  0.5918 3.699   no fit      NA      NA       NA microM
+4         (PT)2  19  81 -2.4082 2.000 linlogit -0.4197 -0.5326       NA microM
+5         MSO2P  28 108 -1.7093 3.699 inactive      NA      NA       NA microM
+6         MSPHI  19  81  0.5918 3.699   probit  3.6625  3.5546  3.88019 microM
+7           PyS  18  80 -0.4082 3.000   probit  2.6818      NA       NA microM
+8  Zn Pyrithion  27  81 -2.1072 2.000 linlogit -0.4133 -0.5293 -0.29980 microM
+9  Cu Pyrithion  19  79 -2.4082 2.000 linlogit -0.3075 -0.4753 -0.15444 microM
+10 Fe Pyrithion  19  81 -2.4082 2.000 linlogit -0.3535 -0.5004 -0.21460 microM
+11         MSPT  18 108 -0.4082 3.000   probit  2.1385  2.0709  2.20511 microM
+12          TBT  38 135 -2.7093 2.398 linlogit -0.1581 -0.2602 -0.05047 microM
+13          NaJ  10 108  0.5918 3.301 inactive      NA      NA       NA microM
+    sigma       a      b        c
+1  0.2086 -0.3461 2.1188 -0.26700
+2      NA      NA     NA       NA
+3  0.1073      NA     NA       NA
+4  0.2051 -0.4197 1.8467 -0.51507
+5      NA      NA     NA       NA
+6  0.1294  3.6625 0.4387       NA
+7  0.1340  2.6818 0.1250       NA
+8  0.2288 -0.4133 1.7425  0.61081
+9  0.2449 -0.3075 1.0151 -0.04897
+10 0.2338 -0.3535 1.1823  0.02508
+11 0.2288  2.1385 0.2113       NA
+12 0.1926 -0.1581 1.0407 -0.02416
+13     NA      NA     NA       NA
 > 
+> proc.time()
+   user  system elapsed 
+  1.556   0.044   1.595 

@@ -1,7 +1,8 @@
 
-R version 2.9.2 (2009-08-24)
-Copyright (C) 2009 The R Foundation for Statistical Computing
+R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -52,23 +53,26 @@ Waiting for profiling to be done...
 IM1-10 BF4: Fitting data...
 
 Waiting for profiling to be done...
-> print(rIM1xVibrio,digits=5)
-   Substance ndl  n      lld    lhd  mtype  logED50     2.5%    97.5%   unit
-1   IM13 BF4  13 22 -5.30103 4.6990 probit  3.93991  3.86362  4.01601 microM
-2   IM14 BF4  12 57 -4.30103 4.6990 probit  3.54421  3.50302  3.58555 microM
-3   IM15 BF4   7 20 -0.30103 4.6990 probit  3.13985  3.11359  3.16624 microM
-4   IM16 BF4  13 30 -4.30103 4.6990 probit  3.18042  3.14358  3.21762 microM
-5   IM17 BF4  10 20 -1.30103 4.6990 probit  2.43173  2.36807  2.49512 microM
-6   IM18 BF4  10 17 -2.30103 2.6990 probit  1.40152  1.31467  1.48806 microM
-7   IM19 BF4  13 22 -5.30103 2.6990 probit  0.71579  0.67038  0.75925 microM
-8 IM1-10 BF4  11 20 -6.30103 2.6990 probit -0.17903 -0.25694 -0.10372 microM
-     sigma        a       b
-1 0.063029  3.93991 0.57631
-2 0.059054  3.54421 0.65613
-3 0.026955  3.13985 0.55267
-4 0.045141  3.18042 0.48816
-5 0.047733  2.43173 0.63865
-6 0.056113  1.40152 0.80085
-7 0.029563  0.71579 0.69693
-8 0.040987 -0.17903 0.80194
+> print(rIM1xVibrio,digits=4)
+   Substance ndl  n    lld   lhd  mtype logED50    2.5%   97.5%   unit   sigma
+1   IM13 BF4  13 22 -5.301 4.699 probit  3.9399  3.8636  4.0160 microM 0.06303
+2   IM14 BF4  12 57 -4.301 4.699 probit  3.5442  3.5030  3.5855 microM 0.05905
+3   IM15 BF4   7 20 -0.301 4.699 probit  3.1398  3.1136  3.1662 microM 0.02695
+4   IM16 BF4  13 30 -4.301 4.699 probit  3.1804  3.1436  3.2176 microM 0.04514
+5   IM17 BF4  10 20 -1.301 4.699 probit  2.4317  2.3681  2.4951 microM 0.04773
+6   IM18 BF4  10 17 -2.301 2.699 probit  1.4015  1.3147  1.4881 microM 0.05611
+7   IM19 BF4  13 22 -5.301 2.699 probit  0.7158  0.6704  0.7592 microM 0.02956
+8 IM1-10 BF4  11 20 -6.301 2.699 probit -0.1790 -0.2569 -0.1037 microM 0.04099
+        a      b
+1  3.9399 0.5763
+2  3.5442 0.6561
+3  3.1398 0.5527
+4  3.1804 0.4882
+5  2.4317 0.6387
+6  1.4015 0.8009
+7  0.7158 0.6969
+8 -0.1790 0.8019
 > 
+> proc.time()
+   user  system elapsed 
+  0.864   0.024   0.879 
