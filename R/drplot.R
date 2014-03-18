@@ -1,3 +1,4 @@
+if(getRversion() >= '2.15.1') utils::globalVariables(c("dose", "Substance", "mtype"))
 drplot <- function(drresults, data, 
         dtype = "std", alpha = 0.95, ctype = "none",
         path = "./", fileprefix = "drplot", overlay = FALSE,
@@ -8,7 +9,8 @@ drplot <- function(drresults, data,
         postscript = FALSE, pdf = FALSE, png = FALSE, 
         bw = TRUE,
         pointsize = 12,
-        colors = 1:8, ltys = 1:8, devoff=TRUE, lpos="topright")
+        colors = 1:8, ltys = 1:8, pchs = "auto",
+        devoff=TRUE, lpos="topright")
 {
     # Check if all data have the same unit
     unitlevels <- levels(as.factor(drresults$unit))
@@ -62,6 +64,7 @@ drplot <- function(drresults, data,
     # Prepare overlay plot if requested
     if (overlay)
     {
+        if (pchs == "auto") pchs = 1:length(dsubstances)
         if (postscript) {
             filename = paste(path,fileprefix,".eps",sep="")
             postscript(file=filename,
@@ -90,6 +93,7 @@ drplot <- function(drresults, data,
             frame.plot = frame.plot)
     } else {
         # If overlay plot is not requested, ask before showing multiple plots on the screen
+        if (pchs == "auto") pchs = rep(1, length(dsubstances))
         if (!postscript && !png && !pdf && length(dsubstances) > 1) {
             op <- par(ask=TRUE)
             on.exit(par(op))
@@ -110,6 +114,7 @@ drplot <- function(drresults, data,
             tmp <- splitted[[i]]
             if (length(tmp$response) != 0) {
                 color <- colors[[n]]
+                pch <- pchs[[n]]
                 # Prepare the single graphs if an overlay is not requested
                 if (!overlay)
                 {
@@ -140,7 +145,7 @@ drplot <- function(drresults, data,
                         axes = axes,
                         frame.plot = frame.plot)
                 }
-                if (!overlay) legend(lpos, i, lty = 1, col = color, inset=0.05)
+                if (!overlay) legend(lpos, i, lty = 1, col = color, pch = pch, inset=0.05)
                 tmp$dosefactor <- factor(tmp$dose)  # necessary because the old
                                                     # factor has all levels, not 
                                                     # only the ones tested with
@@ -159,7 +164,7 @@ drplot <- function(drresults, data,
                 # Plot the data, if requested
                 if (dtype != "none") {
                     if (dtype == "raw") {
-                        points(log10(tmp$dose),tmp$response,col=color)
+                        points(log10(tmp$dose), tmp$response, col = color, pch = pch)
                     } else {
                         splitresponses <- split(tmp$response,tmp$dosefactor)
                         means <- sapply(splitresponses,mean)
@@ -182,7 +187,7 @@ drplot <- function(drresults, data,
                     {
                         x <- log10(as.numeric(levels(tmp$dosefactor)))
                         segments(x,bottoms,x,tops,col=color)
-                        points(x,means,col=color)
+                        points(x, means, col = color, pch = pch)
                         smidge <- 0.05
                         segments(x - smidge,bottoms,x + smidge,bottoms,col=color)
                         segments(x - smidge,tops,x + smidge,tops,col=color)
@@ -191,37 +196,25 @@ drplot <- function(drresults, data,
 
                 # Plot the fits for this substance, if there are any
                 fits <- subset(drresults,Substance == i)
-                nf <-  length(fits$Substance)  # number of fits to plot for this substance
+                fit.rows <- rownames(fits)
+                nf <-  length(fit.rows)  # number of fits to plot for this substance
                 if (nf > 0) {
                     for (j in 1:nf)
                     {
-                        logED50 <- fits[j,"logED50"]
-                        mtype <- as.character(fits[j, "mtype"])
-                        if (mtype == "probit") {
-                            if (overlay) nl <- nl + 1 else nl = j
-                            lty <- ltys[nl]
-                            scale <- fits[j,"b"]
-                            plot(function(x) pnorm(-x,-logED50,scale),lld - 0.5, lhd + 2, add=TRUE, col=color, lty=lty)
-                        }
-                        if (mtype == "logit") {
-                            if (overlay) nl <- nl + 1 else nl = j
-                            lty <- ltys[nl]
-                            scale <- fits[j,"b"]
-                            plot(function(x) plogis(-x,-logED50,scale),lld - 0.5, lhd + 2, add=TRUE, col=color, lty=lty)
-                        }
-                        if (mtype == "weibull") {
-                            if (overlay) nl <- nl + 1 else nl = j
-                            lty <- ltys[nl]
-                            location <- fits[j,"a"]
-                            shape <- fits[j,"b"]
-                            plot(function(x) pweibull(-x+location,shape),lld - 0.5, lhd + 2, add=TRUE, col=color, lty=lty)
-                        }
-                        if (mtype == "linlogit") {
-                            if (overlay) nl <- nl + 1 else nl = j
-                            lty <- ltys[nl]
-                            plot(function(x) linlogitf(10^x,1,fits[j,"c"],fits[j,"logED50"],fits[j,"b"]),
-                                lld - 0.5, lhd + 2,
-                                add=TRUE, col=color, lty=lty)
+                        fit.row = fit.rows[j]
+                        if (overlay) nl <- nl + 1 else nl = j
+                        lty <- ltys[nl]
+                        if (drresults[[fit.row, "mtype"]] %in% c("probit",
+                                                                 "logit",
+                                                                 "weibull",
+                                                                 "linlogit")) 
+                        {
+                            m <- attr(drresults, "models")[[as.numeric(fit.row)]]
+                            of <- function(x) {
+                                predict(m, data.frame(dose = 10^x))
+                            } 
+                            plot(of, lld - 0.5, lhd + 2, 
+                                 add = TRUE, col = color, lty = lty)
                         }
                     }
                 }
@@ -231,7 +224,7 @@ drplot <- function(drresults, data,
             }
         }
     }
-    if (overlay) legend(lpos, dsubstances, col = colors, lty = ltys, inset=0.05)
+    if (overlay) legend(lpos, dsubstances, col = colors, pch = pchs, lty = ltys, inset=0.05)
     if (overlay && (postscript || png || pdf)) {
         if (devoff) {
             dev.off()

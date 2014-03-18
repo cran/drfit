@@ -1,11 +1,13 @@
+if(getRversion() >= '2.15.1') utils::globalVariables(c("ok", "dose"))
 drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
         probit = TRUE, logit = FALSE, weibull = FALSE,
         linlogit = FALSE, level = 0.95,
         linlogitWrong = NA, allWrong = NA,
         ps0 = 1, ls0 = 0.5, ws0 = 0.5,
-        b0 = 2, f0 = 0)
+        b0 = 2, f0 = 0,
+        showED50 = FALSE,
+        EDx = NULL, EDx.tolerance = 1e-4)
 {
-    require(MASS)
     if(!is.null(data$ok)) data <- subset(data,ok!="no fit") # Don't use data
                                                             # with ok set to
                                                             # "no fit"
@@ -26,6 +28,8 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
     logED50low <- logED50high <- vector()
     a <- b <- c <- vector()
 
+    models <- list()                  # a list containing the dose-response models
+
     splitted <- split(data,data$substance)
     for (i in substances) {
         tmp <- splitted[[i]]
@@ -36,6 +40,9 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
         } else {
             unit <- ""
             message("\n",i,": No data\n")
+        }
+        if (length(unit) == 0) {
+            unit <- NA
         }
         if (length(unit) > 1) {
             message("More than one unit for substance ",i,", halting\n\n")
@@ -77,6 +84,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                         if (!inherits(m, "try-error")) {
                             fit <- TRUE
                             ri <- ri + 1
+                            models[[ri]] <- m
                             s <- summary(m)
                             sigma[[ri]] <- s$sigma
                             rsubstance[[ri]] <- i
@@ -120,6 +128,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
                                 ri <- ri + 1
+                                models[[ri]] <- m
                                 s <- summary(m)
                                 sigma[[ri]] <- s$sigma
                                 rsubstance[[ri]] <- i
@@ -163,6 +172,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
                                 ri <- ri + 1
+                                models[[ri]] <- m
                                 s <- summary(m)
                                 sigma[[ri]] <- s$sigma
                                 rsubstance[[ri]] <- i
@@ -204,6 +214,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 ri <- ri + 1
+                                models[[ri]] <- m
                                 a[[ri]] <- coef(m)[["location"]]
                                 b[[ri]] <- coef(m)[["shape"]]
                                 sqrdev <- function(logdose) {
@@ -282,14 +293,44 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
     }
     results <- data.frame(rsubstance, rndl, rn, rlld, rlhd, mtype, 
         logED50, logED50low, logED50high, runit, sigma, a, b)
+    lower_level_percent = paste(100 * (1 - level)/2, "%", sep = "")
+    upper_level_percent = paste(100 * (1 + level)/2, "%", sep = "")
     names(results) <- c("Substance","ndl","n","lld","lhd","mtype","logED50",
-        paste(100*(1-level)/2,"%",sep=""),
-        paste(100*(1+level)/2,"%",sep=""),
+        lower_level_percent, upper_level_percent,
         "unit","sigma","a","b")
 
     if (linlogit) {
         results$c <- c
     }
+    if (showED50) {
+        results[c("ED50", paste("ED50", c(lower_level_percent, upper_level_percent)))] <-
+          10^results[7:9]
+    }
+    if (!is.null(EDx)) {
+        for (row.i in 1:ri) {
+            if (mtype[[row.i]] %in% c("probit", "logit", "weibull", "linlogit")) {
+                for (ED in EDx) {
+                    of <- function(x) {
+                        abs(predict(models[[row.i]], data.frame(dose = 10^x)) - 
+                            (1 - (ED/100)))
+                    } 
+                    # Search over interval starting an order of magnitude below 
+                    # the lowest dose up to one order of magnitude above the
+                    # highest dose
+                    o = optimize(of, 
+                                 results[row.i, c("lld", "lhd")] + c(-1, 1))
+                    # Only keep results within the tolerance
+                    if ((o$objective) < EDx.tolerance) {
+                        logdose.ED = o$minimum
+                        results[row.i, paste0("EDx", ED)] <- 10^logdose.ED 
+                    }
+                }
+            }
+        }
+    }
+
     rownames(results) <- 1:ri
+    attr(results, "models") <- models
     return(results)
 }
+# vim: set ts=4 sw=4 expandtab:

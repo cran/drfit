@@ -15,8 +15,19 @@
   database are also present.
 }
 \examples{
-  \dontrun{demo(antifoul)}
+rantifoul.ED50 <- drfit(antifoul, 
+                        linlogit = TRUE, logit = TRUE, weibull = TRUE,
+                        chooseone = FALSE, 
+                        showED50 = TRUE, EDx = c(10))
+print(rantifoul.ED50, digits = 5)
+
+rantifoul.drc <- drcfit(antifoul, 
+                        linlogit = TRUE, logit = TRUE, weibull = TRUE,
+                        chooseone = FALSE, 
+                        showED50 = TRUE, EDx = c(10))
+print(rantifoul.drc, digits = 5)
 }
+
 \source{
   \url{http://www.uft.uni-bremen.de/chemie}
 }

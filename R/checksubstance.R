@@ -11,7 +11,6 @@ checksubstance <- function(substance, db = "cytotox", experimentator = "%",
 
     if (!(db %in% rownames(databases))) stop("Database is not supported")
 
-    library(RODBC) 
     channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
 
     responsename = as.character(databases[db,1])

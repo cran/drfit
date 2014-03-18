@@ -21,7 +21,12 @@
   the tested organism (name of the cell line).
 }
 \examples{
-  \dontrun{demo(IM1xIPC81)}
+  rIM1xIPC81 <- drfit(IM1xIPC81, linlogit = TRUE, showED50 = TRUE, EDx = 10)
+
+  rIM1xIPC81.drc <- drcfit(IM1xIPC81, linlogit = TRUE, showED50 = TRUE, EDx = 10)
+
+  print(rIM1xIPC81,digits=4)
+  print(rIM1xIPC81.drc,digits=4)
 }
 \source{
   Ranke J, Mölter K, Stock F, Bottin-Weber U, Poczobutt J,

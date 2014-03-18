@@ -19,7 +19,13 @@
   regarded valid (\code{ok}).
 }
 \examples{
-  \dontrun{demo(IM1xVibrio)}
+  rIM1xVibrio <- drfit(IM1xVibrio, logit = TRUE, chooseone = FALSE,
+                       showED50 = TRUE, EDx = c(10, 20))
+  print(rIM1xVibrio, digits = 4)
+
+  rIM1xVibrio.drc <- drcfit(IM1xVibrio, logit = TRUE, chooseone = FALSE,
+                            showED50 = TRUE, EDx = c(10, 20))
+  print(rIM1xVibrio.drc, digits = 4)
 }
 \source{
   Ranke J, Mölter K, Stock F, Bottin-Weber U, Poczobutt J, Hoffmann J,

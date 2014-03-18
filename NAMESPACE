@@ -10,3 +10,5 @@ import(
   MASS,
   RODBC
 )
+
+importFrom("drc", drm, ED, LN.2, LL.2, BC.4, W1.2)

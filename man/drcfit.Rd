@@ -1,16 +1,14 @@
-\name{drfit}
-\alias{drfit}
-\title{Fit dose-response models}
+\name{drcfit}
+\alias{drcfit}
+\title{Fit dose-response models using the drc package}
 \description{
   Fit dose-response relationships to dose-response data and calculate
-  biometric results for (eco)toxicity evaluation
+  biometric results for (eco)toxicity evaluation using the drc package
 }
 \usage{
-  drfit(data, startlogED50 = NA, chooseone = TRUE, probit = TRUE, logit = FALSE,
-  weibull = FALSE, linlogit = FALSE, level = 0.95, linlogitWrong = NA,
-  allWrong = NA, ps0 = 1, ls0 = 0.5, ws0 = 0.5, b0 = 2, f0 = 0,
-  showED50 = FALSE, 
-  EDx = NULL, EDx.tolerance = 1e-4)
+  drcfit(data, chooseone = TRUE, probit = TRUE, logit = FALSE,
+  weibull = FALSE, linlogit = FALSE, level = 0.95, 
+  showED50 = FALSE, EDx = NULL)
 }
 \arguments{
   \item{data}{
@@ -25,63 +23,45 @@
     If there is a column called \dQuote{ok} and it is set to \dQuote{no fit} in
     a specific line, then the corresponding data point will be excluded from
     the fitting procedure, although it will be plotted.}
-  \item{startlogED50}{
-    Especially for the linlogit model, a suitable log10 of the ED50 has to be
-    given by the user, since it is not correctly estimated for data showing
-    hormesis with the default estimation method.}
   \item{probit}{
     A boolean defining if cumulative density curves of normal distributions
-    \code{\link{pnorm}} are fitted against the decadic logarithm of the dose.
-    Default ist TRUE.} 
+    are fitted against the decadic logarithm of the dose.  Default ist TRUE.
+    Note that the parameter definitions used in the model are different to the
+    ones used in \code{\link{drfit}}. Parameter e from \code{\link{LN.2}} is listed
+    as a here, and parameter b from there is listed as b.}
   \item{logit}{
     A boolean defining if cumulative density curves of logistic distributions
     \code{\link{plogis}} are fitted to the decadic logarithm of the dose.
-    Default is FALSE.} 
+    Default is FALSE.
+    Again the parameter definitions used in the model are different to the
+    ones used in \code{\link{drfit}}. Parameter e from \code{\link{LL.2}} is listed
+    as a here, and parameter b from LL.2 is listed as b.}
   \item{weibull}{
-    A boolean defining if the cumulative density curves of weibull distributions
-    (\code{\link{pweibull}} with additionall location parameter and scale=1)
-    are fitted to the decadic logarithm of the dose. Default is FALSE.
-    Note that the weibull distribution is fitted here to the log transformed doses
-    which appears to be an uncommon approach.}
+    A boolean defining if Weibull dose-response models
+    (\code{\link{W1.2}} are fitted to the untransformed dose. Default is FALSE.
+    Note that the results differ from the ones obtained with
+    \code{\link{drfit}}, due to a different model specification.}
   \item{linlogit}{
     A boolean defining if the linear-logistic function
     \code{\link{linlogitf}} as defined by van Ewijk and Hoekstra 1993 is
-    fitted to the data. Default is FALSE.}
+    fitted to the data. Default is FALSE. Obtaining the ED50 (and EDx values
+    in general) uses \code{\link{ED}} internally and does not always give a
+    result.
+  }
   \item{level}{
     The level for the confidence interval listed for the log ED50.}
-  \item{linlogitWrong}{
-    An optional vector containing the names of the substances for which the
-    linlogit function produces a wrong fit.}
-  \item{allWrong}{
-    An optional vector containing the names of the substances for which all
-    functions produce a wrong fit.}
   \item{chooseone}{
     If TRUE (default), the models are tried in the order linlogit, probit,
     logit, weibull, and the first model that produces a valid fit is used.
     If FALSE, all models that are set to TRUE and that can be fitted will be
     reported.}
-  \item{ps0}{
-    If the probit model is fitted, \code{ps0} gives the possibility to adjust
-    the starting value for the scale parameter of \code{\link{pnorm}}.}
-  \item{ls0}{
-    If the logit model is fitted, \code{ls0} gives the possibility to adjust
-    the starting value for the scale parameter of \code{\link{plogis}}.}
-  \item{ws0}{
-    If the weibull model is fitted, \code{ws0} gives the possibility to adjust
-    the starting value for the shape parameter of \code{\link{pweibull}}.}
-  \item{b0,f0}{
-    If the linearlogistic model is fitted, \code{b0} and \code{f0} give the
-    possibility to adjust the starting values for the parameters b and f.}
-  \item{showED50}{
-    If set to TRUE, the ED50 and its confidence interval on the original dose
-    scale (not log scale) is included in the output.
-  }
   \item{EDx}{
     A vector of inhibition values x in percent for which the corresponding doses
     EDx should be reported.
   }
-  \item{EDx.tolerance}{
-    Tolerance of the effect level, expressed on the response scale from 0 to 1.
+  \item{showED50}{
+    If set to TRUE, the ED50 and its confidence interval on the original dose
+    scale (not log scale) is included in the output.
   }
 }
 \value{
@@ -89,12 +69,6 @@
   dose-response models of class \code{\link{nls}}. The dataframe has at least
   one line for each substance. 
 
-  For the \dQuote{linlogit}, \dQuote{logit} and \dQuote{probit} models, the
-  parameter \code{a} that is reported coincides with the logED50, i.e the
-  logED50 is one of the model parameters that is being fitted. Therefore,
-  a confidence interval for the confidence level \code{level} is calculated
-  using the \code{\link[MASS:confint]{confint.nls}} function and listed.
-  
   The following variables are in the dataframe:
   \item{Substance}{
     The name of the substance
@@ -134,34 +108,35 @@
   }
   \item{sigma}{
     The square root of the estimated variance of the random error as returned
-    by \code{\link{summary.nls}}.
+    by \code{\link{summary.drc}}.
   }
   \item{a}{
-    For the \dQuote{linlogit}, \dQuote{logit} and \dQuote{probit} models, the
-    parameter \code{a} coincides with the logED50.  In the case of the
-    \dQuote{weibull} model, \code{a} is a location parameter. 
+    For the linlogit model, this is the parameter e from \code{\link{BC.4}}.
+    For the probit and the logit model, this is the ED50. For the weibull 
+    model, this is parameter e from \code{\link{W1.2}}. Note that the Weibull 
+    model is fitted to the untransformed data.
   }
   \item{b}{
-    Parameter \code{b} in the case of the \dQuote{linlogit} fit is the variable
-    b from the \code{\link{linlogitf}} function. In the case of \dQuote{probit}
-    fit it is the standard deviation of the fitted normal distribution, in the
-    case of the \dQuote{logit} fit it is the \code{scale} parameter in the
-    \code{\link{plogis}} function, and in the \dQuote{weibull} fit it is the
-    \code{shape} parameter of the fitted \code{\link{pweibull}} function.
+    For the linlogit, probit, logit and weibull models, these are the
+    parameters b from \code{\link{BC.4}}, \code{\link{LN.2}}, 
+    \code{\link{LL.2}} and \code{\link{W1.2}}, respectively.
+    Note that the parameter definitions (and in the case of Weibull, the model
+    used) are different to the ones used in \code{\link{drfit}}. 
   }
   \item{c}{
-    Only the \dQuote{linlogit} fit produces a third parameter \code{c} which is
-    the variable f from the \code{\link{linlogitf}} function.
+    Only the \dQuote{linlogit} fit produces a third parameter \code{c}, which is
+    the parameter f from the \code{\link{BC.4}} function.
   }
   If the parameter \code{showED50} was set to TRUE, the ED50 values and their
   confidence intervals are also included on the original dose scale.
 
   If one or more response leves were specified in the argument \code{EDx},
-  the corresponding dose levels are given in addition.
+  the corresponding dose levels are given in addition, together with their
+  confidence intervals as calculated by \code{\link{ED}} from the drc package.
 }
 \examples{
 data(antifoul)
-r <- drfit(antifoul, showED50 = TRUE, EDx = c(5, 10, 20))
+r <- drcfit(antifoul, showED50 = TRUE, EDx = c(5, 10, 20))
 format(r, digits = 2)
 }
 \note{There is a demo for each dataset that can be accessed by
@@ -170,14 +145,12 @@ format(r, digits = 2)
   Further examples are given in help pages to the datasets
   \code{\link{antifoul}}, \code{\link{IM1xIPC81}} and
   \code{\link{IM1xVibrio}}.
-  Since version 0.6.1 of this package, there is a drop-in replacement function
-  \code{\link{drcfit}} which internally uses the drc package and also gives
-  confidence intervals for EDx values via this package.
 }
 \author{
-  Johannes Ranke 
-  \email{jranke@uni-bremen.de} 
+  Johannes Ranke \email{jranke@uni-bremen.de} 
   \url{http://www.uft.uni-bremen.de/chemie/ranke}
+  The functionality of the drc package used under the hood in this function
+  was written by Christian Ritz.
 }
 \keyword{models}
 \keyword{regression}

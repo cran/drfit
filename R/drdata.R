@@ -3,7 +3,6 @@ drdata <- function(substances, experimentator = "%", db = "cytotox",
     organism="Vibrio fischeri",endpoint="Luminescence",whereClause="1",
     ok="'ok','no fit'")
 {
-    library(RODBC) 
     channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
     slist <- paste(substances,collapse="','")
     if (db == "cytotox") {

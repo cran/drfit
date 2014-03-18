@@ -1,3 +1,4 @@
+if(getRversion() >= '2.15.1') utils::globalVariables(c("type", "conc"))
 checkexperiment <- function(id, db = "ecotox", endpoint = "%")
 {
     databases <- data.frame(
@@ -8,7 +9,6 @@ checkexperiment <- function(id, db = "ecotox", endpoint = "%")
 
     if (!(db %in% rownames(databases))) stop("Database is not supported")
 
-    library(RODBC) 
     channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
 
 

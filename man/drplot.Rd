@@ -8,7 +8,7 @@
 \usage{
   drplot(drresults, data, dtype, alpha, ctype, path,
      fileprefix, overlay, xlim, ylim, xlab, ylab, axes, frame.plot, postscript,
-     pdf, png, bw, pointsize, colors, ltys, devoff, lpos)
+     pdf, png, bw, pointsize, colors, ltys, pchs, devoff, lpos)
 }
 \arguments{
   \item{drresults}{
@@ -98,6 +98,11 @@
     }
   \item{ltys}{
     This is a vector of line types for the dose-response models, defaulting to 1:8.
+    }
+  \item{pchs}{
+    This is a vector of character types for the data. The default uses built-in
+    characters 1:n with n being the number of substances for which data are plotted
+    for overlays, or always 1 when no overlay plot is generated.
     }
   \item{lpos}{
     An optional argument defaulting to "topright" specifying the position
