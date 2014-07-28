@@ -1,7 +1,6 @@
 
-R version 2.15.1 (2012-06-22) -- "Roasted Marshmallows"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R version 3.1.1 (2014-07-10) -- "Sock it to Me"
+Copyright (C) 2014 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -17,8 +16,6 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library(drfit)
-Loading required package: MASS
-Loading required package: RODBC
 > data(IM1xIPC81)
 > rIM1xIPC81 <- drfit(IM1xIPC81,linlogit=TRUE)
 
@@ -89,4 +86,4 @@ Waiting for profiling to be done...
 > 
 > proc.time()
    user  system elapsed 
-  0.852   0.024   0.869 
+  1.111   0.808   0.789 

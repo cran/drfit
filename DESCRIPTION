@@ -1,6 +1,6 @@
 Package: drfit
-Version: 0.6.1
-Date: 2014-03-18
+Version: 0.6.3
+Date: 2014-07-28
 Title: Dose-response data evaluation
 Authors@R: c(person("Johannes", "Ranke", role = c("aut", "cre"), 
                     email = "jranke@uni-bremen.de"))
@@ -23,9 +23,9 @@ LazyData: yes
 URL: http://www.r-project.org,
         http://www.uft.uni-bremen.de/chemie/ranke?page=drfit,
         http://kriemhild.uft.uni-bremen.de/viewcvs/?root=drfit
-Packaged: 2014-03-18 10:36:54 UTC; ranke
+Packaged: 2014-07-28 10:07:44 UTC; ranke
 Author: Johannes Ranke [aut, cre]
 Maintainer: Johannes Ranke <jranke@uni-bremen.de>
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2014-03-20 15:39:17
+Date/Publication: 2014-07-28 12:34:53

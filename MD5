@@ -1,5 +1,4 @@
-3a9890064b848b66b738c63d73a43c9c *ChangeLog
-5dbfa9db86a50290d4490d0746131bc1 *DESCRIPTION
+755bc6fc66c1e6b2ac9ce7de7d4d680f *DESCRIPTION
 0c106f4f361c0d4c8f1e2f3e408c5c3b *NAMESPACE
 70cf578ec746a42c87968ed6a3f772c0 *R/checkexperiment.R
 a56ec5cd467e1056946c32c2e487845f *R/checkplate.R
@@ -11,7 +10,7 @@ a56ec5cd467e1056946c32c2e487845f *R/checkplate.R
 5980514992edf8c95aa133e508b59b85 *R/linlogitf.R
 c412b0138954fb5578413dcd5ffe5fd3 *data/IM1xIPC81.rda
 4c75293e1a54a13d93060aa3a01cfc95 *data/IM1xVibrio.rda
-42313e170b8608833c188e58611a936a *data/XY.rda
+979df4d3b5851ac448c2ca8811a2f273 *data/XY.rda
 365ec9e9889a99a9d0c26224598354a6 *data/antifoul.rda
 5c750848778851b29c55496529061993 *data/pyrithione.rda
 7a31d24436d6dae7c1fafff1a7bfbc7a *demo/00Index
@@ -20,8 +19,8 @@ c412b0138954fb5578413dcd5ffe5fd3 *data/IM1xIPC81.rda
 c2fc9f9b9d21051025e9b36e3bbee542 *demo/XY.R
 c3ee1d33f8184cbf70d1107d15413e34 *demo/antifoul.R
 ac78080906f22d0de985163b154fcae2 *demo/pyrithione.R
-2b07242c605cff4ad1d89269746708d2 *inst/doc/drfit-Rnews.pdf
-26e48553fd6c72b31f0c05b6d540d5de *inst/doc/index.html
+a408c0b2156e6085735d8ef66d69bc40 *inst/doc/drfit-Rnews.pdf
+d24990ef110593f75c5955bd7e47064e *inst/doc/index.html
 0f9fa5b6a3322093d391d139b822c925 *man/IM1xIPC81.Rd
 6011aee0f74538ac32022b1023075c07 *man/IM1xVibrio.Rd
 7425a53c30c03b0433315217061a860b *man/XY.Rd
@@ -36,12 +35,12 @@ f1c1abc1276da3b1d322738e56d5775c *man/drfit-package.Rd
 5ae13587732e7be3db2b9e6142535c97 *man/linlogitf.Rd
 1c720d62ff5ead428770443adae91693 *man/pyrithione.Rd
 a4a48d0c2c9336063f874139076175e9 *tests/IM1xIPC81.R
-89b4b4e9527d9a876b356f3b8b42f611 *tests/IM1xIPC81.Rout.save
+15a52d752eb822b3adbff82eaaf9f906 *tests/IM1xIPC81.Rout.save
 4a7452dfb5a75e731149248a8801f2ae *tests/IM1xVibrio.R
-4a051e56ddf20a2b2a7887edf01903e5 *tests/IM1xVibrio.Rout.save
+3a191bbc5fd394d8fa2d574144d44759 *tests/IM1xVibrio.Rout.save
 355e609a7921e869a7ab649c86008e5e *tests/XY.R
-a40e1092a67a5d8afa9bc2726362ced9 *tests/XY.Rout.save
+ddfad13c35eb56bddea46f673f88829a *tests/XY.Rout.save
 2e13984ebd0b6a755cfdc86c625e3539 *tests/antifoul.R
-cc27922beb22cf7898216dcc4c9807eb *tests/antifoul.Rout.save
-cb90ec5d70321fc350bf560e11ffaf28 *tests/pyrithione.R
-d5d97c8b9336d4d4abed19486b84ed36 *tests/pyrithione.Rout.save
+962269250323acd29d78393657837f17 *tests/antifoul.Rout.save
+7c11a4982275f2f7b051f1f12f233631 *tests/pyrithione.R
+ca4049ac5055762e66947dc2198e9969 *tests/pyrithione.Rout.save
