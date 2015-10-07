@@ -9,7 +9,11 @@ checkexperiment <- function(id, db = "ecotox", endpoint = "%")
 
     if (!(db %in% rownames(databases))) stop("Database is not supported")
 
-    channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
+    if (requireNamespace("RODBC")) {
+      channel <- RODBC::odbcConnect(db, uid="cytotox", pwd="cytotox", case="tolower")
+    } else {
+      stop("For this function, the RODBC package has to be installed and configured.")
+    }
 
 
     responsename = as.character(databases[db,1])
@@ -19,7 +23,7 @@ checkexperiment <- function(id, db = "ecotox", endpoint = "%")
     exptable <- paste(exptype, "s", sep="")
     commentquery <- paste("SELECT comment FROM ", exptable ,
         " WHERE ", exptype, " = ", id)
-    commentdata <- sqlQuery(channel,commentquery)
+    commentdata <- RODBC::sqlQuery(channel,commentquery)
     comment <- as.character(commentdata[[1]])
         
     expquery <- paste("SELECT experimentator,substance, ",
@@ -32,15 +36,15 @@ checkexperiment <- function(id, db = "ecotox", endpoint = "%")
                 endpoint, "'", sep = "")
     }
 
-    expdata <- sqlQuery(channel,expquery)
+    expdata <- RODBC::sqlQuery(channel,expquery)
 
     if (db %in% c("cytotox","enzymes")) {
         controlquery <- paste("SELECT type,response FROM controls 
             WHERE plate=",id)
-        controldata <- sqlQuery(channel,controlquery)
+        controldata <- RODBC::sqlQuery(channel,controlquery)
     }
 
-    odbcClose(channel)
+    RODBC::odbcClose(channel)
 
     op <- par(ask=TRUE)
     on.exit(par(op))

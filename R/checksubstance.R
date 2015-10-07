@@ -11,7 +11,11 @@ checksubstance <- function(substance, db = "cytotox", experimentator = "%",
 
     if (!(db %in% rownames(databases))) stop("Database is not supported")
 
-    channel <- odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
+    if (requireNamespace("RODBC")) {
+      channel <- RODBC::odbcConnect(db, uid="cytotox", pwd="cytotox", case="tolower")
+    } else {
+      stop("For this function, the RODBC package has to be installed and configured.")
+    }
 
     responsename = as.character(databases[db,1])
     testtype = as.character(databases[db,2])
@@ -41,8 +45,8 @@ checksubstance <- function(substance, db = "cytotox", experimentator = "%",
                 endpoint, "'", sep = "")
     }
 
-    data <- sqlQuery(channel,query)
-    odbcClose(channel)
+    data <- RODBC::sqlQuery(channel,query)
+    RODBC::odbcClose(channel)
 
     if (length(data$experimentator) < 1) {
         stop(paste("\nNo response data for",substance,"in database",
