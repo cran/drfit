@@ -27,6 +27,16 @@ drcfit <- function(data, chooseone=TRUE,
     models <- list()                  # a list containing the dose-response models
 
     splitted <- split(data,data$substance)
+
+    # The indexing of the results of the ED50 function changed with drc 3.0.1
+    if (packageVersion("drc") > 3) {
+      ED50_row_index = "e:1:50"
+      EDx_row_index_prefix = "e:1"
+    } else {
+      ED50_row_index = "1:50"
+      EDx_row_index_prefix = "1"
+    }
+
     for (i in substances) {
         tmp <- splitted[[i]]
         fit <- FALSE
@@ -95,9 +105,9 @@ drcfit <- function(data, chooseone=TRUE,
                                                upper = highestdose * 10,
                                                display = FALSE))
                                 if (!inherits(ED50, "try-error")) {
-                                    logED50[[ri]] <- log10(ED50["1:50", "Estimate"])
-                                    logED50low[[ri]] <- log10(ED50["1:50", "Lower"])
-                                    logED50high[[ri]] <- log10(ED50["1:50", "Upper"])
+                                    logED50[[ri]] <- log10(ED50[ED50_row_index, "Estimate"])
+                                    logED50low[[ri]] <- log10(ED50[ED50_row_index, "Lower"])
+                                    logED50high[[ri]] <- log10(ED50[ED50_row_index, "Upper"])
                                     if (logED50[[ri]] > rlhd[[ri]]) {
                                         mtype[[ri]] <- "no fit"
                                     }
@@ -134,8 +144,8 @@ drcfit <- function(data, chooseone=TRUE,
                                 } else {
                                     mtype[[ri]] <- "probit"
                                     ED50 <- ED(m, 50, interval = "delta", display = FALSE)
-                                    logED50low[[ri]] <- log10(ED50["1:50", "Lower"])
-                                    logED50high[[ri]] <- log10(ED50["1:50", "Upper"])
+                                    logED50low[[ri]] <- log10(ED50[ED50_row_index, "Lower"])
+                                    logED50high[[ri]] <- log10(ED50[ED50_row_index, "Upper"])
                                 }
                             }
                         }
@@ -170,8 +180,8 @@ drcfit <- function(data, chooseone=TRUE,
                                 } else {
                                     mtype[[ri]] <- "logit"
                                     ED50 <- ED(m, 50, interval = "delta", display = FALSE)
-                                    logED50low[[ri]] <- log10(ED50["1:50", "Lower"])
-                                    logED50high[[ri]] <- log10(ED50["1:50", "Upper"])
+                                    logED50low[[ri]] <- log10(ED50[ED50_row_index, "Lower"])
+                                    logED50high[[ri]] <- log10(ED50[ED50_row_index, "Upper"])
                                 }
                             }
                         }
@@ -195,7 +205,7 @@ drcfit <- function(data, chooseone=TRUE,
                                 rlhd[[ri]] <- log10(highestdose)
                                 c[[ri]] <- NA
                                 ED50 <- ED(m, 50, interval = "delta", display = FALSE)
-                                logED50[[ri]] <- log10(ED50["1:50", "Estimate"])
+                                logED50[[ri]] <- log10(ED50[ED50_row_index, "Estimate"])
                                 if (logED50[[ri]] > rlhd[[ri]]) {
                                     mtype[[ri]] <- "no fit"
                                     logED50[[ri]] <- NA
@@ -205,8 +215,8 @@ drcfit <- function(data, chooseone=TRUE,
                                     b[[ri]] <- NA
                                 } else {
                                     mtype[[ri]] <- "weibull"
-                                    logED50low[[ri]] <- log10(ED50["1:50", "Lower"])
-                                    logED50high[[ri]] <- log10(ED50["1:50", "Upper"])
+                                    logED50low[[ri]] <- log10(ED50[ED50_row_index, "Lower"])
+                                    logED50high[[ri]] <- log10(ED50[ED50_row_index, "Upper"])
                                     a[[ri]] <- logED50[[ri]]
                                     b[[ri]] <- coef(m)[[1]]
                                 }
@@ -277,11 +287,12 @@ drcfit <- function(data, chooseone=TRUE,
                 for (EDi in EDx) {
                     EDx.drc = try(ED(m, EDi, interval = "delta", display = FALSE, level = level))
                     if (!inherits(EDx.drc, "try-error")) {
-                        results[row.i, paste0("EDx", EDi)] <- EDx.drc[paste0("1:", EDi), "Estimate"]
-                        results[row.i, paste0("EDx", EDi, " ", lower_level_percent)] <- EDx.drc[paste0("1:", EDi), 
-                                                                                                "Lower"]
-                        results[row.i, paste0("EDx", EDi, " ", upper_level_percent)] <- EDx.drc[paste0("1:", EDi), 
-                                                                                                "Upper"]
+                        results[row.i, paste0("EDx", EDi)] <- 
+                            EDx.drc[paste(EDx_row_index_prefix, EDi, sep = ":"), "Estimate"]
+                        results[row.i, paste0("EDx", EDi, " ", lower_level_percent)] <- 
+                            EDx.drc[paste(EDx_row_index_prefix, EDi, sep = ":"), "Lower"]
+                        results[row.i, paste0("EDx", EDi, " ", upper_level_percent)] <- 
+                            EDx.drc[paste(EDx_row_index_prefix, EDi, sep = ":"), "Upper"]
                     }
                 }
             }

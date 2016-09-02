@@ -1,0 +1,75 @@
+2016-09-02  Johannes Ranke
+
+	* Make drcfit compatible with drc >= 3.0.1 (the row names of the matrix
+	returned by the ED() function were changed).
+	* Switch back to using requireNamespace(RODBC) in order to address 
+	a NOTE issued by R CMD check
+	* Use single quotes to quote other packages in the DESCRIPTION file
+
+2015-12-15  Johannes Ranke
+
+	* Use require(RODBC) instead of requireNamespace(RODBC) as the former fails
+	with the message that rodbcConnectDriver is not found
+
+2015-10-07  Johannes Ranke
+
+	* Suggest RODBC instead of depending on it, as it is not available
+	  on all CRAN check systems.
+
+	* Adress various NOTES given by R CMD check
+
+2014-07-28  Johannes Ranke
+
+	* DESCRIPTION: New verson 0.6.3
+
+	* inst/test: Reduced precision in pyrithione.R as results were
+	platform dependent. Updated all .Rout.save files
+
+	* inst/doc/index.html: Make the index contain valid html. Thanks to
+	Kurt Hornik for checking HTML validity in CRAN packages.
+
+2014-03-18  Johannes Ranke
+
+	* DESCRIPTION, NAMESPACE: New verson 0.6.1, with the drc package as
+	dependency. Import needed functionality to avoid masking standard functions.
+
+	* R/drcfit.R: Add function drcfit() that imitates the functionality of
+	drfit(), but internally uses the methods supplied by the drc package
+
+	* R/{drfit,drcfit}.R: Return the list of fitted models in an attribute of
+	the resulting dataframe. Deal with the case of only NA values in the unit 
+	column of the data.
+
+	* R/drfit.R: Use the fitted nls() models directly to calculate EDx values
+
+	* R/drplot.R: Use different point characters (pch) for the data, and add the 
+	possibility to specify them using the argument pchs. Also make drplot() work
+	for the results from the drcfit function.
+
+	* man/drcfit.Rd: Document the above
+
+	* tests/drcfit.R: Add some tests for this new functionality
+
+	* man/{antifoul,IM1xIPC81,IM1xVibrio}.Rd: Add more example code including
+	the use of drcfit().
+
+2014-02-03  Johannes Ranke
+
+	* DESCRIPTION: New version 0.5-97 (leading zeros in version numbers are
+	deprecated), modernize author field, enable lazy loading
+
+	* Add this ChangeLog, a GNUMakefile, and an .Rbuildignore file
+
+	* R/*.R: Clean out unnecessary calls to library() and require()
+
+	* R/*.R: Tell R (>2.15.1) about some undeclared global variables to avoid NOTES in
+	package checks
+
+	* R/drfit.R: Add the argument showED50. If set to TRUE, drfit includes the
+	ED50 and its confidence interval on the original scale in the output
+
+	* R/drfit.R: Add the possibility to calculate several EDx values for each
+	dose-response model
+
+	* man/drfit.Rd: Update the documentation and use the new optional arguments
+	in the example
