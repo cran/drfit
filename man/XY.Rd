@@ -3,7 +3,7 @@
 \alias{XY}
 \title{Dose-Response data for two substances X and Y}
 \description{
-  This is just a sample Lemna growth rate data set for two substances 
+  This is just a sample Lemna growth rate data set for two substances
   arbitrarily named X and Y.
 }
 \usage{data(XY)}

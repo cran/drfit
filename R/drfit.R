@@ -18,7 +18,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                                     # model result was appended
     rsubstance <- array()           # the substance names in the results
     rndl <- vector()                # number of dose levels
-    rn <- vector()                  # mean number of replicates 
+    rn <- vector()                  # mean number of replicates
                                     # in each dose level
     runit <- vector()               # vector of units for each result row
     rlhd <- rlld <- vector()        # highest and lowest doses tested
@@ -75,12 +75,13 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                     active <- TRUE
                 } else {
                     active <- FALSE
-                    if (linlogit && 
+                    if (linlogit &&
                         length(subset(linlogitWrong,linlogitWrong == i))==0 &&
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ linlogitf(dose,1,f,logED50,b),
-                                data=tmp, algorithm="port",
-                                start=list(f=f0,logED50=startlogED50[[i]],b=b0)))
+                                     data=tmp, algorithm="port",
+                                     start=list(f=f0,logED50=startlogED50[[i]],b=b0)),
+                                 silent = TRUE)
                         if (!inherits(m, "try-error")) {
                             fit <- TRUE
                             ri <- ri + 1
@@ -104,7 +105,8 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                                 c[[ri]] <- NA
                             } else {
                                 mtype[[ri]] <- "linlogit"
-                                logED50conf <- try(confint(m,"logED50",level=level))
+                                logED50conf <- try(confint(m,"logED50",level=level),
+                                                   silent = TRUE)
                                 if (!inherits(logED50conf, "try-error")) {
                                     logED50low[[ri]] <- logED50conf[[1]]
                                     logED50high[[ri]] <- logED50conf[[2]]
@@ -122,8 +124,9 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                     if (probit &&
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ pnorm(-log10(dose),-logED50,scale),
-                                    data=tmp, algorithm="port",
-                                    start=list(logED50=startlogED50[[i]],scale=ps0)))
+                                     data=tmp, algorithm="port",
+                                     start=list(logED50=startlogED50[[i]],scale=ps0)),
+                                 silent = TRUE)
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
@@ -148,7 +151,8 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                                     b[[ri]] <- NA
                                 } else {
                                     mtype[[ri]] <- "probit"
-                                    logED50conf <- try(confint(m,"logED50",level=level))
+                                    logED50conf <- try(confint(m,"logED50",level=level),
+                                                       silent = TRUE)
                                     if (!inherits(logED50conf, "try-error")) {
                                         logED50low[[ri]] <- logED50conf[[1]]
                                         logED50high[[ri]] <- logED50conf[[2]]
@@ -166,8 +170,9 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                     if (logit &&
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ plogis(-log10(dose),-logED50,scale),
-                                data=tmp, algorithm="port",
-                                start=list(logED50=startlogED50[[i]],scale=ls0)))
+                                     data=tmp, algorithm="port",
+                                     start=list(logED50=startlogED50[[i]],scale=ls0)),
+                                 silent = TRUE)
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
@@ -193,7 +198,8 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                                     b[[ri]] <- NA
                                 } else {
                                     mtype[[ri]] <- "logit"
-                                    logED50conf <- try(confint(m,"logED50",level=level))
+                                    logED50conf <- try(confint(m,"logED50",level=level),
+                                                       silent = TRUE)
                                     if (!inherits(logED50conf, "try-error")) {
                                         logED50low[[ri]] <- logED50conf[[1]]
                                         logED50high[[ri]] <- logED50conf[[2]]
@@ -209,8 +215,9 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                     if (weibull &&
                         length(subset(allWrong,allWrong == i))==0) {
                         m <- try(nls(response ~ pweibull(-log10(dose)+location,shape),
-                                data=tmp, algorithm="port",
-                                start=list(location=startlogED50[[i]],shape=ws0)))
+                                     data=tmp, algorithm="port",
+                                     start=list(location=startlogED50[[i]],shape=ws0)),
+                                 silent = TRUE)
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 ri <- ri + 1
@@ -218,7 +225,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
                                 a[[ri]] <- coef(m)[["location"]]
                                 b[[ri]] <- coef(m)[["shape"]]
                                 sqrdev <- function(logdose) {
-                                    (0.5 - pweibull( - logdose + a[[ri]], b[[ri]]))^2 
+                                    (0.5 - pweibull( - logdose + a[[ri]], b[[ri]]))^2
                                 }
                                 logED50[[ri]] <- nlm(sqrdev,startlogED50[[i]])$estimate
                                 if (sqrdev(logED50[[ri]]) > 0.1) {
@@ -291,7 +298,7 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
             c[[ri]] <- NA
         }
     }
-    results <- data.frame(rsubstance, rndl, rn, rlld, rlhd, mtype, 
+    results <- data.frame(rsubstance, rndl, rn, rlld, rlhd, mtype,
         logED50, logED50low, logED50high, runit, sigma, a, b)
     lower_level_percent = paste(100 * (1 - level)/2, "%", sep = "")
     upper_level_percent = paste(100 * (1 + level)/2, "%", sep = "")
@@ -311,18 +318,18 @@ drfit <- function(data, startlogED50 = NA, chooseone=TRUE,
             if (mtype[[row.i]] %in% c("probit", "logit", "weibull", "linlogit")) {
                 for (ED in EDx) {
                     of <- function(x) {
-                        abs(predict(models[[row.i]], data.frame(dose = 10^x)) - 
+                        abs(predict(models[[row.i]], data.frame(dose = 10^x)) -
                             (1 - (ED/100)))
-                    } 
-                    # Search over interval starting an order of magnitude below 
+                    }
+                    # Search over interval starting an order of magnitude below
                     # the lowest dose up to one order of magnitude above the
                     # highest dose
-                    o = optimize(of, 
+                    o = optimize(of,
                                  results[row.i, c("lld", "lhd")] + c(-1, 1))
                     # Only keep results within the tolerance
                     if ((o$objective) < EDx.tolerance) {
                         logdose.ED = o$minimum
-                        results[row.i, paste0("EDx", ED)] <- 10^logdose.ED 
+                        results[row.i, paste0("EDx", ED)] <- 10^logdose.ED
                     }
                 }
             }

@@ -1,6 +1,6 @@
 
-R version 3.1.1 (2014-07-10) -- "Sock it to Me"
-Copyright (C) 2014 The R Foundation for Statistical Computing
+R version 3.3.3 (2017-03-06) -- "Another Canoe"
+Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -28,8 +28,6 @@ Pyridin: Fitting data...
 
 PyNO: Fitting data...
 
-Error in nls(response ~ linlogitf(dose, 1, f, logED50, b), data = tmp,  : 
-  Convergence failure: false convergence (8)
 
 (PT)2: Fitting data...
 
@@ -45,10 +43,6 @@ Waiting for profiling to be done...
 PyS: Fitting data...
 
 Waiting for profiling to be done...
-Error in numericDeriv(form[[3L]], names(ind), env, ifelse(internalPars <  : 
-  Missing value or an infinity produced when evaluating the model
-In addition: Warning message:
-In pnorm(-log10(dose), -logED50, scale) : NaNs produced
 
 Zn Pyrithion: Fitting data...
 
@@ -72,6 +66,8 @@ Waiting for profiling to be done...
 
 NaJ: Fitting data...
 
+Warning message:
+In pnorm(-log10(dose), -logED50, scale) : NaNs produced
 > print(rpyr,digits=2)
       Substance ndl   n   lld lhd    mtype logED50  2.5% 97.5%   unit sigma
 1  Na Pyrithion  20 108 -2.11 2.0 linlogit   -0.35 -0.43 -0.26 microM  0.21
@@ -104,4 +100,4 @@ NaJ: Fitting data...
 > 
 > proc.time()
    user  system elapsed 
-  2.302   1.804   1.550 
+  1.884   0.680   1.831 

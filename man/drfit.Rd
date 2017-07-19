@@ -9,7 +9,7 @@
   drfit(data, startlogED50 = NA, chooseone = TRUE, probit = TRUE, logit = FALSE,
   weibull = FALSE, linlogit = FALSE, level = 0.95, linlogitWrong = NA,
   allWrong = NA, ps0 = 1, ls0 = 0.5, ws0 = 0.5, b0 = 2, f0 = 0,
-  showED50 = FALSE, 
+  showED50 = FALSE,
   EDx = NULL, EDx.tolerance = 1e-4)
 }
 \arguments{
@@ -32,11 +32,11 @@
   \item{probit}{
     A boolean defining if cumulative density curves of normal distributions
     \code{\link{pnorm}} are fitted against the decadic logarithm of the dose.
-    Default ist TRUE.} 
+    Default ist TRUE.}
   \item{logit}{
     A boolean defining if cumulative density curves of logistic distributions
     \code{\link{plogis}} are fitted to the decadic logarithm of the dose.
-    Default is FALSE.} 
+    Default is FALSE.}
   \item{weibull}{
     A boolean defining if the cumulative density curves of weibull distributions
     (\code{\link{pweibull}} with additionall location parameter and scale=1)
@@ -87,14 +87,14 @@
 \value{
   A dataframe with the attribute \code{models} holding a list of the fitted
   dose-response models of class \code{\link{nls}}. The dataframe has at least
-  one line for each substance. 
+  one line for each substance.
 
   For the \dQuote{linlogit}, \dQuote{logit} and \dQuote{probit} models, the
   parameter \code{a} that is reported coincides with the logED50, i.e the
   logED50 is one of the model parameters that is being fitted. Therefore,
   a confidence interval for the confidence level \code{level} is calculated
   using the \code{\link[MASS:confint]{confint.nls}} function and listed.
-  
+
   The following variables are in the dataframe:
   \item{Substance}{
     The name of the substance
@@ -115,14 +115,14 @@
     If the data did not show a mean response < 0.5 at the highest dose level,
     the modeltype is set to \dQuote{inactive}. If the mean response at the
     lowest dose is smaller than 0.5, the modeltype is set to \dQuote{active}.
-    In both cases, no fitting procedure is carried out. If the fitted ED50 
+    In both cases, no fitting procedure is carried out. If the fitted ED50
     is higher than the highest dose, \dQuote{no fit} is given here.
   }
   \item{logED50}{
     The decadic logarithm of the ED50
   }
   \item{low \%}{
-    The lower bound of the confidence interval of log ED50. 
+    The lower bound of the confidence interval of log ED50.
     The name of the column depends on the requested confidence \code{level}.
   }
   \item{high \%}{
@@ -139,7 +139,7 @@
   \item{a}{
     For the \dQuote{linlogit}, \dQuote{logit} and \dQuote{probit} models, the
     parameter \code{a} coincides with the logED50.  In the case of the
-    \dQuote{weibull} model, \code{a} is a location parameter. 
+    \dQuote{weibull} model, \code{a} is a location parameter.
   }
   \item{b}{
     Parameter \code{b} in the case of the \dQuote{linlogit} fit is the variable
@@ -165,7 +165,7 @@ r <- drfit(antifoul, showED50 = TRUE, EDx = c(5, 10, 20))
 format(r, digits = 2)
 }
 \note{There is a demo for each dataset that can be accessed by
-  \code{demo(dataset)}} 
+  \code{demo(dataset)}}
 \seealso{
   Further examples are given in help pages to the datasets
   \code{\link{antifoul}}, \code{\link{IM1xIPC81}} and
@@ -175,8 +175,8 @@ format(r, digits = 2)
   confidence intervals for EDx values via this package.
 }
 \author{
-  Johannes Ranke 
-  \email{jranke@uni-bremen.de} 
+  Johannes Ranke
+  \email{jranke@uni-bremen.de}
   \url{http://www.uft.uni-bremen.de/chemie/ranke}
 }
 \keyword{models}

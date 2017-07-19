@@ -7,23 +7,27 @@ drdata <- function(substances, experimentator = "%", db = "cytotox",
     channel <- RODBC::odbcConnect(db,uid="cytotox",pwd="cytotox",case="tolower")
     slist <- paste(substances,collapse="','")
     if (db == "cytotox") {
+        experimenttype <- "plate"
         responsetype <- "viability"
         testtype <- "celltype"
         type <- celltype
     } else {
         if (db == "enzymes") {
+            experimenttype <- "plate"
             responsetype <- "activity"
             testtype <- "enzyme"
             type <- enzymetype
         } else {
+            experimenttype <- "experiment"
             responsetype <- "response"
             testtype <- "organism"
             type <- organism
         }
     }
-        
-    query <- paste("SELECT conc,",responsetype,",unit,experimentator,substance,",testtype,
-        ",ok FROM ", db, " WHERE substance IN ('",
+
+    query <- paste("SELECT conc,",responsetype,", unit, experimentator, ",
+        experimenttype, ", substance, ", testtype,
+        ", ok FROM ", db, " WHERE substance IN ('",
         slist,"') AND experimentator LIKE '",
         experimentator,"' AND ",testtype," LIKE '",
         type,"' AND ",

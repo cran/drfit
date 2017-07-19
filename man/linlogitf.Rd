@@ -22,13 +22,13 @@
 }
 \value{
   The response at dose x.
-} 
+}
 \references{
   van Ewijk, P. H. and Hoekstra, J. A. (1993) \emph{Ecotox Environ Safety}
   \bold{25} 25-32}
 \author{
-  Johannes Ranke 
-  \email{jranke@uni-bremen.de} 
+  Johannes Ranke
+  \email{jranke@uni-bremen.de}
   \url{http://www.uft.uni-bremen.de/chemie/ranke}
 }
 \keyword{models}

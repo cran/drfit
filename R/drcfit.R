@@ -14,7 +14,7 @@ drcfit <- function(data, chooseone=TRUE,
                                     # model result was appended
     rsubstance <- array()           # the substance names in the results
     rndl <- vector()                # number of dose levels
-    rn <- vector()                  # mean number of replicates 
+    rn <- vector()                  # mean number of replicates
                                     # in each dose level
     runit <- vector()               # vector of units for each result row
     rlhd <- rlld <- vector()        # highest and lowest doses tested
@@ -79,7 +79,8 @@ drcfit <- function(data, chooseone=TRUE,
                     active <- FALSE
                     if (linlogit)
                     {
-                        m <- try(drm(response ~ dose, data = tmp, fct = BC.4(fixed = c(NA, 1, NA, NA))))
+                        m <- try(drm(response ~ dose, data = tmp, fct = BC.4(fixed = c(NA, 1, NA, NA))),
+                                 silent = TRUE)
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
@@ -100,10 +101,11 @@ drcfit <- function(data, chooseone=TRUE,
                                 a[[ri]] <- coef(m)[[2]]
                                 b[[ri]] <- coef(m)[[1]]
                                 c[[ri]] <- coef(m)[[3]]
-                                ED50 <- try(ED(m, 50, interval = "delta", 
+                                ED50 <- try(ED(m, 50, interval = "delta",
                                                lower = lowestdose / 10,
                                                upper = highestdose * 10,
-                                               display = FALSE))
+                                               display = FALSE),
+                                            silent = TRUE)
                                 if (!inherits(ED50, "try-error")) {
                                     logED50[[ri]] <- log10(ED50[ED50_row_index, "Estimate"])
                                     logED50low[[ri]] <- log10(ED50[ED50_row_index, "Lower"])
@@ -111,14 +113,15 @@ drcfit <- function(data, chooseone=TRUE,
                                     if (logED50[[ri]] > rlhd[[ri]]) {
                                         mtype[[ri]] <- "no fit"
                                     }
-                                } 
+                                }
                             }
                         }
                     }
                     if (probit)
                     {
-                        m <- try(drm(response ~ dose, data = tmp, 
-                                     fct = LN.2()))
+                        m <- try(drm(response ~ dose, data = tmp,
+                                     fct = LN.2()),
+                                 silent = TRUE)
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
@@ -152,7 +155,8 @@ drcfit <- function(data, chooseone=TRUE,
                     }
                     if (logit)
                     {
-                        m <- try(drm(response ~ dose, data = tmp, fct = LL.2()))
+                        m <- try(drm(response ~ dose, data = tmp, fct = LL.2()),
+                                 silent = TRUE)
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
@@ -189,7 +193,8 @@ drcfit <- function(data, chooseone=TRUE,
                     }
                     if (weibull)
                     {
-                        m <- try(drm(response ~ dose, data = tmp, fct = W1.2()))
+                        m <- try(drm(response ~ dose, data = tmp, fct = W1.2()),
+                                 silent = TRUE)
                         if (chooseone==FALSE || fit==FALSE) {
                             if (!inherits(m, "try-error")) {
                                 fit <- TRUE
@@ -262,7 +267,7 @@ drcfit <- function(data, chooseone=TRUE,
         }
     }
 
-    results <- data.frame(rsubstance, rndl, rn, rlld, rlhd, mtype, 
+    results <- data.frame(rsubstance, rndl, rn, rlld, rlhd, mtype,
         logED50, logED50low, logED50high, runit, sigma, a, b)
     lower_level_percent = paste(100 * (1 - level)/2, "%", sep = "")
     upper_level_percent = paste(100 * (1 + level)/2, "%", sep = "")
@@ -285,13 +290,14 @@ drcfit <- function(data, chooseone=TRUE,
             mtype <- as.character(results[row.i, "mtype"])
             if (mtype %in% c("probit", "logit", "weibull", "linlogit")) {
                 for (EDi in EDx) {
-                    EDx.drc = try(ED(m, EDi, interval = "delta", display = FALSE, level = level))
+                    EDx.drc = try(ED(m, EDi, interval = "delta", display = FALSE, level = level),
+                                  silent = TRUE)
                     if (!inherits(EDx.drc, "try-error")) {
-                        results[row.i, paste0("EDx", EDi)] <- 
+                        results[row.i, paste0("EDx", EDi)] <-
                             EDx.drc[paste(EDx_row_index_prefix, EDi, sep = ":"), "Estimate"]
-                        results[row.i, paste0("EDx", EDi, " ", lower_level_percent)] <- 
+                        results[row.i, paste0("EDx", EDi, " ", lower_level_percent)] <-
                             EDx.drc[paste(EDx_row_index_prefix, EDi, sep = ":"), "Lower"]
-                        results[row.i, paste0("EDx", EDi, " ", upper_level_percent)] <- 
+                        results[row.i, paste0("EDx", EDi, " ", upper_level_percent)] <-
                             EDx.drc[paste(EDx_row_index_prefix, EDi, sep = ":"), "Upper"]
                     }
                 }

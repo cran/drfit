@@ -29,7 +29,7 @@
   print(rIM1xIPC81.drc,digits=4)
 }
 \source{
-  Ranke J, Mölter K, Stock F, Bottin-Weber U, Poczobutt J,
+  Ranke J, MÃ¶lter K, Stock F, Bottin-Weber U, Poczobutt J,
   Hoffmann J, Ondruschka B, Filser J, Jastorff B (2004)
   Biological effects of imidazolium ionic liquids with varying
   chain lenghts in acute Vibrio fischeri and WST-1 cell

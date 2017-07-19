@@ -7,7 +7,7 @@
 }
 \usage{
   drcfit(data, chooseone = TRUE, probit = TRUE, logit = FALSE,
-  weibull = FALSE, linlogit = FALSE, level = 0.95, 
+  weibull = FALSE, linlogit = FALSE, level = 0.95,
   showED50 = FALSE, EDx = NULL)
 }
 \arguments{
@@ -67,7 +67,7 @@
 \value{
   A dataframe with the attribute \code{models} holding a list of the fitted
   dose-response models of class \code{\link{nls}}. The dataframe has at least
-  one line for each substance. 
+  one line for each substance.
 
   The following variables are in the dataframe:
   \item{Substance}{
@@ -89,14 +89,14 @@
     If the data did not show a mean response < 0.5 at the highest dose level,
     the modeltype is set to \dQuote{inactive}. If the mean response at the
     lowest dose is smaller than 0.5, the modeltype is set to \dQuote{active}.
-    In both cases, no fitting procedure is carried out. If the fitted ED50 
+    In both cases, no fitting procedure is carried out. If the fitted ED50
     is higher than the highest dose, \dQuote{no fit} is given here.
   }
   \item{logED50}{
     The decadic logarithm of the ED50
   }
   \item{low \%}{
-    The lower bound of the confidence interval of log ED50. 
+    The lower bound of the confidence interval of log ED50.
     The name of the column depends on the requested confidence \code{level}.
   }
   \item{high \%}{
@@ -112,16 +112,16 @@
   }
   \item{a}{
     For the linlogit model, this is the parameter e from \code{\link{BC.4}}.
-    For the probit and the logit model, this is the ED50. For the weibull 
-    model, this is parameter e from \code{\link{W1.2}}. Note that the Weibull 
+    For the probit and the logit model, this is the ED50. For the weibull
+    model, this is parameter e from \code{\link{W1.2}}. Note that the Weibull
     model is fitted to the untransformed data.
   }
   \item{b}{
     For the linlogit, probit, logit and weibull models, these are the
-    parameters b from \code{\link{BC.4}}, \code{\link{LN.2}}, 
+    parameters b from \code{\link{BC.4}}, \code{\link{LN.2}},
     \code{\link{LL.2}} and \code{\link{W1.2}}, respectively.
     Note that the parameter definitions (and in the case of Weibull, the model
-    used) are different to the ones used in \code{\link{drfit}}. 
+    used) are different to the ones used in \code{\link{drfit}}.
   }
   \item{c}{
     Only the \dQuote{linlogit} fit produces a third parameter \code{c}, which is
@@ -140,14 +140,14 @@ r <- drcfit(antifoul, showED50 = TRUE, EDx = c(5, 10, 20))
 format(r, digits = 2)
 }
 \note{There is a demo for each dataset that can be accessed by
-  \code{demo(dataset)}} 
+  \code{demo(dataset)}}
 \seealso{
   Further examples are given in help pages to the datasets
   \code{\link{antifoul}}, \code{\link{IM1xIPC81}} and
   \code{\link{IM1xVibrio}}.
 }
 \author{
-  Johannes Ranke \email{jranke@uni-bremen.de} 
+  Johannes Ranke \email{jranke@uni-bremen.de}
   \url{http://www.uft.uni-bremen.de/chemie/ranke}
   The functionality of the drc package used under the hood in this function
   was written by Christian Ritz.

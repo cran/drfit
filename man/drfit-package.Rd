@@ -16,7 +16,7 @@ of R for chemists.
 Author and Maintainer: Johannes Ranke <jranke@uni-bremen.de>
 }
 \note{There is a demo for each dataset that can be accessed by
-  \code{demo(dataset)}} 
+  \code{demo(dataset)}}
 \keyword{ package }
 \keyword{ models }
 \keyword{ regression }

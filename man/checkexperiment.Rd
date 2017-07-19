@@ -29,8 +29,8 @@
 \dontrun{checkplate(3)}
 }
 \author{
-  Johannes Ranke 
-  \email{jranke@uni-bremen.de} 
+  Johannes Ranke
+  \email{jranke@uni-bremen.de}
   \url{http://www.uft.uni-bremen.de/chemie/ranke}
 }
 \keyword{database}

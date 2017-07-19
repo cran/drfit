@@ -3,9 +3,9 @@
 \alias{antifoul}
 \title{Dose-Response data for TBT and Zink Pyrithione in IPC-81 cells}
 \description{
-  This data set shows the response of the rat leukaemic cell line IPC-81 to 
+  This data set shows the response of the rat leukaemic cell line IPC-81 to
   dilution series of tributyltin chloride (TBT) and Zink Pyrithione as retrieved
-  from the "cytotox" database of the UFT Department of Bioorganic Chemistry on 
+  from the "cytotox" database of the UFT Department of Bioorganic Chemistry on
   February 25, 2004
 }
 \usage{data(antifoul)}
@@ -15,15 +15,15 @@
   database are also present.
 }
 \examples{
-rantifoul.ED50 <- drfit(antifoul, 
+rantifoul.ED50 <- drfit(antifoul,
                         linlogit = TRUE, logit = TRUE, weibull = TRUE,
-                        chooseone = FALSE, 
+                        chooseone = FALSE,
                         showED50 = TRUE, EDx = c(10))
 print(rantifoul.ED50, digits = 5)
 
-rantifoul.drc <- drcfit(antifoul, 
+rantifoul.drc <- drcfit(antifoul,
                         linlogit = TRUE, logit = TRUE, weibull = TRUE,
-                        chooseone = FALSE, 
+                        chooseone = FALSE,
                         showED50 = TRUE, EDx = c(10))
 print(rantifoul.drc, digits = 5)
 }

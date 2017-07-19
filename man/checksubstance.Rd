@@ -6,18 +6,19 @@
   the data.
 }
 \usage{
-  checksubstance(substance, db = "cytotox", experimentator = "\%", 
-    celltype = "\%", enzymetype = "\%", organism = "\%", 
+  checksubstance(substance, db = "cytotox", experimentator = "\%",
+    celltype = "\%", enzymetype = "\%", organism = "\%",
     endpoint = "\%",
     whereClause = "1", ok = "\%")
 }
 \arguments{
   \item{substance}{
-    The name of the substance identifying it within the database.}
+    The name of the substance identifying it within the database. Matching is not 
+    case-sensitive.}
   \item{db}{
     The database to be used. Currently, the databases "cytotox" and "enzymes"
     of the UFT Department of Bioorganic Chemistry are supported (default is
-    "cytotox").} 
+    "cytotox").}
   \item{experimentator}{
     The name of the experimentator whose data is to be used. Default is "\%",
     which means that data from all experimentators are shown.}
@@ -35,10 +36,10 @@
     The endpoint that should be used for selecting the data. Only important if
     the database "ecotox" is used. Defaults to "\%".}
   \item{whereClause}{
-    With this argument, additional conditions for the SQL query can be set, 
+    With this argument, additional conditions for the SQL query can be set,
     e.g. "plate != 710". The default is 1 (in SQL syntax this means TRUE).}
   \item{ok}{
-    With the default value "\%", all data in the database is retrieved for the 
+    With the default value "\%", all data in the database is retrieved for the
     specified substance.}
 }
 \value{
@@ -49,8 +50,8 @@
 \dontrun{checksubstance("IM14 BF4")}
 }
 \author{
-  Johannes Ranke 
-  \email{jranke@uni-bremen.de} 
+  Johannes Ranke
+  \email{jranke@uni-bremen.de}
   \url{http://www.uft.uni-bremen.de/chemie/ranke}
 }
 \keyword{database}

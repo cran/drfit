@@ -1,12 +1,12 @@
 if(getRversion() >= '2.15.1') utils::globalVariables(c("dose", "Substance", "mtype"))
-drplot <- function(drresults, data, 
+drplot <- function(drresults, data,
         dtype = "std", alpha = 0.95, ctype = "none",
         path = "./", fileprefix = "drplot", overlay = FALSE,
         xlim = c("auto","auto"), ylim = c("auto","auto"),
         xlab = paste("Decadic Logarithm of the dose in ", unit),
         ylab = "Normalized response",
         axes = TRUE, frame.plot = TRUE,
-        postscript = FALSE, pdf = FALSE, png = FALSE, 
+        postscript = FALSE, pdf = FALSE, png = FALSE,
         bw = TRUE,
         pointsize = 12,
         colors = 1:8, ltys = 1:8, pchs = "auto",
@@ -24,7 +24,7 @@ drplot <- function(drresults, data,
     if(is.data.frame(data)) {
         # Get rid of pseudo substance names of controls
         nonzerodata <- subset(data,dose!=0)
-        nonzerodata$substance <- factor(nonzerodata$substance) 
+        nonzerodata$substance <- factor(nonzerodata$substance)
         zerodata <- subset(data,dose==0)
         nc <- length(zerodata$dose)     # Number of control points
         if (nc > 0) {
@@ -44,12 +44,12 @@ drplot <- function(drresults, data,
         hr <- max(nonzerodata$response)
         if (ctype == "std") hr <- max(hr,1 + sdc)
         if (ctype == "conf") hr <- max(hr,1 + controlconf)
-        dsubstances <- levels(nonzerodata$substance)    
+        dsubstances <- levels(nonzerodata$substance)
     } else {
         lld <- min(drresults[["logED50"]],na.rm=TRUE) - 2
         lhd <- max(drresults[["logED50"]],na.rm=TRUE) + 2
         if (length(subset(drresults,mtype=="linlogit")$Substance) != 0) {
-            hr <- 1.8 
+            hr <- 1.8
         } else {
             hr <- 1.0
         }
@@ -70,20 +70,20 @@ drplot <- function(drresults, data,
             postscript(file=filename,
                     paper="special",width=7,height=7,horizontal=FALSE, pointsize=pointsize)
             message("Created File: ",filename,"\n")
-        } 
+        }
         if (pdf) {
             filename = paste(path,fileprefix,".pdf",sep="")
             pdf(file=filename,
                     paper="special",width=7,height=7,horizontal=FALSE, pointsize=pointsize)
             message("Created File: ",filename,"\n")
-        } 
+        }
         if (png) {
             filename = paste(path,fileprefix,".png",sep="")
             png(filename=filename,
                 width=500, height=500, pointsize=pointsize)
             message("Created File: ",filename,"\n")
         }
-            
+
         plot(0,type="n",
             xlim = xlim,
             ylim = ylim,
@@ -97,7 +97,7 @@ drplot <- function(drresults, data,
         if (!postscript && !png && !pdf && length(dsubstances) > 1) {
             op <- par(ask=TRUE)
             on.exit(par(op))
-        } 
+        }
     }
     # nl is the overall number of fits to draw by different line types
     nl <- 0
@@ -123,20 +123,20 @@ drplot <- function(drresults, data,
                         postscript(file=filename,
                                 paper="special",width=7,height=7,horizontal=FALSE,pointsize=pointsize)
                         message("Created File: ",filename,"\n")
-                    } 
+                    }
                     if (pdf) {
                         filename = paste(path,fileprefix,sub(" ","_",i),".pdf",sep="")
                         pdf(file=filename,
                                 paper="special",width=7,height=7,horizontal=FALSE,pointsize=pointsize)
                         message("Created File: ",filename,"\n")
-                    } 
+                    }
                     if (png) {
                         filename = paste(path,fileprefix,sub(" ","_",i),".png",sep="")
                         png(filename=filename,
                             width=500, height=500, pointsize=pointsize)
                         message("Created File: ",filename,"\n")
                     }
-                        
+
                     plot(0,type="n",
                         xlim = xlim,
                         ylim = ylim,
@@ -147,7 +147,7 @@ drplot <- function(drresults, data,
                 }
                 if (!overlay) legend(lpos, i, lty = 1, col = color, pch = pch, inset=0.05)
                 tmp$dosefactor <- factor(tmp$dose)  # necessary because the old
-                                                    # factor has all levels, not 
+                                                    # factor has all levels, not
                                                     # only the ones tested with
                                                     # this substance
 
@@ -157,7 +157,7 @@ drplot <- function(drresults, data,
                     abline(h = 1 + sdc, lty = 2)
                 }
                 if (ctype == "conf") {
-                    abline(h = 1 - controlconf, lty = 2) 
+                    abline(h = 1 - controlconf, lty = 2)
                     abline(h = 1 + controlconf, lty = 2)
                 }
 
@@ -179,7 +179,7 @@ drplot <- function(drresults, data,
                     }
                     if (dtype == "conf")
                     {
-                        confidencedeltas <- qt((1 + alpha)/2, lengths - 1) * sqrt(vars) 
+                        confidencedeltas <- qt((1 + alpha)/2, lengths - 1) * sqrt(vars)
                         tops <- means + confidencedeltas
                         bottoms <- means - confidencedeltas
                     }
@@ -207,13 +207,13 @@ drplot <- function(drresults, data,
                         if (drresults[[fit.row, "mtype"]] %in% c("probit",
                                                                  "logit",
                                                                  "weibull",
-                                                                 "linlogit")) 
+                                                                 "linlogit"))
                         {
                             m <- attr(drresults, "models")[[as.numeric(fit.row)]]
                             of <- function(x) {
                                 predict(m, data.frame(dose = 10^x))
-                            } 
-                            plot(of, lld - 0.5, lhd + 2, 
+                            }
+                            plot(of, lld - 0.5, lhd + 2,
                                  add = TRUE, col = color, lty = lty)
                         }
                     }
