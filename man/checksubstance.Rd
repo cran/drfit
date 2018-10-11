@@ -6,7 +6,9 @@
   the data.
 }
 \usage{
-  checksubstance(substance, db = "cytotox", experimentator = "\%",
+  checksubstance(substance, 
+    db = c("cytotox", "enzymes", "ecotox"), 
+    experimentator = "\%",
     celltype = "\%", enzymetype = "\%", organism = "\%",
     endpoint = "\%",
     whereClause = "1", ok = "\%")
@@ -52,7 +54,6 @@
 \author{
   Johannes Ranke
   \email{jranke@uni-bremen.de}
-  \url{http://www.uft.uni-bremen.de/chemie/ranke}
 }
 \keyword{database}
 \keyword{internal}

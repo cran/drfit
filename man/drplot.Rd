@@ -123,14 +123,13 @@
 \examples{
 data(antifoul)
 r <- drfit(antifoul)
-\dontrun{drplot(r,antifoul)}
+drplot(r,antifoul)
 }
 \note{There is a demo for each dataset that can be accessed by
   \code{demo(dataset)}}
 \author{
   Johannes Ranke
   \email{jranke@uni-bremen.de}
-  \url{http://www.uft.uni-bremen.de/chemie/ranke}
 }
 \keyword{models}
 \keyword{regression}

@@ -148,7 +148,6 @@ format(r, digits = 2)
 }
 \author{
   Johannes Ranke \email{jranke@uni-bremen.de}
-  \url{http://www.uft.uni-bremen.de/chemie/ranke}
   The functionality of the drc package used under the hood in this function
   was written by Christian Ritz.
 }

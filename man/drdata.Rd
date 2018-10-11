@@ -5,8 +5,9 @@
   Get dose-response data from an adequate ODBC data source
 }
 \usage{
-  drdata(substances, experimentator = "\%", db = "cytotox", celltype = "IPC-81",
-    enzymetype="AChE", organism="Vibrio fischeri", endpoint="Luminescence",
+  drdata(substances, experimentator = "\%", db = "cytotox", 
+    celltype = "IPC-81", enzymetype = "AChE", organism = "Vibrio fischeri",
+    endpoint = "Luminescence",
     whereClause = "1", ok = "'ok','no fit'")
 }
 \arguments{
@@ -78,14 +79,17 @@
   }
 }
 \examples{
-# Get cytotoxicity data for Tributyltin and zinc pyrithione, tested with IPC-81
-# cells
-\dontrun{drdata(c("TBT","ZnPT2"))}
+  \dontrun{
+
+  # Get cytotoxicity data for Tributyltin and zinc pyrithione, tested with IPC-81
+  # cells
+  drdata(c("TBT", "ZnPT2"))
+
+  }
 }
 \author{
   Johannes Ranke
   \email{jranke@uni-bremen.de}
-  \url{http://www.uft.uni-bremen.de/chemie/ranke}
 }
 \keyword{IO}
 \keyword{database}

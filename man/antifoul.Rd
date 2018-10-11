@@ -28,7 +28,4 @@ rantifoul.drc <- drcfit(antifoul,
 print(rantifoul.drc, digits = 5)
 }
 
-\source{
-  \url{http://www.uft.uni-bremen.de/chemie}
-}
 \keyword{datasets}

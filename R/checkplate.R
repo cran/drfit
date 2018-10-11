@@ -1,4 +1,5 @@
-checkplate <- function(id, db = "cytotox")
+checkplate <- function(id, db = c("cytotox", "enzymes"))
 {
-    checkexperiment(id, db = db)
+  db <- match.arg(db)
+  checkexperiment(id, db = db)
 }

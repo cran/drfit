@@ -6,7 +6,8 @@
   experiments from a specified database.
 }
 \usage{
-  checkcontrols(last = 10, id = NULL, db = "cytotox", 
+  checkcontrols(last = 10, id = NULL, 
+                db = c("cytotox", "enzymes", "ecotox"),
                 celltype = "IPC-81", enzymetype = "AChE", 
                 organism = "Vibrio fischeri",
                 endpoint = "\%", qcc = c("R", "xbar"))
@@ -54,6 +55,5 @@
 \author{
   Johannes Ranke
   \email{jranke@uni-bremen.de}
-  \url{http://www.uft.uni-bremen.de/chemie/ranke}
 }
 \keyword{database}

@@ -14,7 +14,4 @@
 \examples{
   \dontrun{demo(XY)}
 }
-\source{
-  \url{http://www.uft.uni-bremen.de/chemie}
-}
 \keyword{datasets}

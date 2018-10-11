@@ -7,8 +7,8 @@
   specified database, box plot controls, and plot the dose-response data.
 }
 \usage{
-  checkplate(id, db = "cytotox")
-  checkexperiment(id, db = "ecotox", endpoint = "\%")
+  checkplate(id, db = c("cytotox", "enzymes"))
+  checkexperiment(id, db = c("ecotox", "cytotox", "enzymes"), endpoint = "\%")
 }
 \arguments{
   \item{id}{
@@ -31,6 +31,5 @@
 \author{
   Johannes Ranke
   \email{jranke@uni-bremen.de}
-  \url{http://www.uft.uni-bremen.de/chemie/ranke}
 }
 \keyword{database}
